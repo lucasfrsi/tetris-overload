@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "assets/*": ["src/assets/*"],
+      "components/*": ["src/components/*"],
+      "lib/*": ["src/lib/*"],
+      "services/*": ["src/services/*"],
+      "store/*": ["src/store/*"],
+      "style/*": ["src/style/*"],
+      "utils/*": ["src/utils/*"],
+    }
+  },
+  "exclude": ["node_modules", "dist"],
+  "typeAcquisition": {
+    "include": [
+      "jest",
+    ]
+  }
+}
