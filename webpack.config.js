@@ -42,6 +42,7 @@ const config = {
       assets: path.join(__dirname, 'src', 'assets'),
       components: path.join(__dirname, 'src', 'components'),
       lib: path.join(__dirname, 'src', 'lib'),
+      hooks: path.join(__dirname, 'src', 'hooks'),
       services: path.join(__dirname, 'src', 'services'),
       store: path.join(__dirname, 'src', 'store'),
       style: path.join(__dirname, 'src', 'style'),
