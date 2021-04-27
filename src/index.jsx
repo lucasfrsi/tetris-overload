@@ -7,7 +7,6 @@ import GlobalHelmet from './globalHelmet';
 
 import appStore from './store';
 
-import Layout from './components/Layout';
 import Tetris from './components/Tetris';
 
 const App = () => (
@@ -15,9 +14,7 @@ const App = () => (
     <GlobalHelmet />
     <GlobalStyle />
     <Provider store={appStore}>
-      <Layout>
-        <Tetris />
-      </Layout>
+      <Tetris />
     </Provider>
   </>
 );
@@ -26,7 +23,3 @@ const app = document.createElement('div');
 document.body.appendChild(app);
 
 ReactDOM.render(<App />, app);
-
-// Steps:
-// 1. Mock the structure (From menus, to the game itself)
-// 2. Start programming :D

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInGameAction as setInGame } from 'store/actions/tetris';
 
 import { createStage, checkCollision } from 'utils/gameHelpers';
 
@@ -9,11 +11,10 @@ import { useStage } from 'hooks/useStage';
 import { useGameStatus } from 'hooks/useGameStatus';
 
 // Components
-import Stage from 'components/Stage';
-import Display from 'components/Display';
-import StartButton from 'components/StartButton';
+import Stage from '../Stage';
+import Menu from '../Menu';
 
-import { StyledTetrisWrapper, StyledTetris } from './style';
+import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
 const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
@@ -25,7 +26,11 @@ const Tetris = () => {
     rowsCleared,
   );
 
-  console.log('re-render Tetris');
+  const inGame = useSelector((state) => state.tetris.inGame);
+  const dispatch = useDispatch();
+  const goToMenu = () => dispatch(setInGame(false));
+
+  console.log('re-render Tetris', inGame);
 
   const movePlayer = (dir) => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -102,29 +107,64 @@ const Tetris = () => {
   };
 
   return (
-    <StyledTetrisWrapper
-      role="button"
-      tabIndex="0"
-      onKeyDown={(e) => move(e)}
-      onKeyUp={keyUp}
-    >
-      <StyledTetris>
-        <Stage stage={stage} />
-        <aside>
-          {gameOver ? (
-            <Display gameOver={gameOver} text="Game Over" />
-          ) : (
-            <div>
-              <Display text={`Score: ${score}`} />
-              <Display text={`rows: ${rows}`} />
-              <Display text={`Level: ${level}`} />
-            </div>
-          )}
-          <StartButton callback={startGame} />
-        </aside>
-      </StyledTetris>
-    </StyledTetrisWrapper>
+    inGame ? (
+      <StyledTetrisWrapper
+        role="button"
+        tabIndex="0"
+        onKeyDown={(e) => move(e)}
+        onKeyUp={keyUp}
+      >
+        <StyledTetrisLayout>
+          <aside>
+            <div>pocket/hold</div>
+            <div>learned skills</div>
+            <button type="button" onClick={goToMenu}>menu</button>
+          </aside>
+          <Stage stage={stage} />
+          <aside>
+            <div>next piece</div>
+            <div>pieces stack</div>
+            <div>score</div>
+            <div>level</div>
+            <div>lines</div>
+            <button type="button" onClick={startGame}>start</button>
+          </aside>
+        </StyledTetrisLayout>
+      </StyledTetrisWrapper>
+    ) : <Menu />
   );
 };
 
 export default Tetris;
+
+/*
+  In-game Menus
+  - Skill Tree
+  - Pause
+
+  Mechanics
+  - Skills and Skill Tree
+  - Coins randomly spawns on the stage, giving extra exp/money
+  - Exp/money are also earned by clearing rows (the more rows at once, more exp/money is earned)
+    - Clairvoyance
+      =PASSIVE=
+      = Allow the player to see the next piece(s)
+    - Time Stop
+      =ACTIVE=
+      = Allow the player to freely move the piece for a certain period of time
+    - Mimic
+      =ACTIVE=
+      = Set the next piece to be equal to the current one
+    - Pixel Pocket
+      =ACTIVE=
+      = Stores a piece to be used later on
+    - Perfectionist
+      =PASSIVE=
+      = Clearing 4 rows at once resets all abilities cooldown
+    - Intuition
+      =PASSIVE=
+      = Shows a mark of where the piece will fall at
+    - Greedy
+      =PASSIVE=
+      = Earns more exp/money per coin and rows cleared
+*/

@@ -8,12 +8,16 @@ export const StyledTetrisWrapper = styled.div`
   overflow: hidden;
 `;
 
-export const StyledTetris = styled.div`
+export const StyledTetrisLayout = styled.div`
   display: flex;
-  align-items: flex-start;
-  padding: 40px;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4rem;
   margin: 0 auto;
-  max-width: 900px;
+
+  max-width: 144rem;
+
   aside {
     width: 100%;
     max-width: 200px;
