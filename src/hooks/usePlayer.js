@@ -43,7 +43,6 @@ export const usePlayer = () => {
   const updatePlayerPos = ({ x, y, collided }) => {
     setPlayer((prev) => ({
       ...prev,
-      // pos: { x: (prev.pos.x += x), y: (prev.pos.y += y) },
       pos: { x: (prev.pos.x + x), y: (prev.pos.y + y) },
       collided,
     }));
@@ -52,7 +51,8 @@ export const usePlayer = () => {
   const resetPlayer = useCallback(() => {
     const newNextPieces = [...nextPieces];
     const nextPiece = newNextPieces.shift();
-    newNextPieces.push(randomTetromino());
+    // Mimic Check
+    if (newNextPieces.length < 3) newNextPieces.push(randomTetromino());
 
     setPlayer({
       pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
@@ -77,9 +77,20 @@ export const usePlayer = () => {
     }
   };
 
-  return [player, nextPieces, hold, activateHold, updatePlayerPos, resetPlayer, playerRotate];
-};
+  const activateMimic = () => {
+    const newNextPieces = [...nextPieces];
+    newNextPieces.unshift(player.tetromino);
+    setNextPieces(newNextPieces);
+  };
 
-// Hold Implementation
-// 1. If empty, take current player tetromino and store it in hold
-// 2. If not empty, swap the current player tetromino with the piece in hold
+  return {
+    player,
+    nextPieces,
+    hold,
+    activateHold,
+    activateMimic,
+    updatePlayerPos,
+    resetPlayer,
+    playerRotate,
+  };
+};

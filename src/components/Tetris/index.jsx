@@ -22,15 +22,16 @@ const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [
+  const {
     player,
     nextPieces,
     hold,
     activateHold,
+    activateMimic,
     updatePlayerPos,
     resetPlayer,
     playerRotate,
-  ] = usePlayer();
+  } = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
     rowsCleared,
@@ -41,7 +42,7 @@ const Tetris = () => {
   const dispatch = useDispatch();
   const goToMenu = () => dispatch(setInGame(false));
 
-  console.log('re-render Tetris', inGame);
+  console.log('re-render Tetris', inGame, nextPieces);
 
   const movePlayer = (dir) => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -117,6 +118,8 @@ const Tetris = () => {
         playerRotate(stage, 1);
       } else if (key === 7 || code === 'Numpad7') {
         activateHold();
+      } else if (key === 9 || code === 'Numpad9') {
+        activateMimic();
       }
     }
   };
