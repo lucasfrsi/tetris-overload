@@ -66,3 +66,11 @@ export const randomTetromino = () => {
   const randTetromino = tetrominos[Math.floor(Math.random() * tetrominos.length)];
   return TETROMINOS[randTetromino];
 };
+
+export const createNextPiecesArray = (piecesAmount) => {
+  const array = [];
+  for (let i = 0; i < piecesAmount; i++) {
+    array.push(randomTetromino());
+  }
+  return array;
+};

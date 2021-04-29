@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInGameAction as setInGame } from 'store/actions/tetris';
 
-import { createStage, checkCollision } from 'utils/gameHelpers';
+import { createMainStage, checkCollision } from 'utils/gameHelpers';
 
 // Custom Hooks
 import { useInterval } from 'hooks/useInterval';
 import { usePlayer } from 'hooks/usePlayer';
 import { useStage } from 'hooks/useStage';
 import { useGameStatus } from 'hooks/useGameStatus';
+import { usePieceHolders } from 'hooks/usePieceHolders';
 
 // Components
 import Stage from '../Stage';
 import Menu from '../Menu';
+import PieceHolder from '../PieceHolder';
 
 import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
@@ -20,11 +22,12 @@ const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
+  const [player, nextPieces, hold, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
     rowsCleared,
   );
+  const [nextStage, queueStage, holdStage] = usePieceHolders(nextPieces, hold);
 
   const inGame = useSelector((state) => state.tetris.inGame);
   const dispatch = useDispatch();
@@ -49,7 +52,7 @@ const Tetris = () => {
 
   const startGame = () => {
     // Reset everything
-    setStage(createStage());
+    setStage(createMainStage());
     setDropTime(1000);
     resetPlayer();
     setScore(0);
@@ -116,18 +119,20 @@ const Tetris = () => {
       >
         <StyledTetrisLayout>
           <aside>
-            <div>pocket/hold</div>
+            <PieceHolder pieceHolderStage={holdStage} />
             <div>learned skills</div>
             <button type="button" onClick={goToMenu}>menu</button>
           </aside>
           <Stage stage={stage} />
           <aside>
-            <div>next piece</div>
-            <div>pieces stack</div>
+            <PieceHolder pieceHolderStage={nextStage} />
+            <PieceHolder pieceHolderStage={queueStage} />
             <div>score</div>
             <div>level</div>
             <div>lines</div>
             <button type="button" onClick={startGame}>start</button>
+            {/* tests */}
+            {/* <div>X {player.pos.x} Y {player.pos.y}</div> */}
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
