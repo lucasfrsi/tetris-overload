@@ -9,7 +9,8 @@ export const usePlayer = () => {
 
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
-    tetromino: TETROMINOS[0].shape,
+    // tetromino: TETROMINOS[0].shape,
+    tetromino: TETROMINOS[0],
     collided: false,
   });
 
@@ -23,15 +24,15 @@ export const usePlayer = () => {
 
   function playerRotate(stage, dir) {
     const clonedPlayer = JSON.parse(JSON.stringify(player));
-    clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, dir);
+    clonedPlayer.tetromino.shape = rotate(clonedPlayer.tetromino.shape, dir);
 
     const pos = clonedPlayer.pos.x;
     let offset = 1;
     while (checkCollision(clonedPlayer, stage, { x: 0, y: 0 })) {
       clonedPlayer.pos.x += offset;
       offset = -(offset + (offset > 0 ? 1 : -1));
-      if (offset > clonedPlayer.tetromino[0].length) {
-        rotate(clonedPlayer.tetromino, -dir);
+      if (offset > clonedPlayer.tetromino.shape[0].length) {
+        rotate(clonedPlayer.tetromino.shape, -dir);
         clonedPlayer.pos.x = pos;
         return;
       }
@@ -55,11 +56,30 @@ export const usePlayer = () => {
 
     setPlayer({
       pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-      tetromino: nextPiece.shape,
+      tetromino: nextPiece,
       collided: false,
     });
     setNextPieces(newNextPieces);
   }, [nextPieces]);
 
-  return [player, nextPieces, hold, updatePlayerPos, resetPlayer, playerRotate];
+  const activateHold = () => {
+    if (hold.length === 0) {
+      setHold([player.tetromino]);
+      resetPlayer();
+    } else {
+      const holdPiece = hold[0];
+      setHold([player.tetromino]);
+      setPlayer((prev) => ({
+        ...prev,
+        pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+        tetromino: holdPiece,
+      }));
+    }
+  };
+
+  return [player, nextPieces, hold, activateHold, updatePlayerPos, resetPlayer, playerRotate];
 };
+
+// Hold Implementation
+// 1. If empty, take current player tetromino and store it in hold
+// 2. If not empty, swap the current player tetromino with the piece in hold

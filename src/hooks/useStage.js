@@ -22,7 +22,7 @@ export const useStage = (player, resetPlayer) => {
       const newStage = prevStage.map((row) => row.map((cell) => (cell[1] === 'clear' ? [0, 'clear'] : cell)));
 
       // Then draw the tetromino
-      player.tetromino.forEach((row, y) => {
+      player.tetromino.shape.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
             newStage[y + player.pos.y][x + player.pos.x] = [

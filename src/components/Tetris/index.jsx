@@ -22,7 +22,15 @@ const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [player, nextPieces, hold, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
+  const [
+    player,
+    nextPieces,
+    hold,
+    activateHold,
+    updatePlayerPos,
+    resetPlayer,
+    playerRotate,
+  ] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
     rowsCleared,
@@ -41,10 +49,10 @@ const Tetris = () => {
     }
   };
 
-  const keyUp = ({ keyCode }) => {
+  const onKeyUp = ({ code, key }) => {
     if (!gameOver) {
       // Activate the interval again when user releases down arrow.
-      if (keyCode === 40) {
+      if (key === 2 || code === 'Numpad2') {
         setDropTime(1000 / (level + 1));
       }
     }
@@ -95,16 +103,20 @@ const Tetris = () => {
     drop();
   }, dropTime);
 
-  const move = ({ keyCode }) => {
+  const onKeyDownHandler = ({ code, key }) => {
     if (!gameOver) {
-      if (keyCode === 37) {
+      if (key === 1 || code === 'Numpad1') {
         movePlayer(-1);
-      } else if (keyCode === 39) {
+      } else if (key === 3 || code === 'Numpad3') {
         movePlayer(1);
-      } else if (keyCode === 40) {
+      } else if (key === 2 || code === 'Numpad2') {
         dropPlayer();
-      } else if (keyCode === 38) {
+      } else if (key === 4 || code === 'Numpad4') {
+        playerRotate(stage, -1);
+      } else if (key === 6 || code === 'Numpad6') {
         playerRotate(stage, 1);
+      } else if (key === 7 || code === 'Numpad7') {
+        activateHold();
       }
     }
   };
@@ -114,8 +126,8 @@ const Tetris = () => {
       <StyledTetrisWrapper
         role="button"
         tabIndex="0"
-        onKeyDown={(e) => move(e)}
-        onKeyUp={keyUp}
+        onKeyDown={(e) => onKeyDownHandler(e)}
+        onKeyUp={onKeyUp}
       >
         <StyledTetrisLayout>
           <aside>
@@ -172,4 +184,12 @@ export default Tetris;
     - Greedy
       =PASSIVE=
       = Earns more exp/money per coin and rows cleared
+    - Blink
+      =ACTIVE=
+      = Immediately set the piece to the intuition location mark
+
+  TO-DOS
+  1. Fix initial tetrominos position (horizontal)
+  2. Check rotation to match original games
+  3. Find a way to centralize next and queue pieces in container
 */

@@ -22,7 +22,7 @@ export const usePieceHolders = (nextPieces, hold) => {
 
   useEffect(() => {
     const updateNextStage = () => {
-      const newStage = createStage(SINGLE_STAGE_WIDTH, SINGLE_STAGE_WIDTH);
+      const newStage = createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH);
 
       nextPieces[0].shape.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -54,6 +54,28 @@ export const usePieceHolders = (nextPieces, hold) => {
     setNextStage(updateNextStage());
     setQueueStage(updateQueueStage());
   }, [nextPieces]);
+
+  useEffect(() => {
+    const updateHoldStage = () => {
+      const newStage = createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH);
+
+      if (hold.length === 0) {
+        return newStage;
+      }
+
+      hold[0].shape.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value !== 0) {
+            newStage[y + 1][x + 1] = [value, 'merged'];
+          }
+        });
+      });
+
+      return newStage;
+    };
+
+    setHoldStage(updateHoldStage());
+  }, [hold]);
 
   return [nextStage, queueStage, holdStage];
 };
