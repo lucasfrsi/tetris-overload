@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createMainStage } from 'utils/gameHelpers';
+import { createMainStage, checkCollision } from 'utils/gameHelpers';
 
 export const useStage = (player, resetPlayer) => {
   const [stage, setStage] = useState(createMainStage());
@@ -21,6 +21,30 @@ export const useStage = (player, resetPlayer) => {
       // First flush the stage
       const newStage = prevStage.map((row) => row.map((cell) => (cell[1] === 'clear' ? [0, 'clear'] : cell)));
 
+      const intuition = true;
+      // Draw the tetromino highlight
+      if (intuition && !player.collided && player.tetromino.shape.length > 1) {
+        // Calculate the y, up to the point there's a collision
+        let count = 1;
+        while (checkCollision(player, newStage, { x: 0, y: count }) === false) {
+          count++;
+        }
+        count--;
+
+        // Paint the tetromino highlight
+        player.tetromino.shape.forEach((row, y) => {
+          row.forEach((value, x) => {
+            if (value !== 0) {
+              newStage[y + player.pos.y + count][x + player.pos.x] = [
+                value,
+                'clear',
+                true,
+              ];
+            }
+          });
+        });
+      }
+
       // Then draw the tetromino
       player.tetromino.shape.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -32,6 +56,7 @@ export const useStage = (player, resetPlayer) => {
           }
         });
       });
+
       // Then check if we got some score if collided
       if (player.collided) {
         resetPlayer();
@@ -43,6 +68,7 @@ export const useStage = (player, resetPlayer) => {
     // Here are the updates
     setStage((prev) => updateStage(prev));
   }, [
+    player,
     player.collided,
     player.pos.x,
     player.pos.y,

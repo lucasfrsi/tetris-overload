@@ -5,7 +5,7 @@ import { StyledPieceHolder } from './style';
 
 const PieceHolder = ({ pieceHolderStage }) => (
   <StyledPieceHolder width={pieceHolderStage[0].length} height={pieceHolderStage.length}>
-    {pieceHolderStage.map((row) => row.map((cell, x) => <Cell key={x} type={cell[0]} />))}
+    {pieceHolderStage.map((row) => row.map((cell, x) => <Cell key={x} type={cell} />))}
   </StyledPieceHolder>
 );
 

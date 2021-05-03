@@ -6,8 +6,8 @@ export const createStage = (height, width) => Array.from(Array(height), () => Ar
 export const createMainStage = () => createStage(STAGE_HEIGHT, STAGE_WIDTH);
 
 export const checkCollision = (player, stage, { x: moveX, y: moveY }) => {
-  for (let y = 0; y < player.tetromino.shape.length; y += 1) {
-    for (let x = 0; x < player.tetromino.shape[y].length; x += 1) {
+  for (let y = 0; y < player.tetromino.shape.length; y++) {
+    for (let x = 0; x < player.tetromino.shape[y].length; x++) {
       // 1. Check that we're on an actual Tetromino cell
       if (player.tetromino.shape[y][x] !== 0) {
         if (

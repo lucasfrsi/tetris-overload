@@ -42,7 +42,7 @@ const Tetris = () => {
   const dispatch = useDispatch();
   const goToMenu = () => dispatch(setInGame(false));
 
-  console.log('re-render Tetris', inGame, nextPieces);
+  // console.log('re-render Tetris', inGame, nextPieces, player);
 
   const movePlayer = (dir) => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -83,7 +83,7 @@ const Tetris = () => {
     } else {
       // Game over!
       if (player.pos.y < 1) {
-        console.log('GAME OVER!!!');
+        // console.log('GAME OVER!!!');
         setGameOver(true);
         setDropTime(null);
       }
@@ -142,9 +142,9 @@ const Tetris = () => {
           <aside>
             <PieceHolder pieceHolderStage={nextStage} />
             <PieceHolder pieceHolderStage={queueStage} />
-            <div>score</div>
-            <div>level</div>
-            <div>lines</div>
+            <div>Score: {score}</div> {/* score */}
+            <div>Level: {level}</div> {/* level */}
+            <div>Rows: {rows}</div> {/* lines */}
             <button type="button" onClick={startGame}>start</button>
             {/* tests */}
             {/* <div>X {player.pos.x} Y {player.pos.y}</div> */}
@@ -166,16 +166,16 @@ export default Tetris;
   - Skills and Skill Tree
   - Coins randomly spawns on the stage, giving extra exp/money
   - Exp/money are also earned by clearing rows (the more rows at once, more exp/money is earned)
-    - Clairvoyance
+    - Clairvoyance [OK]
       =PASSIVE=
       = Allow the player to see the next piece(s)
     - Time Stop
       =ACTIVE=
       = Allow the player to freely move the piece for a certain period of time
-    - Mimic
+    - Mimic [OK]
       =ACTIVE=
       = Set the next piece to be equal to the current one
-    - Pixel Pocket
+    - Pixel Pocket [OK]
       =ACTIVE=
       = Stores a piece to be used later on
     - Perfectionist
