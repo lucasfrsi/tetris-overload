@@ -10,6 +10,8 @@ import { usePlayer } from 'hooks/usePlayer';
 import { useStage } from 'hooks/useStage';
 import { useGameStatus } from 'hooks/useGameStatus';
 import { usePieceHolders } from 'hooks/usePieceHolders';
+import { useControllers } from 'hooks/useControllers';
+// import { useSkills } from 'hooks/useSkills';
 
 // Components
 import Stage from '../Stage';
@@ -37,25 +39,15 @@ const Tetris = () => {
     rowsCleared,
   );
   const [nextStage, queueStage, holdStage] = usePieceHolders(nextPieces, hold);
+  const { onKeyDown, onKeyUp } = useControllers();
 
   const inGame = useSelector((state) => state.tetris.inGame);
   const dispatch = useDispatch();
   const goToMenu = () => dispatch(setInGame(false));
 
-  // console.log('re-render Tetris', inGame, nextPieces, player);
-
   const movePlayer = (dir) => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0 });
-    }
-  };
-
-  const onKeyUp = ({ code, key }) => {
-    if (!gameOver) {
-      // Activate the interval again when user releases down arrow.
-      if (key === 2 || code === 'Numpad2') {
-        setDropTime(1000 / (level + 1));
-      }
     }
   };
 
@@ -83,7 +75,6 @@ const Tetris = () => {
     } else {
       // Game over!
       if (player.pos.y < 1) {
-        // console.log('GAME OVER!!!');
         setGameOver(true);
         setDropTime(null);
       }
@@ -92,36 +83,29 @@ const Tetris = () => {
   };
 
   const dropPlayer = () => {
-    // We don't need to run the interval when we use the arrow down to
-    // move the tetromino downwards. So deactivate it for now.
     setDropTime(null);
     drop();
   };
 
-  // This one starts the game
-  // Custom hook by Dan Abramov
   useInterval(() => {
     drop();
   }, dropTime);
 
-  const onKeyDownHandler = ({ code, key }) => {
-    if (!gameOver) {
-      if (key === 1 || code === 'Numpad1') {
-        movePlayer(-1);
-      } else if (key === 3 || code === 'Numpad3') {
-        movePlayer(1);
-      } else if (key === 2 || code === 'Numpad2') {
-        dropPlayer();
-      } else if (key === 4 || code === 'Numpad4') {
-        playerRotate(stage, -1);
-      } else if (key === 6 || code === 'Numpad6') {
-        playerRotate(stage, 1);
-      } else if (key === 7 || code === 'Numpad7') {
-        activateHold();
-      } else if (key === 9 || code === 'Numpad9') {
-        activateMimic();
-      }
-    }
+  const onKeyDownHandler = (event) => {
+    onKeyDown({
+      event,
+      gameOver,
+      stage,
+      movePlayer,
+      dropPlayer,
+      playerRotate,
+      activateHold,
+      activateMimic,
+    });
+  };
+
+  const onKeyUpHandler = (e) => {
+    onKeyUp(e, gameOver, level, setDropTime);
   };
 
   return (
@@ -129,8 +113,8 @@ const Tetris = () => {
       <StyledTetrisWrapper
         role="button"
         tabIndex="0"
-        onKeyDown={(e) => onKeyDownHandler(e)}
-        onKeyUp={onKeyUp}
+        onKeyDown={onKeyDownHandler}
+        onKeyUp={onKeyUpHandler}
       >
         <StyledTetrisLayout>
           <aside>
@@ -142,12 +126,10 @@ const Tetris = () => {
           <aside>
             <PieceHolder pieceHolderStage={nextStage} />
             <PieceHolder pieceHolderStage={queueStage} />
-            <div>Score: {score}</div> {/* score */}
-            <div>Level: {level}</div> {/* level */}
-            <div>Rows: {rows}</div> {/* lines */}
+            <div>Score: {score}</div>
+            <div>Level: {level}</div>
+            <div>Lines: {rows}</div>
             <button type="button" onClick={startGame}>start</button>
-            {/* tests */}
-            {/* <div>X {player.pos.x} Y {player.pos.y}</div> */}
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
@@ -166,33 +148,23 @@ export default Tetris;
   - Skills and Skill Tree
   - Coins randomly spawns on the stage, giving extra exp/money
   - Exp/money are also earned by clearing rows (the more rows at once, more exp/money is earned)
-    - Clairvoyance [OK]
-      =PASSIVE=
-      = Allow the player to see the next piece(s)
-    - Time Stop
-      =ACTIVE=
-      = Allow the player to freely move the piece for a certain period of time
-    - Mimic [OK]
-      =ACTIVE=
-      = Set the next piece to be equal to the current one
-    - Pixel Pocket [OK]
-      =ACTIVE=
-      = Stores a piece to be used later on
-    - Perfectionist
-      =PASSIVE=
-      = Clearing 4 rows at once resets all abilities cooldown
-    - Intuition
-      =PASSIVE=
-      = Shows a mark of where the piece will fall at
-    - Greedy
-      =PASSIVE=
-      = Earns more exp/money per coin and rows cleared
-    - Blink
-      =ACTIVE=
-      = Immediately set the piece to the intuition location mark
 
   TO-DOS
   1. Fix initial tetrominos position (horizontal)
   2. Check rotation to match original games
-  3. Find a way to centralize next and queue pieces in container
+  3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
+  5. Add controls and the ability to choose all the keys
+  6. Add pause and save game
+  4. Add sound effects and cell animations
+  5. Add song
+  6. Style the entire game
+  7. Play the game, tweak the math calculations + balance
+
+  Next feats to implement:
+  1. Blink
+  2. Time Stop
+  Then after implementing coin/orb spawn
+  3. Greedy
+  Then after implementing learning skills + adding cooldowns
+  4. Perfectionist
 */
