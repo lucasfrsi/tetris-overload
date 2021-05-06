@@ -1,14 +1,39 @@
-export const useControllers = () => {
-  const onKeyDown = ({
-    event: { code, key },
-    gameOver,
-    stage,
-    movePlayer,
-    playerRotate,
-    dropPlayer,
-    activateMimic,
-    activateHold,
-  }) => {
+export const useControllers = (playerAPI, stageAPI, gameStatusAPI, tetrisAPI) => {
+  const {
+    actions: {
+      playerRotate,
+      activateHold,
+      activateMimic,
+    },
+  } = playerAPI;
+
+  const {
+    state: {
+      stage,
+    },
+  } = stageAPI;
+
+  const {
+    state: {
+      level,
+    },
+  } = gameStatusAPI;
+
+  const {
+    state: {
+      gameOver,
+    },
+    actions: {
+      dropPlayer,
+      movePlayer,
+      setDropTime,
+    },
+  } = tetrisAPI;
+
+  // const onKeyDown = ({ event: { code, key } }) => {
+  const onKeyDown = (event) => {
+    const { code, key } = event;
+
     if (!gameOver) {
       if (key === 1 || code === 'Numpad1') {
         movePlayer(-1);
@@ -28,12 +53,10 @@ export const useControllers = () => {
     }
   };
 
-  const onKeyUp = ({
-    event: { code, key },
-    gameOver,
-    level,
-    setDropTime,
-  }) => {
+  // const onKeyUp = ({ event: { code, key } }) => {
+  const onKeyUp = (event) => {
+    const { code, key } = event;
+
     if (!gameOver) {
       // Activate the interval again when user releases down arrow.
       if (key === 2 || code === 'Numpad2') {
@@ -43,7 +66,12 @@ export const useControllers = () => {
   };
 
   return {
-    onKeyDown,
-    onKeyUp,
+    state: {
+
+    },
+    actions: {
+      onKeyDown,
+      onKeyUp,
+    },
   };
 };

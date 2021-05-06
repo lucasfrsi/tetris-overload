@@ -84,13 +84,17 @@ export const usePlayer = () => {
   };
 
   return {
-    player,
-    nextPieces,
-    hold,
-    activateHold,
-    activateMimic,
-    updatePlayerPos,
-    resetPlayer,
-    playerRotate,
+    state: {
+      player,
+      nextPieces,
+      hold,
+    },
+    actions: {
+      activateHold,
+      activateMimic,
+      updatePlayerPos,
+      resetPlayer,
+      playerRotate,
+    },
   };
 };

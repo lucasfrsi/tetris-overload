@@ -7,7 +7,7 @@ const SINGLE_STAGE_WIDTH = 5;
 const DOUBLE_STAGE_HEIGHT = SINGLE_STAGE_HEIGHT * 2;
 const DOUBLE_STAGE_WIDTH = SINGLE_STAGE_WIDTH;
 
-export const usePieceHolders = (nextPieces, hold) => {
+export const usePieceHolders = (playerAPI) => {
   const [holdStage, setHoldStage] = useState(
     createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH),
   );
@@ -19,6 +19,10 @@ export const usePieceHolders = (nextPieces, hold) => {
   const [queueStage, setQueueStage] = useState(
     createStage(DOUBLE_STAGE_HEIGHT, DOUBLE_STAGE_WIDTH),
   );
+
+  const {
+    state: { nextPieces, hold },
+  } = playerAPI;
 
   useEffect(() => {
     const updateNextStage = () => {
@@ -77,5 +81,14 @@ export const usePieceHolders = (nextPieces, hold) => {
     setHoldStage(updateHoldStage());
   }, [hold]);
 
-  return { nextStage, queueStage, holdStage };
+  return {
+    state: {
+      nextStage,
+      queueStage,
+      holdStage,
+    },
+    actions: {
+
+    },
+  };
 };

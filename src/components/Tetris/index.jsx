@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInGameAction as setInGame } from 'store/actions/tetris';
 
-import { createMainStage, checkCollision } from 'utils/gameHelpers';
-
 // Custom Hooks
-import { useInterval } from 'hooks/useInterval';
 import { usePlayer } from 'hooks/usePlayer';
 import { useStage } from 'hooks/useStage';
 import { useGameStatus } from 'hooks/useGameStatus';
 import { usePieceHolders } from 'hooks/usePieceHolders';
 import { useControllers } from 'hooks/useControllers';
+import { useTetris } from 'hooks/useTetris';
 // import { useSkills } from 'hooks/useSkills';
 
 // Components
@@ -21,96 +19,60 @@ import PieceHolder from '../PieceHolder';
 import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
 const Tetris = () => {
-  const [dropTime, setDropTime] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
+  const playerAPI = usePlayer();
+  const stageAPI = useStage(playerAPI);
+  const pieceHoldersAPI = usePieceHolders(playerAPI);
+  const gameStatusAPI = useGameStatus(stageAPI);
 
-  const {
-    player,
-    nextPieces,
-    hold,
-    activateHold,
-    activateMimic,
-    updatePlayerPos,
-    resetPlayer,
-    playerRotate,
-  } = usePlayer();
-  const { stage, setStage, rowsCleared } = useStage(player, resetPlayer);
-  const { score, setScore, rows, setRows, level, setLevel } = useGameStatus(
-    rowsCleared,
-  );
-  const { nextStage, queueStage, holdStage } = usePieceHolders(nextPieces, hold);
-  const { onKeyDown, onKeyUp } = useControllers();
+  const tetrisAPI = useTetris(playerAPI, stageAPI, gameStatusAPI);
+
+  const controllersAPI = useControllers(playerAPI, stageAPI, gameStatusAPI, tetrisAPI);
 
   const inGame = useSelector((state) => state.tetris.inGame);
   const dispatch = useDispatch();
   const goToMenu = () => dispatch(setInGame(false));
 
-  const movePlayer = (dir) => {
-    if (!checkCollision(player, stage, { x: dir, y: 0 })) {
-      updatePlayerPos({ x: dir, y: 0 });
-    }
-  };
+  const {
+    state: {
+      stage,
+    },
+  } = stageAPI;
 
-  const startGame = () => {
-    // Reset everything
-    setStage(createMainStage());
-    setDropTime(1000);
-    resetPlayer();
-    setScore(0);
-    setLevel(0);
-    setRows(0);
-    setGameOver(false);
-  };
+  const {
+    state: {
+      holdStage,
+      nextStage,
+      queueStage,
+    },
+  } = pieceHoldersAPI;
 
-  const drop = () => {
-    // Increase level when player has cleared 10 rows
-    if (rows > (level + 1) * 10) {
-      setLevel((prev) => prev + 1);
-      // Also increase speed
-      setDropTime(1000 / (level + 1) + 200);
-    }
+  const {
+    state: {
+      level,
+      rows,
+      score,
+    },
+  } = gameStatusAPI;
 
-    if (!checkCollision(player, stage, { x: 0, y: 1 })) {
-      updatePlayerPos({ x: 0, y: 1, collided: false });
-    } else {
-      // Game over!
-      if (player.pos.y < 1) {
-        setGameOver(true);
-        setDropTime(null);
-      }
-      updatePlayerPos({ x: 0, y: 0, collided: true });
-    }
-  };
+  const {
+    actions: {
+      startGame,
+    },
+  } = tetrisAPI;
 
-  const dropPlayer = () => {
-    setDropTime(null);
-    drop();
-  };
-
-  useInterval(() => {
-    drop();
-  }, dropTime);
+  const {
+    actions: {
+      onKeyDown,
+      onKeyUp,
+    },
+  } = controllersAPI;
 
   const onKeyDownHandler = (event) => {
-    onKeyDown({
-      event,
-      gameOver,
-      stage,
-      movePlayer,
-      dropPlayer,
-      playerRotate,
-      activateHold,
-      activateMimic,
-    });
+    onKeyDown(event);
   };
 
   const onKeyUpHandler = (event) => {
-    onKeyUp({
-      event,
-      gameOver,
-      level,
-      setDropTime,
-    });
+    onKeyUp(event);
   };
 
   return (

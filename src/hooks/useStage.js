@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
 import { createMainStage, checkCollision } from 'utils/gameHelpers';
 
-export const useStage = (player, resetPlayer) => {
+export const useStage = (playerAPI) => {
   const [stage, setStage] = useState(createMainStage());
   const [rowsCleared, setRowsCleared] = useState(0);
+
+  const {
+    state: { player },
+    actions: { resetPlayer },
+  } = playerAPI;
 
   useEffect(() => {
     setRowsCleared(0);
@@ -67,14 +72,22 @@ export const useStage = (player, resetPlayer) => {
 
     // Here are the updates
     setStage((prev) => updateStage(prev));
-  }, [
-    player,
-    player.collided,
-    player.pos.x,
-    player.pos.y,
-    player.tetromino,
-    resetPlayer,
-  ]);
+  }, [player, resetPlayer]);
 
-  return { stage, setStage, rowsCleared };
+  // player,
+  // player.collided,
+  // player.pos.x,
+  // player.pos.y,
+  // player.tetromino,
+  // resetPlayer,
+
+  return {
+    state: {
+      stage,
+      rowsCleared,
+    },
+    actions: {
+      setStage,
+    },
+  };
 };
