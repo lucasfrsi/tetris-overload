@@ -1,11 +1,20 @@
-import { css } from 'styled-components';
+import styled from 'styled-components';
 
-export const home = css`
-  width: 100%;
+export const StyledTetrisWrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  background-size: cover;
+  overflow: hidden;
+`;
 
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-  }
+export const StyledTetrisLayout = styled.div`
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
 
+  padding: 4rem;
+  margin: 0 auto;
+
+  max-width: 144rem;
 `;

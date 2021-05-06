@@ -7,7 +7,6 @@ import GlobalHelmet from './globalHelmet';
 
 import appStore from './store';
 
-import Layout from './components/Layout';
 import Tetris from './components/Tetris';
 
 const App = () => (
@@ -15,9 +14,7 @@ const App = () => (
     <GlobalHelmet />
     <GlobalStyle />
     <Provider store={appStore}>
-      <Layout>
-        <Tetris />
-      </Layout>
+      <Tetris />
     </Provider>
   </>
 );

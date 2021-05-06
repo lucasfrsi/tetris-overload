@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
-
-import counterReducer from './counter';
+import tetrisReducer from './tetris';
 
 const rootReducer = combineReducers({
-  counter: counterReducer,
+  tetris: tetrisReducer,
 });
 
 export default rootReducer;
