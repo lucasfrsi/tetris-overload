@@ -28,12 +28,12 @@ export const useControllers = () => {
     }
   };
 
-  const onKeyUp = (
-    { code, key },
+  const onKeyUp = ({
+    event: { code, key },
     gameOver,
     level,
     setDropTime,
-  ) => {
+  }) => {
     if (!gameOver) {
       // Activate the interval again when user releases down arrow.
       if (key === 2 || code === 'Numpad2') {

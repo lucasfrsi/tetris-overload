@@ -34,11 +34,11 @@ const Tetris = () => {
     resetPlayer,
     playerRotate,
   } = usePlayer();
-  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
-  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
+  const { stage, setStage, rowsCleared } = useStage(player, resetPlayer);
+  const { score, setScore, rows, setRows, level, setLevel } = useGameStatus(
     rowsCleared,
   );
-  const [nextStage, queueStage, holdStage] = usePieceHolders(nextPieces, hold);
+  const { nextStage, queueStage, holdStage } = usePieceHolders(nextPieces, hold);
   const { onKeyDown, onKeyUp } = useControllers();
 
   const inGame = useSelector((state) => state.tetris.inGame);
@@ -104,8 +104,13 @@ const Tetris = () => {
     });
   };
 
-  const onKeyUpHandler = (e) => {
-    onKeyUp(e, gameOver, level, setDropTime);
+  const onKeyUpHandler = (event) => {
+    onKeyUp({
+      event,
+      gameOver,
+      level,
+      setDropTime,
+    });
   };
 
   return (
@@ -150,7 +155,7 @@ export default Tetris;
   - Exp/money are also earned by clearing rows (the more rows at once, more exp/money is earned)
 
   TO-DOS
-  1. Fix initial tetrominos position (horizontal)
+  1. Fix initial tetrominos position (horizontal) and surge from sky
   2. Check rotation to match original games
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
   5. Add controls and the ability to choose all the keys

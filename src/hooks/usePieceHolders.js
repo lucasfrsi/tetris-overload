@@ -77,5 +77,5 @@ export const usePieceHolders = (nextPieces, hold) => {
     setHoldStage(updateHoldStage());
   }, [hold]);
 
-  return [nextStage, queueStage, holdStage];
+  return { nextStage, queueStage, holdStage };
 };

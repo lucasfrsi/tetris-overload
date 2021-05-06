@@ -20,5 +20,5 @@ export const useGameStatus = (rowsCleared) => {
     calcScore();
   }, [calcScore, rowsCleared, score]);
 
-  return [score, setScore, rows, setRows, level, setLevel];
+  return { score, setScore, rows, setRows, level, setLevel };
 };
