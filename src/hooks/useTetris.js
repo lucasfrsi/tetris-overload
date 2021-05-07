@@ -38,10 +38,26 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
     },
   } = gameStatusAPI;
 
-  const movePlayer = (dir) => {
-    if (!checkCollision(player, stage, { x: dir, y: 0 })) {
-      updatePlayerPos({ x: dir, y: 0 });
+  const {
+    state: {
+      timeStop,
+    },
+    actions: {
+      setTimeStop,
+    },
+  } = skillsAPI;
+
+  const movePlayer = (xDir, yDir = 0) => {
+    if (!checkCollision(player, stage, { x: xDir, y: yDir })) {
+      updatePlayerPos({ x: xDir, y: yDir });
     }
+  };
+
+  const toggleTimeStop = () => {
+    setTimeStop((prev) => ({
+      ...prev,
+      active: !timeStop.active,
+    }));
   };
 
   const startGame = () => {
@@ -71,7 +87,7 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
         setGameOver(true);
         setDropTime(null);
       }
-      updatePlayerPos({ x: 0, y: 0, collided: true });
+      updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
     }
   };
 
@@ -81,7 +97,7 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
   };
 
   useInterval(() => {
-    drop();
+    if (!timeStop.active) drop();
   }, dropTime);
 
   return {
@@ -93,6 +109,7 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
       movePlayer,
       startGame,
       setDropTime,
+      toggleTimeStop,
     },
   };
 };

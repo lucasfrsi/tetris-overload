@@ -27,7 +27,7 @@ const Tetris = () => {
 
   const tetrisAPI = useTetris(playerAPI, stageAPI, gameStatusAPI, skillsAPI);
 
-  const controllersAPI = useControllers(playerAPI, stageAPI, gameStatusAPI, tetrisAPI);
+  const controllersAPI = useControllers(playerAPI, stageAPI, gameStatusAPI, tetrisAPI, skillsAPI);
 
   const inGame = useSelector((state) => state.tetris.inGame);
   const dispatch = useDispatch();
@@ -130,7 +130,6 @@ export default Tetris;
   8. Check all the useEffect dependencies and update functions accordingly, using useCallback
 
   Next feats to implement:
-  2. Time Stop
   Then after implementing coin/orb spawn
   3. Greedy
   Then after implementing learning skills + adding cooldowns

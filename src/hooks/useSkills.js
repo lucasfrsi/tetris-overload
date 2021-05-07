@@ -21,7 +21,6 @@ export const useSkills = () => {
     expCost: [0, 100],
     cooldown: 0,
     duration: 0,
-    // currentLevel: 0,
     currentLevel: 1,
   });
 
@@ -29,8 +28,7 @@ export const useSkills = () => {
     expCost: [0, 100],
     cooldown: 0,
     duration: 0,
-    currentLevel: 0,
-    // currentLevel: 1,
+    currentLevel: 1,
   });
 
   const [greedy, setGreedy] = useState({
@@ -45,6 +43,7 @@ export const useSkills = () => {
     expCost: [0, 100, 150, 200],
     cooldown: [0, 90, 75, 60],
     duration: [0, 4, 6, 8],
+    active: false,
     currentLevel: 0,
   });
 
