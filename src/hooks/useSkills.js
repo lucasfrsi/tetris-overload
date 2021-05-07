@@ -21,7 +21,8 @@ export const useSkills = () => {
     expCost: [0, 100],
     cooldown: 0,
     duration: 0,
-    currentLevel: 0,
+    // currentLevel: 0,
+    currentLevel: 1,
   });
 
   const [blink, setBlink] = useState({
@@ -29,6 +30,7 @@ export const useSkills = () => {
     cooldown: 0,
     duration: 0,
     currentLevel: 0,
+    // currentLevel: 1,
   });
 
   const [greedy, setGreedy] = useState({
@@ -61,24 +63,28 @@ export const useSkills = () => {
   });
 
   return {
-    exp,
-    setExp,
-    perfectionism,
-    setPerfectionism,
-    clairvoyance,
-    setClairvoyance,
-    blink,
-    setBlink,
-    intuition,
-    setIntuition,
-    greedy,
-    setGreedy,
-    pixelPocket,
-    setPixelPocket,
-    mimic,
-    setMimic,
-    timeStop,
-    setTimeStop,
+    state: {
+      exp,
+      perfectionism,
+      clairvoyance,
+      blink,
+      intuition,
+      greedy,
+      pixelPocket,
+      mimic,
+      timeStop,
+    },
+    actions: {
+      setExp,
+      setPerfectionism,
+      setClairvoyance,
+      setBlink,
+      setIntuition,
+      setGreedy,
+      setPixelPocket,
+      setMimic,
+      setTimeStop,
+    },
   };
 };
 

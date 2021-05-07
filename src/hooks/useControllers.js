@@ -4,6 +4,7 @@ export const useControllers = (playerAPI, stageAPI, gameStatusAPI, tetrisAPI) =>
       playerRotate,
       activateHold,
       activateMimic,
+      activateBlink,
     },
   } = playerAPI;
 
@@ -49,6 +50,8 @@ export const useControllers = (playerAPI, stageAPI, gameStatusAPI, tetrisAPI) =>
         activateHold();
       } else if (key === 9 || code === 'Numpad9') {
         activateMimic();
+      } else if (key === 5 || code === 'Numpad5') {
+        activateBlink();
       }
     }
   };

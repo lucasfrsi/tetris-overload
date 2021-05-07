@@ -3,7 +3,7 @@ import { useInterval } from 'hooks/useInterval';
 
 import { checkCollision, createMainStage } from 'utils/gameHelpers';
 
-export const useTetris = (playerAPI, stageAPI, gameStatusAPI) => {
+export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 

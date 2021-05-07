@@ -9,7 +9,7 @@ import { useGameStatus } from 'hooks/useGameStatus';
 import { usePieceHolders } from 'hooks/usePieceHolders';
 import { useControllers } from 'hooks/useControllers';
 import { useTetris } from 'hooks/useTetris';
-// import { useSkills } from 'hooks/useSkills';
+import { useSkills } from 'hooks/useSkills';
 
 // Components
 import Stage from '../Stage';
@@ -19,12 +19,13 @@ import PieceHolder from '../PieceHolder';
 import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
 const Tetris = () => {
+  const skillsAPI = useSkills();
   const playerAPI = usePlayer();
-  const stageAPI = useStage(playerAPI);
+  const stageAPI = useStage(playerAPI, skillsAPI);
   const pieceHoldersAPI = usePieceHolders(playerAPI);
   const gameStatusAPI = useGameStatus(stageAPI);
 
-  const tetrisAPI = useTetris(playerAPI, stageAPI, gameStatusAPI);
+  const tetrisAPI = useTetris(playerAPI, stageAPI, gameStatusAPI, skillsAPI);
 
   const controllersAPI = useControllers(playerAPI, stageAPI, gameStatusAPI, tetrisAPI);
 
@@ -126,9 +127,9 @@ export default Tetris;
   5. Add song
   6. Style the entire game
   7. Play the game, tweak the math calculations + balance
+  8. Check all the useEffect dependencies and update functions accordingly, using useCallback
 
   Next feats to implement:
-  1. Blink
   2. Time Stop
   Then after implementing coin/orb spawn
   3. Greedy
