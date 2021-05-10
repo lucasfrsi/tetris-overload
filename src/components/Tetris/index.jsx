@@ -20,7 +20,7 @@ import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
 const Tetris = () => {
   const skillsAPI = useSkills();
-  const playerAPI = usePlayer();
+  const playerAPI = usePlayer(skillsAPI);
   const stageAPI = useStage(playerAPI, skillsAPI);
   const pieceHoldersAPI = usePieceHolders(playerAPI);
   const gameStatusAPI = useGameStatus(stageAPI);
@@ -70,10 +70,8 @@ const Tetris = () => {
 
   const {
     state: {
-      timeStop: {
-        active,
+      mimic: {
         onCooldown,
-
       },
     },
   } = skillsAPI;
@@ -99,7 +97,7 @@ const Tetris = () => {
             <PieceHolder pieceHolderStage={holdStage} />
             <div>learned skills</div>
             <button type="button" onClick={goToMenu}>menu</button>
-            <div>Active: {active || 'false'}</div>
+            {/* <div>Active: {active || 'false'}</div> */}
             <div>On Cooldown: {onCooldown || 'false'}</div>
           </aside>
           <Stage stage={stage} />

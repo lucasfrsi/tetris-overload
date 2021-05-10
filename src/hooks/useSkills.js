@@ -1,69 +1,61 @@
 import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 
-const INTERVAL_DELAY = 1000;
-
 export const useSkills = () => {
+  const INTERVAL_DELAY = 1000;
+
   const [exp, setExp] = useState(0);
 
   const [clairvoyance, setClairvoyance] = useState({
     expCost: [0, 50, 75, 100],
-    cooldown: 0,
-    duration: 0,
     currentLevel: 0,
   });
 
   const [pixelPocket, setPixelPocket] = useState({
     expCost: [0, 50],
-    cooldown: 0,
-    duration: 0,
     currentLevel: 0,
   });
 
   const [intuition, setIntuition] = useState({
     expCost: [0, 100],
-    cooldown: 0,
-    duration: 0,
     currentLevel: 1,
   });
 
   const [blink, setBlink] = useState({
     expCost: [0, 100],
-    cooldown: 0,
-    duration: 0,
     currentLevel: 1,
   });
 
   const [greedy, setGreedy] = useState({
     expCost: [0, 50, 75, 100],
     multiplier: [0, 1.25, 1.5, 2],
-    cooldown: 0,
-    duration: 0,
     currentLevel: 0,
   });
 
   const [timeStop, setTimeStop] = useState({
     expCost: [0, 100, 150, 200],
     duration: [0, 4, 6, 8],
-    cooldown: [0, 90, 75, 60],
+    durationTimer: null,
     active: 0,
+    cooldown: [0, 90, 75, 60],
+    cooldownTimer: null,
     onCooldown: 0,
     currentLevel: 3,
-    durationTimer: null,
-    cooldownTimer: null,
   });
 
   const [mimic, setMimic] = useState({
     expCost: [0, 100, 150, 200],
     cooldown: [0, 60, 45, 30],
-    duration: 0,
-    currentLevel: 0,
+    onCooldown: 0,
+    cooldownTimer: null,
+    currentLevel: 1,
   });
 
   const [perfectionism, setPerfectionism] = useState({
     expCost: [0, 150, 200, 250],
     cooldown: [0, 120, 90, 60],
-    duration: 0,
+    onCooldown: 0,
+    cooldownTimer: null,
     currentLevel: 0,
   });
 
@@ -85,17 +77,21 @@ export const useSkills = () => {
     }
   };
 
+  // TIMERS
+  // Using setInterval for now, even though it's not perfectly accurate
   useInterval(() => {
+    // console.log('useInterval: timeStop cooldownTimer');
     if (timeStop.onCooldown > 0) {
       setTimeStop((prev) => ({
         ...prev,
         onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.active === 1 ? null : INTERVAL_DELAY,
+        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
       }));
     }
   }, timeStop.cooldownTimer);
 
   useInterval(() => {
+    // console.log('useInterval: timeStop durationTimer');
     if (timeStop.active > 0) {
       setTimeStop((prev) => ({
         ...prev,
@@ -107,7 +103,34 @@ export const useSkills = () => {
     }
   }, timeStop.durationTimer);
 
+  useInterval(() => {
+    // console.log('useInterval: mimic cooldownTimer');
+    if (mimic.onCooldown > 0) {
+      setMimic((prev) => ({
+        ...prev,
+        onCooldown: prev.onCooldown - 1,
+        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
+      }));
+    }
+  }, mimic.cooldownTimer);
+
+  useInterval(() => {
+    // console.log('useInterval: perfectionism cooldownTimer');
+    if (perfectionism.onCooldown > 0) {
+      setPerfectionism((prev) => ({
+        ...prev,
+        onCooldown: prev.onCooldown - 1,
+        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
+      }));
+    }
+  }, perfectionism.cooldownTimer);
+
+  // TO-DO: put level requirement in conditions
+
   return {
+    constants: {
+      INTERVAL_DELAY,
+    },
     state: {
       exp,
       perfectionism,
@@ -162,6 +185,6 @@ export const useSkills = () => {
 // =PASSIVE=
 // = Earns more exp/money per coin and rows cleared
 
-// - Blink
+// - Blink [OK]
 // =ACTIVE=
 // = Immediately set the piece to the intuition location mark

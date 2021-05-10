@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { TETROMINOS, randomTetromino, createNextPiecesArray } from 'utils/tetrominos';
 import { STAGE_WIDTH, checkCollision } from 'utils/gameHelpers';
 
-export const usePlayer = () => {
+export const usePlayer = (skillsAPI) => {
   const [hold, setHold] = useState([]);
   const [nextPieces, setNextPieces] = useState(createNextPiecesArray(3));
   const [preCollisionY, setPreCollisionY] = useState(0);
@@ -13,6 +13,18 @@ export const usePlayer = () => {
     tetromino: TETROMINOS[0],
     collided: false,
   });
+
+  const {
+    constants: {
+      INTERVAL_DELAY,
+    },
+    state: {
+      mimic,
+    },
+    actions: {
+      setMimic,
+    },
+  } = skillsAPI;
 
   function rotate(matrix, dir) {
     // Make the rows to become cols (transpose)
@@ -82,10 +94,17 @@ export const usePlayer = () => {
   }, [hold, player.tetromino, resetPlayer]);
 
   const activateMimic = useCallback(() => {
-    const newNextPieces = [...nextPieces];
-    newNextPieces.unshift(player.tetromino);
-    setNextPieces(newNextPieces);
-  }, [nextPieces, player.tetromino]);
+    if (!mimic.onCooldown) {
+      setMimic((prev) => ({
+        ...prev,
+        onCooldown: prev.cooldown[prev.currentLevel],
+        cooldownTimer: INTERVAL_DELAY,
+      }));
+      const newNextPieces = [...nextPieces];
+      newNextPieces.unshift(player.tetromino);
+      setNextPieces(newNextPieces);
+    }
+  }, [INTERVAL_DELAY, mimic.onCooldown, nextPieces, player.tetromino, setMimic]);
 
   const activateBlink = useCallback(() => {
     updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
