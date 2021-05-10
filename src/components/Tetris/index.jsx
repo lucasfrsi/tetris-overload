@@ -68,6 +68,16 @@ const Tetris = () => {
     },
   } = controllersAPI;
 
+  const {
+    state: {
+      timeStop: {
+        active,
+        onCooldown,
+
+      },
+    },
+  } = skillsAPI;
+
   const onKeyDownHandler = (event) => {
     onKeyDown(event);
   };
@@ -89,6 +99,8 @@ const Tetris = () => {
             <PieceHolder pieceHolderStage={holdStage} />
             <div>learned skills</div>
             <button type="button" onClick={goToMenu}>menu</button>
+            <div>Active: {active || 'false'}</div>
+            <div>On Cooldown: {onCooldown || 'false'}</div>
           </aside>
           <Stage stage={stage} />
           <aside>
@@ -130,8 +142,8 @@ export default Tetris;
   8. Check all the useEffect dependencies and update functions accordingly, using useCallback
 
   Next feats to implement:
-  Then after implementing coin/orb spawn
+  Then AFTER implementing coin/orb spawn
   3. Greedy
-  Then after implementing learning skills + adding cooldowns
+  Then AFTER implementing learning skills + adding cooldowns
   4. Perfectionist
 */

@@ -42,22 +42,12 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
     state: {
       timeStop,
     },
-    actions: {
-      setTimeStop,
-    },
   } = skillsAPI;
 
   const movePlayer = (xDir, yDir = 0) => {
     if (!checkCollision(player, stage, { x: xDir, y: yDir })) {
       updatePlayerPos({ x: xDir, y: yDir });
     }
-  };
-
-  const toggleTimeStop = () => {
-    setTimeStop((prev) => ({
-      ...prev,
-      active: !timeStop.active,
-    }));
   };
 
   const startGame = () => {
@@ -109,7 +99,6 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
       movePlayer,
       startGame,
       setDropTime,
-      toggleTimeStop,
     },
   };
 };

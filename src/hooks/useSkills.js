@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useInterval } from 'hooks/useInterval';
+
+const INTERVAL_DELAY = 1000;
 
 export const useSkills = () => {
   const [exp, setExp] = useState(0);
@@ -41,10 +44,13 @@ export const useSkills = () => {
 
   const [timeStop, setTimeStop] = useState({
     expCost: [0, 100, 150, 200],
-    cooldown: [0, 90, 75, 60],
     duration: [0, 4, 6, 8],
-    active: false,
-    currentLevel: 0,
+    cooldown: [0, 90, 75, 60],
+    active: 0,
+    onCooldown: 0,
+    currentLevel: 3,
+    durationTimer: null,
+    cooldownTimer: null,
   });
 
   const [mimic, setMimic] = useState({
@@ -60,6 +66,46 @@ export const useSkills = () => {
     duration: 0,
     currentLevel: 0,
   });
+
+  const activateTimeStop = () => {
+    if (!timeStop.active && !timeStop.onCooldown) {
+      setTimeStop((prev) => ({
+        ...prev,
+        active: prev.duration[prev.currentLevel],
+        durationTimer: INTERVAL_DELAY,
+      }));
+    } else if (timeStop.active) {
+      setTimeStop((prev) => ({
+        ...prev,
+        active: 0,
+        onCooldown: prev.cooldown[prev.currentLevel],
+        durationTimer: null,
+        cooldownTimer: INTERVAL_DELAY,
+      }));
+    }
+  };
+
+  useInterval(() => {
+    if (timeStop.onCooldown > 0) {
+      setTimeStop((prev) => ({
+        ...prev,
+        onCooldown: prev.onCooldown - 1,
+        cooldownTimer: prev.active === 1 ? null : INTERVAL_DELAY,
+      }));
+    }
+  }, timeStop.cooldownTimer);
+
+  useInterval(() => {
+    if (timeStop.active > 0) {
+      setTimeStop((prev) => ({
+        ...prev,
+        active: prev.active - 1,
+        onCooldown: prev.active === 1 ? prev.cooldown[prev.currentLevel] : prev.onCooldown,
+        durationTimer: prev.active === 1 ? null : INTERVAL_DELAY,
+        cooldownTimer: prev.active === 1 ? INTERVAL_DELAY : null,
+      }));
+    }
+  }, timeStop.durationTimer);
 
   return {
     state: {
@@ -83,6 +129,7 @@ export const useSkills = () => {
       setPixelPocket,
       setMimic,
       setTimeStop,
+      activateTimeStop,
     },
   };
 };
@@ -91,7 +138,7 @@ export const useSkills = () => {
 // =PASSIVE=
 // = Allow the player to see the next piece(s)
 
-// - Time Stop
+// - Time Stop [OK]
 // =ACTIVE=
 // = Allow the player to freely move the piece for a certain period of time
 
