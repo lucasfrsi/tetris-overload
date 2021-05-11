@@ -7,7 +7,7 @@ const SINGLE_STAGE_WIDTH = 5;
 const DOUBLE_STAGE_HEIGHT = SINGLE_STAGE_HEIGHT * 2;
 const DOUBLE_STAGE_WIDTH = SINGLE_STAGE_WIDTH;
 
-export const usePieceHolders = (playerAPI) => {
+export const usePieceHolders = (playerAPI, skillsAPI) => {
   const [holdStage, setHoldStage] = useState(
     createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH),
   );
@@ -23,6 +23,8 @@ export const usePieceHolders = (playerAPI) => {
   const {
     state: { nextPieces, hold },
   } = playerAPI;
+
+  // build stages if skill is learned
 
   useEffect(() => {
     const updateNextStage = () => {

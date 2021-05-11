@@ -19,7 +19,9 @@ export const usePlayer = (skillsAPI) => {
       INTERVAL_DELAY,
     },
     state: {
+      blink,
       mimic,
+      pixelPocket,
     },
     actions: {
       setMimic,
@@ -79,22 +81,24 @@ export const usePlayer = (skillsAPI) => {
   }, [nextPieces]);
 
   const activateHold = useCallback(() => {
-    if (hold.length === 0) {
-      setHold([player.tetromino]);
-      resetPlayer();
-    } else {
-      const holdPiece = hold[0];
-      setHold([player.tetromino]);
-      setPlayer((prev) => ({
-        ...prev,
-        pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-        tetromino: holdPiece,
-      }));
+    if (pixelPocket.currentLevel) {
+      if (hold.length === 0) {
+        setHold([player.tetromino]);
+        resetPlayer();
+      } else {
+        const holdPiece = hold[0];
+        setHold([player.tetromino]);
+        setPlayer((prev) => ({
+          ...prev,
+          pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+          tetromino: holdPiece,
+        }));
+      }
     }
-  }, [hold, player.tetromino, resetPlayer]);
+  }, [hold, pixelPocket.currentLevel, player.tetromino, resetPlayer]);
 
   const activateMimic = useCallback(() => {
-    if (!mimic.onCooldown) {
+    if (mimic.currentLevel && !mimic.onCooldown) {
       setMimic((prev) => ({
         ...prev,
         onCooldown: prev.cooldown[prev.currentLevel],
@@ -104,11 +108,24 @@ export const usePlayer = (skillsAPI) => {
       newNextPieces.unshift(player.tetromino);
       setNextPieces(newNextPieces);
     }
-  }, [INTERVAL_DELAY, mimic.onCooldown, nextPieces, player.tetromino, setMimic]);
+  }, [
+    INTERVAL_DELAY,
+    mimic.currentLevel,
+    mimic.onCooldown,
+    nextPieces,
+    player.tetromino,
+    setMimic,
+  ]);
 
   const activateBlink = useCallback(() => {
-    updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
-  }, [preCollisionY, updatePlayerPos]);
+    if (blink.currentLevel) {
+      updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
+    }
+  }, [
+    blink.currentLevel,
+    preCollisionY,
+    updatePlayerPos,
+  ]);
 
   return {
     state: {

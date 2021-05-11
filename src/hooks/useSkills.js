@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useInterval } from 'hooks/useInterval';
 
 export const useSkills = () => {
   const INTERVAL_DELAY = 1000;
+  const EXP_POINTS = useMemo(() => [5, 15, 25, 35], []);
 
   const [exp, setExp] = useState(0);
 
@@ -18,17 +19,17 @@ export const useSkills = () => {
 
   const [intuition, setIntuition] = useState({
     expCost: [0, 100],
-    currentLevel: 1,
+    currentLevel: 0,
   });
 
   const [blink, setBlink] = useState({
     expCost: [0, 100],
-    currentLevel: 1,
+    currentLevel: 0,
   });
 
   const [greedy, setGreedy] = useState({
     expCost: [0, 50, 75, 100],
-    multiplier: [0, 1.25, 1.5, 2],
+    multiplier: [0, 1.25, 1.5, 1.75],
     currentLevel: 0,
   });
 
@@ -40,7 +41,7 @@ export const useSkills = () => {
     cooldown: [0, 90, 75, 60],
     cooldownTimer: null,
     onCooldown: 0,
-    currentLevel: 3,
+    currentLevel: 0,
   });
 
   const [mimic, setMimic] = useState({
@@ -48,7 +49,7 @@ export const useSkills = () => {
     cooldown: [0, 60, 45, 30],
     onCooldown: 0,
     cooldownTimer: null,
-    currentLevel: 1,
+    currentLevel: 0,
   });
 
   const [perfectionism, setPerfectionism] = useState({
@@ -59,21 +60,28 @@ export const useSkills = () => {
     currentLevel: 0,
   });
 
+  const calcExp = useCallback((rowsCleared) => {
+    const expFormula = EXP_POINTS[rowsCleared - 1] * greedy.multiplier[greedy.currentLevel];
+    setExp((prev) => prev + expFormula);
+  }, [EXP_POINTS, greedy.currentLevel, greedy.multiplier]);
+
   const activateTimeStop = () => {
-    if (!timeStop.active && !timeStop.onCooldown) {
-      setTimeStop((prev) => ({
-        ...prev,
-        active: prev.duration[prev.currentLevel],
-        durationTimer: INTERVAL_DELAY,
-      }));
-    } else if (timeStop.active) {
-      setTimeStop((prev) => ({
-        ...prev,
-        active: 0,
-        onCooldown: prev.cooldown[prev.currentLevel],
-        durationTimer: null,
-        cooldownTimer: INTERVAL_DELAY,
-      }));
+    if (timeStop.currentLevel) {
+      if (!timeStop.active && !timeStop.onCooldown) {
+        setTimeStop((prev) => ({
+          ...prev,
+          active: prev.duration[prev.currentLevel],
+          durationTimer: INTERVAL_DELAY,
+        }));
+      } else if (timeStop.active) {
+        setTimeStop((prev) => ({
+          ...prev,
+          active: 0,
+          onCooldown: prev.cooldown[prev.currentLevel],
+          durationTimer: null,
+          cooldownTimer: INTERVAL_DELAY,
+        }));
+      }
     }
   };
 
@@ -125,8 +133,6 @@ export const useSkills = () => {
     }
   }, perfectionism.cooldownTimer);
 
-  // TO-DO: put level requirement in conditions
-
   return {
     constants: {
       INTERVAL_DELAY,
@@ -144,6 +150,7 @@ export const useSkills = () => {
     },
     actions: {
       setExp,
+      calcExp,
       setPerfectionism,
       setClairvoyance,
       setBlink,

@@ -22,8 +22,8 @@ const Tetris = () => {
   const skillsAPI = useSkills();
   const playerAPI = usePlayer(skillsAPI);
   const stageAPI = useStage(playerAPI, skillsAPI);
-  const pieceHoldersAPI = usePieceHolders(playerAPI);
-  const gameStatusAPI = useGameStatus(stageAPI);
+  const pieceHoldersAPI = usePieceHolders(playerAPI, skillsAPI);
+  const gameStatusAPI = useGameStatus(stageAPI, skillsAPI);
 
   const tetrisAPI = useTetris(playerAPI, stageAPI, gameStatusAPI, skillsAPI);
 
@@ -68,14 +68,6 @@ const Tetris = () => {
     },
   } = controllersAPI;
 
-  const {
-    state: {
-      mimic: {
-        onCooldown,
-      },
-    },
-  } = skillsAPI;
-
   const onKeyDownHandler = (event) => {
     onKeyDown(event);
   };
@@ -97,8 +89,6 @@ const Tetris = () => {
             <PieceHolder pieceHolderStage={holdStage} />
             <div>learned skills</div>
             <button type="button" onClick={goToMenu}>menu</button>
-            {/* <div>Active: {active || 'false'}</div> */}
-            <div>On Cooldown: {onCooldown || 'false'}</div>
           </aside>
           <Stage stage={stage} />
           <aside>
@@ -119,20 +109,15 @@ export default Tetris;
 
 /*
   In-game Menus
-  - Skill Tree
   - Pause
-
-  Mechanics
-  - Skills and Skill Tree
-  - Coins randomly spawns on the stage, giving extra exp/money
-  - Exp/money are also earned by clearing rows (the more rows at once, more exp/money is earned)
+  - Skill Tree (pause automatically)
 
   TO-DOS
   1. Fix initial tetrominos position (horizontal) and surge from sky
   2. Check rotation to match original games
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
   5. Add controls and the ability to choose all the keys
-  6. Add pause and save game
+  6. Add pause
   4. Add sound effects and cell animations
   5. Add song
   6. Style the entire game
@@ -140,8 +125,6 @@ export default Tetris;
   8. Check all the useEffect dependencies and update functions accordingly, using useCallback
 
   Next feats to implement:
-  Then AFTER implementing coin/orb spawn
-  3. Greedy
-  Then AFTER implementing learning skills + adding cooldowns
+  Then AFTER implementing learning skills + check levels
   4. Perfectionist
 */

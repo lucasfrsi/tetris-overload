@@ -40,7 +40,6 @@ export const useControllers = (playerAPI, stageAPI, gameStatusAPI, tetrisAPI, sk
     },
   } = skillsAPI;
 
-  // const onKeyDown = ({ event: { code, key } }) => {
   const onKeyDown = (event) => {
     const { code, key } = event;
 
@@ -69,7 +68,6 @@ export const useControllers = (playerAPI, stageAPI, gameStatusAPI, tetrisAPI, sk
     }
   };
 
-  // const onKeyUp = ({ event: { code, key } }) => {
   const onKeyUp = (event) => {
     const { code, key } = event;
 
