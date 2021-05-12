@@ -6,7 +6,7 @@ import Cell from 'components/Cell';
 import { StyledStage } from './style';
 
 const Stage = ({ stage }) => {
-  const visibleStage = stage.slice(2);
+  const visibleStage = stage.slice(1);
 
   return (
     <StyledStage width={visibleStage[0].length} height={visibleStage.length}>
