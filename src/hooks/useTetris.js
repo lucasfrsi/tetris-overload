@@ -1,12 +1,8 @@
-import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 
 import { checkCollision, createMainStage } from 'utils/gameHelpers';
 
-export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
-  const [dropTime, setDropTime] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
-
+export const useTetris = (skillsAPI, gameStatusAPI, playerAPI, stageAPI) => {
   const {
     state: {
       player,
@@ -30,11 +26,14 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
     state: {
       level,
       rows,
+      dropTime,
     },
     actions: {
       setLevel,
       setRows,
       setScore,
+      setGameOver,
+      setDropTime,
     },
   } = gameStatusAPI;
 
@@ -91,9 +90,6 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI, skillsAPI) => {
   }, dropTime);
 
   return {
-    state: {
-      gameOver,
-    },
     actions: {
       dropPlayer,
       movePlayer,

@@ -9,7 +9,7 @@ export const useSkills = () => {
 
   const [clairvoyance, setClairvoyance] = useState({
     expCost: [0, 50, 75, 100],
-    currentLevel: 0,
+    currentLevel: 3,
   });
 
   const [pixelPocket, setPixelPocket] = useState({

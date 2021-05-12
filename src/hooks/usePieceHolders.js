@@ -7,14 +7,12 @@ const SINGLE_STAGE_WIDTH = 5;
 const DOUBLE_STAGE_HEIGHT = SINGLE_STAGE_HEIGHT * 2;
 const DOUBLE_STAGE_WIDTH = SINGLE_STAGE_WIDTH;
 
-export const usePieceHolders = (playerAPI, skillsAPI) => {
+export const usePieceHolders = (skillsAPI, playerAPI) => {
   const [holdStage, setHoldStage] = useState(
     createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH),
   );
 
-  const [nextStage, setNextStage] = useState(
-    createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH),
-  );
+  const [nextStage, setNextStage] = useState(null);
 
   const [queueStage, setQueueStage] = useState(
     createStage(DOUBLE_STAGE_HEIGHT, DOUBLE_STAGE_WIDTH),
@@ -24,21 +22,21 @@ export const usePieceHolders = (playerAPI, skillsAPI) => {
     state: { nextPieces, hold },
   } = playerAPI;
 
-  // build stages if skill is learned
+  const {
+    state: { clairvoyance },
+  } = skillsAPI;
 
   useEffect(() => {
     const updateNextStage = () => {
-      const newStage = createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH);
+      if (clairvoyance.currentLevel) {
+        const nextPiece = nextPieces[0];
+        const nextPieceShape = nextPiece.shape;
 
-      nextPieces[0].shape.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value !== 0) {
-            newStage[y + 1][x + 1] = [value, 'merged'];
-          }
-        });
-      });
+        const newStage = nextPieceShape.map((row) => row.map((value) => [value]));
 
-      return newStage;
+        return newStage;
+      }
+      return null;
     };
 
     const updateQueueStage = () => {
@@ -59,7 +57,7 @@ export const usePieceHolders = (playerAPI, skillsAPI) => {
 
     setNextStage(updateNextStage());
     setQueueStage(updateQueueStage());
-  }, [nextPieces]);
+  }, [clairvoyance.currentLevel, nextPieces]);
 
   useEffect(() => {
     const updateHoldStage = () => {

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { createMainStage, checkCollision } from 'utils/gameHelpers';
 
-export const useStage = (playerAPI, skillsAPI) => {
+export const useStage = (skillsAPI, gameStatusAPI, playerAPI) => {
   const [stage, setStage] = useState(createMainStage());
-  const [rowsCleared, setRowsCleared] = useState(0);
 
   const {
     state: { player },
@@ -13,6 +12,11 @@ export const useStage = (playerAPI, skillsAPI) => {
   const {
     state: { intuition },
   } = skillsAPI;
+
+  const {
+    state: { gameOver },
+    actions: { setRowsCleared },
+  } = gameStatusAPI;
 
   useEffect(() => {
     setRowsCleared(0);
@@ -69,7 +73,7 @@ export const useStage = (playerAPI, skillsAPI) => {
       });
 
       // Check for score
-      if (player.collided) {
+      if (player.collided && !gameOver) {
         resetPlayer();
         return sweepRows(newStage);
       }
@@ -77,12 +81,11 @@ export const useStage = (playerAPI, skillsAPI) => {
     };
 
     setStage((prev) => updateStage(prev));
-  }, [intuition.currentLevel, player, resetPlayer, updatePreCollisionY]);
+  }, [gameOver, intuition.currentLevel, player, resetPlayer, setRowsCleared, updatePreCollisionY]);
 
   return {
     state: {
       stage,
-      rowsCleared,
     },
     actions: {
       setStage,

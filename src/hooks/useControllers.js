@@ -1,4 +1,4 @@
-export const useControllers = (playerAPI, stageAPI, gameStatusAPI, tetrisAPI, skillsAPI) => {
+export const useControllers = (skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI) => {
   const {
     actions: {
       playerRotate,
@@ -17,17 +17,17 @@ export const useControllers = (playerAPI, stageAPI, gameStatusAPI, tetrisAPI, sk
   const {
     state: {
       level,
+      gameOver,
+    },
+    actions: {
+      setDropTime,
     },
   } = gameStatusAPI;
 
   const {
-    state: {
-      gameOver,
-    },
     actions: {
       dropPlayer,
       movePlayer,
-      setDropTime,
     },
   } = tetrisAPI;
 

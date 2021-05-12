@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export const useGameStatus = (stageAPI, skillsAPI) => {
+export const useGameStatus = (skillsAPI) => {
   const [score, setScore] = useState(0);
   const [rows, setRows] = useState(0);
   const [level, setLevel] = useState(0);
 
-  const {
-    state: { rowsCleared },
-  } = stageAPI;
+  const [dropTime, setDropTime] = useState(null);
+  const [gameOver, setGameOver] = useState(false);
+
+  const [rowsCleared, setRowsCleared] = useState(0);
 
   const {
     actions: { calcExp },
@@ -34,11 +35,17 @@ export const useGameStatus = (stageAPI, skillsAPI) => {
       score,
       rows,
       level,
+      gameOver,
+      dropTime,
+      rowsCleared,
     },
     actions: {
       setScore,
       setRows,
       setLevel,
+      setGameOver,
+      setDropTime,
+      setRowsCleared,
     },
   };
 };
