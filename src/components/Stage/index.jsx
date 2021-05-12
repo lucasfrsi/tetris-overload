@@ -5,11 +5,15 @@ import Cell from 'components/Cell';
 
 import { StyledStage } from './style';
 
-const Stage = ({ stage }) => (
-  <StyledStage width={stage[0].length} height={stage.length}>
-    {stage.map((row) => row.map((cell, x) => <Cell key={x} type={cell} />))}
-  </StyledStage>
-);
+const Stage = ({ stage }) => {
+  const visibleStage = stage.slice(2);
+
+  return (
+    <StyledStage width={visibleStage[0].length} height={visibleStage.length}>
+      {visibleStage.map((row) => row.map((cell, x) => <Cell key={x} type={cell} />))}
+    </StyledStage>
+  );
+};
 
 Stage.propTypes = {
   stage: PropTypes.arrayOf(PropTypes.array).isRequired,
