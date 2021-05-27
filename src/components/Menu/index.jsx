@@ -11,8 +11,7 @@ const Menu = () => {
 
   return (
     <div>
-      <button type="button" onClick={startGame}>New Game</button>
-      <button type="button">Load Game</button>
+      <button type="button" onClick={startGame}>Play</button>
       <button type="button">Options</button>
       <button type="button">Credits</button>
     </div>

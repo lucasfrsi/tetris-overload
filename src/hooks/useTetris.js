@@ -1,12 +1,8 @@
-import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 
 import { checkCollision, createMainStage } from 'utils/gameHelpers';
 
-export const useTetris = (playerAPI, stageAPI, gameStatusAPI) => {
-  const [dropTime, setDropTime] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
-
+export const useTetris = (skillsAPI, gameStatusAPI, playerAPI, stageAPI) => {
   const {
     state: {
       player,
@@ -30,17 +26,26 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI) => {
     state: {
       level,
       rows,
+      dropTime,
     },
     actions: {
       setLevel,
       setRows,
       setScore,
+      setGameOver,
+      setDropTime,
     },
   } = gameStatusAPI;
 
-  const movePlayer = (dir) => {
-    if (!checkCollision(player, stage, { x: dir, y: 0 })) {
-      updatePlayerPos({ x: dir, y: 0 });
+  const {
+    state: {
+      timeStop,
+    },
+  } = skillsAPI;
+
+  const movePlayer = (xDir, yDir = 0) => {
+    if (!checkCollision(player, stage, { x: xDir, y: yDir })) {
+      updatePlayerPos({ x: xDir, y: yDir });
     }
   };
 
@@ -71,7 +76,7 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI) => {
         setGameOver(true);
         setDropTime(null);
       }
-      updatePlayerPos({ x: 0, y: 0, collided: true });
+      updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
     }
   };
 
@@ -81,13 +86,10 @@ export const useTetris = (playerAPI, stageAPI, gameStatusAPI) => {
   };
 
   useInterval(() => {
-    drop();
+    if (!timeStop.active) drop();
   }, dropTime);
 
   return {
-    state: {
-      gameOver,
-    },
     actions: {
       dropPlayer,
       movePlayer,

@@ -1,5 +1,7 @@
-export const STAGE_WIDTH = 12;
-export const STAGE_HEIGHT = 20;
+// export const STAGE_WIDTH = 12;
+// export const STAGE_HEIGHT = 20;
+export const STAGE_WIDTH = 10;
+export const STAGE_HEIGHT = 21;
 
 export const createStage = (height, width) => Array.from(Array(height), () => Array(width).fill([0, 'clear']));
 
@@ -11,6 +13,7 @@ export const checkCollision = (player, stage, { x: moveX, y: moveY }) => {
       // 1. Check that we're on an actual Tetromino cell
       if (player.tetromino.shape[y][x] !== 0) {
         if (
+          // Implement a check to not go over the roof
           // 2. Check that our move is inside the game areas height (y)
           // That we're not go through bottom of the play area
           !stage[y + player.pos.y + moveY]

@@ -9,7 +9,7 @@ import { useGameStatus } from 'hooks/useGameStatus';
 import { usePieceHolders } from 'hooks/usePieceHolders';
 import { useControllers } from 'hooks/useControllers';
 import { useTetris } from 'hooks/useTetris';
-// import { useSkills } from 'hooks/useSkills';
+import { useSkills } from 'hooks/useSkills';
 
 // Components
 import Stage from '../Stage';
@@ -19,14 +19,15 @@ import PieceHolder from '../PieceHolder';
 import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
 const Tetris = () => {
-  const playerAPI = usePlayer();
-  const stageAPI = useStage(playerAPI);
-  const pieceHoldersAPI = usePieceHolders(playerAPI);
-  const gameStatusAPI = useGameStatus(stageAPI);
+  const skillsAPI = useSkills();
+  const gameStatusAPI = useGameStatus(skillsAPI);
+  const playerAPI = usePlayer(skillsAPI);
+  const stageAPI = useStage(skillsAPI, gameStatusAPI, playerAPI);
+  const pieceHoldersAPI = usePieceHolders(skillsAPI, playerAPI);
 
-  const tetrisAPI = useTetris(playerAPI, stageAPI, gameStatusAPI);
+  const tetrisAPI = useTetris(skillsAPI, gameStatusAPI, playerAPI, stageAPI);
 
-  const controllersAPI = useControllers(playerAPI, stageAPI, gameStatusAPI, tetrisAPI);
+  const controllersAPI = useControllers(skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI);
 
   const inGame = useSelector((state) => state.tetris.inGame);
   const dispatch = useDispatch();
@@ -108,30 +109,22 @@ export default Tetris;
 
 /*
   In-game Menus
-  - Skill Tree
   - Pause
-
-  Mechanics
-  - Skills and Skill Tree
-  - Coins randomly spawns on the stage, giving extra exp/money
-  - Exp/money are also earned by clearing rows (the more rows at once, more exp/money is earned)
+  - Skill Tree (pause automatically)
 
   TO-DOS
-  1. Fix initial tetrominos position (horizontal) and surge from sky
-  2. Check rotation to match original games
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
   5. Add controls and the ability to choose all the keys
-  6. Add pause and save game
+  6. Add pause
   4. Add sound effects and cell animations
   5. Add song
   6. Style the entire game
   7. Play the game, tweak the math calculations + balance
+  8. Check all the useEffect dependencies and update functions accordingly, using useCallback
+  9. Rethink the tetrominos randomization (not totally random, like the original game)
+  10. Improve responsiveness when pressing to drop (small delay to begin with)
 
   Next feats to implement:
-  1. Blink
-  2. Time Stop
-  Then after implementing coin/orb spawn
-  3. Greedy
-  Then after implementing learning skills + adding cooldowns
+  Then AFTER implementing learning skills + check levels
   4. Perfectionist
 */
