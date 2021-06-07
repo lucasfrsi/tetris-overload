@@ -24,6 +24,12 @@ const config = {
   module: {
     rules: [
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
@@ -84,7 +90,7 @@ if (isDevelopment) {
     compress: true,
   };
 
-  config.module.rules[0].use.options = {
+  config.module.rules[1].use.options = {
     plugins: ['react-refresh/babel'],
   };
 
