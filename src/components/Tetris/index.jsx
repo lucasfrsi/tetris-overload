@@ -15,6 +15,7 @@ import { useSkills } from 'hooks/useSkills';
 import Stage from '../Stage';
 import Menu from '../Menu';
 import PieceHolder from '../PieceHolder';
+import Skills from '../Skills';
 
 import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
@@ -87,7 +88,7 @@ const Tetris = () => {
         <StyledTetrisLayout>
           <aside>
             <PieceHolder pieceHolderStage={holdStage} />
-            <div>learned skills</div>
+            <Skills skillsAPI={skillsAPI} />
             <button type="button" onClick={goToMenu}>menu</button>
           </aside>
           <Stage stage={stage} />
