@@ -29,7 +29,7 @@ export const useSkills = () => {
 
   const [greedy, setGreedy] = useState({
     expCost: [0, 50, 75, 100],
-    multiplier: [0, 1.25, 1.5, 1.75],
+    multiplier: [1, 1.25, 1.5, 1.75],
     currentLevel: 0,
   });
 
