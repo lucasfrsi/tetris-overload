@@ -8,32 +8,38 @@ export const useSkills = () => {
   const [exp, setExp] = useState(0);
 
   const [clairvoyance, setClairvoyance] = useState({
+    name: 'Clairvoyance',
     expCost: [0, 50, 75, 100],
-    currentLevel: 3,
+    currentLevel: 1,
   });
 
   const [pixelPocket, setPixelPocket] = useState({
+    name: 'Pixel Pocket',
     expCost: [0, 50],
     currentLevel: 0,
   });
 
   const [intuition, setIntuition] = useState({
+    name: 'Intuition',
     expCost: [0, 100],
     currentLevel: 0,
   });
 
   const [blink, setBlink] = useState({
+    name: 'Blink',
     expCost: [0, 100],
     currentLevel: 0,
   });
 
   const [greedy, setGreedy] = useState({
+    name: 'Greedy',
     expCost: [0, 50, 75, 100],
     multiplier: [1, 1.25, 1.5, 1.75],
     currentLevel: 0,
   });
 
   const [timeStop, setTimeStop] = useState({
+    name: 'Time Stop',
     expCost: [0, 100, 150, 200],
     duration: [0, 4, 6, 8],
     durationTimer: null,
@@ -45,6 +51,7 @@ export const useSkills = () => {
   });
 
   const [mimic, setMimic] = useState({
+    name: 'Mimic',
     expCost: [0, 100, 150, 200],
     cooldown: [0, 60, 45, 30],
     onCooldown: 0,
@@ -53,6 +60,7 @@ export const useSkills = () => {
   });
 
   const [perfectionism, setPerfectionism] = useState({
+    name: 'Perfectionism',
     expCost: [0, 150, 200, 250],
     cooldown: [0, 120, 90, 60],
     onCooldown: 0,
@@ -133,6 +141,25 @@ export const useSkills = () => {
     }
   }, perfectionism.cooldownTimer);
 
+  const levelUpSkill = (skill, setSkill) => {
+    const currentSkillLevel = skill.currentLevel;
+    const skillMaxLevel = skill.expCost.length - 1;
+
+    if (currentSkillLevel < skillMaxLevel) {
+      const costToLevel = skill.expCost[currentSkillLevel + 1];
+      if (exp > costToLevel) {
+        setSkill((prev) => ({
+          ...prev,
+          currentLevel: prev.currentLevel + 1,
+        }));
+        setExp((prev) => prev - costToLevel);
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   return {
     constants: {
       INTERVAL_DELAY,
@@ -160,6 +187,41 @@ export const useSkills = () => {
       setMimic,
       setTimeStop,
       activateTimeStop,
+      levelUpSkill,
+    },
+    skills: {
+      perfectionism: {
+        state: perfectionism,
+        setState: setPerfectionism,
+      },
+      clairvoyance: {
+        state: clairvoyance,
+        setState: setClairvoyance,
+      },
+      blink: {
+        state: blink,
+        setState: setBlink,
+      },
+      intuition: {
+        state: intuition,
+        setState: setIntuition,
+      },
+      greedy: {
+        state: greedy,
+        setState: setGreedy,
+      },
+      pixelPocket: {
+        state: pixelPocket,
+        setState: setPixelPocket,
+      },
+      mimic: {
+        state: mimic,
+        setState: setMimic,
+      },
+      timeStop: {
+        state: timeStop,
+        setState: setTimeStop,
+      },
     },
   };
 };
@@ -188,7 +250,7 @@ export const useSkills = () => {
 // =PASSIVE=
 // = Shows a mark of where the piece will fall at
 
-// - Greedy
+// - Greedy [OK]
 // =PASSIVE=
 // = Earns more exp/money per coin and rows cleared
 

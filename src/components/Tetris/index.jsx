@@ -15,7 +15,7 @@ import { useSkills } from 'hooks/useSkills';
 import Stage from '../Stage';
 import Menu from '../Menu';
 import PieceHolder from '../PieceHolder';
-import Skills from '../Skills';
+import Skills from '../SkillsContainer';
 
 import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
 
@@ -88,6 +88,7 @@ const Tetris = () => {
         <StyledTetrisLayout>
           <aside>
             <PieceHolder pieceHolderStage={holdStage} />
+            EXP: {skillsAPI.state.exp}
             <Skills skillsAPI={skillsAPI} />
             <button type="button" onClick={goToMenu}>menu</button>
           </aside>
@@ -111,7 +112,6 @@ export default Tetris;
 /*
   In-game Menus
   - Pause
-  - Skill Tree (pause automatically)
 
   TO-DOS
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
@@ -126,6 +126,8 @@ export default Tetris;
   10. Improve responsiveness when pressing to drop (small delay to begin with)
 
   Next feats to implement:
-  Then AFTER implementing learning skills + check levels
   4. Perfectionist
+
+  Refactor:
+  1. How useSkills are being exported, use the new version
 */
