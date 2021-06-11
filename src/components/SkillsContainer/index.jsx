@@ -5,11 +5,13 @@ import Skill from '../Skill';
 
 const Skills = ({ skillsAPI }) => (
   <div>
-    <h1>Skills</h1>
     {Object.entries(skillsAPI.skills).map((skill) => {
       const key = skill[0];
       const { state, setState } = skill[1];
       const {
+        state: {
+          exp,
+        },
         actions: {
           levelUpSkill,
         },
@@ -21,10 +23,10 @@ const Skills = ({ skillsAPI }) => (
           state={state}
           setState={setState}
           levelUpSkill={levelUpSkill}
+          exp={exp}
         />
       );
     })}
-    {console.log(skillsAPI)}
   </div>
 );
 
