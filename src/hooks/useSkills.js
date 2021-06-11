@@ -190,25 +190,13 @@ export const useSkills = () => {
       levelUpSkill,
     },
     skills: {
-      perfectionism: {
-        state: perfectionism,
-        setState: setPerfectionism,
+      greedy: {
+        state: greedy,
+        setState: setGreedy,
       },
       clairvoyance: {
         state: clairvoyance,
         setState: setClairvoyance,
-      },
-      blink: {
-        state: blink,
-        setState: setBlink,
-      },
-      intuition: {
-        state: intuition,
-        setState: setIntuition,
-      },
-      greedy: {
-        state: greedy,
-        setState: setGreedy,
       },
       pixelPocket: {
         state: pixelPocket,
@@ -218,9 +206,21 @@ export const useSkills = () => {
         state: mimic,
         setState: setMimic,
       },
+      intuition: {
+        state: intuition,
+        setState: setIntuition,
+      },
+      blink: {
+        state: blink,
+        setState: setBlink,
+      },
       timeStop: {
         state: timeStop,
         setState: setTimeStop,
+      },
+      perfectionism: {
+        state: perfectionism,
+        setState: setPerfectionism,
       },
     },
   };
