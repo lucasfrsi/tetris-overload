@@ -1,27 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Icon from 'assets/icon.png';
 
-const Skill = ({ state, setState, levelUpSkill }) => {
+import { SkillIcon } from './style';
+
+const Skill = ({ state, setState, levelUpSkill, exp }) => {
   const {
     currentLevel,
     name,
     onCooldown,
     active,
+    expCost,
   } = state;
 
   return (
-    <div onClick={() => levelUpSkill(state, setState)} style={{
-      border: '1px solid blue',
-      cursor: 'pointer',
-    }}>
-      Name: {name}
-      <br />
-      Lvl: {currentLevel}
-      <br />
-      CD: {onCooldown || 'Ok'}
-      <br />
-      Active: {active || 'No'}
-    </div>
+    <SkillIcon
+      type="button"
+      onClick={() => levelUpSkill(state, setState)}
+      state={state}
+      exp={exp}
+    >
+      <img src={Icon} alt="skill_icon" />
+      <span>{currentLevel}/{expCost.length - 1}</span>
+      <span>{name}</span>
+    </SkillIcon>
   );
 };
 
