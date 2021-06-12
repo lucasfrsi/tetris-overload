@@ -17,7 +17,7 @@ import Menu from '../Menu';
 import PieceHolder from '../PieceHolder';
 import Skills from '../SkillsContainer';
 
-import { StyledTetrisWrapper, StyledTetrisLayout } from './style';
+import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
 const Tetris = () => {
   const skillsAPI = useSkills();
@@ -90,7 +90,6 @@ const Tetris = () => {
             <PieceHolder pieceHolderStage={holdStage} />
             EXP: {skillsAPI.state.exp}
             <Skills skillsAPI={skillsAPI} />
-            <button type="button" onClick={goToMenu}>menu</button>
           </aside>
           <Stage stage={stage} />
           <aside>
@@ -100,6 +99,8 @@ const Tetris = () => {
             <div>Level: {level}</div>
             <div>Lines: {rows}</div>
             <button type="button" onClick={startGame}>start</button>
+            <br />
+            <button type="button" onClick={goToMenu}>menu</button>
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>

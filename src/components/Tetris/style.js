@@ -10,11 +10,8 @@ export const StyledTetrisWrapper = styled.div`
 
 export const StyledTetrisLayout = styled.div`
   display: flex;
-  /* align-items: center; */
   justify-content: center;
-
-  padding: 4rem;
   margin: 0 auto;
-
   max-width: 144rem;
+  height: 100%;
 `;
