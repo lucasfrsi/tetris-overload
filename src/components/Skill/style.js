@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const SkillIcon = styled.button`
   position: relative;
   display: block;
   /* border: 0 solid; */
-  margin: 0 auto 1rem;
+  margin: 0 auto 3rem;
   cursor: pointer;
   background-color: transparent;
 
@@ -22,20 +22,30 @@ export const SkillIcon = styled.button`
   border: 2px solid ${(props) => (props.exp > props.state.expCost[props.state.currentLevel + 1] ? 'green' : 'red')};
   border-radius: 50%;
 
-  span {
-    position: absolute;
-    bottom: -.5rem;
-    right: -.5rem;
-    color: white;
-    text-shadow: 0 0 0.5rem black;
-    font-weight: 600;
-    font-size: 1.4rem;
-  }
-
   img {
     /* display: none; */
     width: 100%;
     height: auto;
     border-radius: 50%;
   }
+`;
+
+export const skillLvl = css`
+  position: absolute;
+  bottom: -.5rem;
+  right: -.5rem;
+  color: white;
+  text-shadow: 0 0 0.5rem black;
+  font-weight: 600;
+  font-size: 1.4rem;
+`;
+
+export const skillName = css`
+  position: absolute;
+  bottom: -1.5rem;
+  right: -.5rem;
+  color: white;
+  text-shadow: 0 0 0.5rem black;
+  font-weight: 600;
+  font-size: 1.4rem;
 `;

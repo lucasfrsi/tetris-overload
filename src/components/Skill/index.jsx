@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'assets/icon.png';
 
-import { SkillIcon } from './style';
+import * as styles from './style';
 
 const Skill = ({ state, setState, levelUpSkill, exp }) => {
   const {
@@ -14,16 +14,16 @@ const Skill = ({ state, setState, levelUpSkill, exp }) => {
   } = state;
 
   return (
-    <SkillIcon
+    <styles.SkillIcon
       type="button"
       onClick={() => levelUpSkill(state, setState)}
       state={state}
       exp={exp}
     >
       <img src={Icon} alt="skill_icon" />
-      <span>{currentLevel}/{expCost.length - 1}</span>
-      <span>{name}</span>
-    </SkillIcon>
+      <span css={styles.skillLvl}>{currentLevel}/{expCost.length - 1}</span>
+      <span css={styles.skillName}>{name}</span>
+    </styles.SkillIcon>
   );
 };
 
