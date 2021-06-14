@@ -3,7 +3,8 @@ import { useInterval } from 'hooks/useInterval';
 
 export const useSkills = () => {
   const INTERVAL_DELAY = 1000;
-  const EXP_POINTS = useMemo(() => [5, 15, 25, 35], []);
+  // const EXP_POINTS = useMemo(() => [5, 15, 25, 35], []);
+  const EXP_POINTS = useMemo(() => [10, 30, 50, 70], []);
 
   const [exp, setExp] = useState(0);
 
