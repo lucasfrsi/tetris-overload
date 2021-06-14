@@ -16,6 +16,7 @@ import Stage from '../Stage';
 import Menu from '../Menu';
 import PieceHolder from '../PieceHolder';
 import Skills from '../SkillsContainer';
+import Score from '../Score';
 
 import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
@@ -33,6 +34,12 @@ const Tetris = () => {
   const inGame = useSelector((state) => state.tetris.inGame);
   const dispatch = useDispatch();
   const goToMenu = () => dispatch(setInGame(false));
+
+  const {
+    state: {
+      exp,
+    },
+  } = skillsAPI;
 
   const {
     state: {
@@ -88,16 +95,16 @@ const Tetris = () => {
         <StyledTetrisLayout>
           <aside>
             <PieceHolder pieceHolderStage={holdStage} />
-            EXP: {skillsAPI.state.exp}
+            <Score name="Experience" value={exp} />
             <Skills skillsAPI={skillsAPI} />
           </aside>
           <Stage stage={stage} />
           <aside>
             <PieceHolder pieceHolderStage={nextStage} />
             <PieceHolder pieceHolderStage={queueStage} />
-            <div>Score: {score}</div>
-            <div>Level: {level}</div>
-            <div>Lines: {rows}</div>
+            <Score name="Score" value={score} />
+            <Score name="Level" value={level} />
+            <Score name="Rows" value={rows} />
             <button type="button" onClick={startGame}>start</button>
             <br />
             <button type="button" onClick={goToMenu}>menu</button>
