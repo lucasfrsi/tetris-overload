@@ -14,4 +14,10 @@ export const StyledTetrisLayout = styled.div`
   margin: 0 auto;
   max-width: 144rem;
   height: 100%;
+
+  aside {
+    display: flex;
+    flex-direction: column;
+    max-width: 25rem;
+  }
 `;
