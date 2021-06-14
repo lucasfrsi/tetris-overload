@@ -34,5 +34,6 @@ export const colors = {
 };
 
 export const fonts = {
-  primary: 'Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif',
+  primary: "'Roboto', -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif",
+  secondary: "'Press Start 2P', cursive",
 };
