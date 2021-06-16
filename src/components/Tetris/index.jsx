@@ -38,6 +38,7 @@ const Tetris = () => {
   const {
     state: {
       exp,
+      paused,
     },
   } = skillsAPI;
 
@@ -105,6 +106,7 @@ const Tetris = () => {
             <Score name="Score" value={score} />
             <Score name="Level" value={level} />
             <Score name="Rows" value={rows} />
+            <h1 style={{ textAlign: 'center', color: 'white' }}>{paused ? 'Paused' : 'Not Paused'}</h1>
             <button type="button" onClick={startGame}>start</button>
             <br />
             <button type="button" onClick={goToMenu}>menu</button>
@@ -123,12 +125,12 @@ export default Tetris;
 
   TO-DOS
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
-  5. Add controls and the ability to choose all the keys
-  6. Add pause
   4. Add sound effects and cell animations
   5. Add song
   6. Style the entire game
   7. Play the game, tweak the math calculations + balance
+  5. Add controls and the ability to choose all the keys
+  x. Add switch case in place of all the ifs (use switch(true))
   8. Check all the useEffect dependencies and update functions accordingly, using useCallback
   9. Rethink the tetrominos randomization (not totally random, like the original game)
   10. Improve responsiveness when pressing to drop (small delay to begin with)

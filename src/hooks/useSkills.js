@@ -3,10 +3,10 @@ import { useInterval } from 'hooks/useInterval';
 
 export const useSkills = () => {
   const INTERVAL_DELAY = 1000;
-  // const EXP_POINTS = useMemo(() => [5, 15, 25, 35], []);
   const EXP_POINTS = useMemo(() => [10, 30, 50, 70], []);
 
   const [exp, setExp] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const [clairvoyance, setClairvoyance] = useState({
     name: 'Clairvoyance',
@@ -98,7 +98,7 @@ export const useSkills = () => {
   // Using setInterval for now, even though it's not perfectly accurate
   useInterval(() => {
     // console.log('useInterval: timeStop cooldownTimer');
-    if (timeStop.onCooldown > 0) {
+    if (!paused && timeStop.onCooldown > 0) {
       setTimeStop((prev) => ({
         ...prev,
         onCooldown: prev.onCooldown - 1,
@@ -109,7 +109,7 @@ export const useSkills = () => {
 
   useInterval(() => {
     // console.log('useInterval: timeStop durationTimer');
-    if (timeStop.active > 0) {
+    if (!paused && timeStop.active > 0) {
       setTimeStop((prev) => ({
         ...prev,
         active: prev.active - 1,
@@ -122,7 +122,7 @@ export const useSkills = () => {
 
   useInterval(() => {
     // console.log('useInterval: mimic cooldownTimer');
-    if (mimic.onCooldown > 0) {
+    if (!paused && mimic.onCooldown > 0) {
       setMimic((prev) => ({
         ...prev,
         onCooldown: prev.onCooldown - 1,
@@ -133,7 +133,7 @@ export const useSkills = () => {
 
   useInterval(() => {
     // console.log('useInterval: perfectionism cooldownTimer');
-    if (perfectionism.onCooldown > 0) {
+    if (!paused && perfectionism.onCooldown > 0) {
       setPerfectionism((prev) => ({
         ...prev,
         onCooldown: prev.onCooldown - 1,
@@ -167,6 +167,7 @@ export const useSkills = () => {
     },
     state: {
       exp,
+      paused,
       perfectionism,
       clairvoyance,
       blink,
@@ -179,6 +180,7 @@ export const useSkills = () => {
     actions: {
       setExp,
       calcExp,
+      setPaused,
       setPerfectionism,
       setClairvoyance,
       setBlink,

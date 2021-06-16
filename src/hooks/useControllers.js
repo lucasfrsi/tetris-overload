@@ -33,17 +33,19 @@ export const useControllers = (skillsAPI, gameStatusAPI, playerAPI, stageAPI, te
 
   const {
     state: {
+      paused,
       timeStop,
     },
     actions: {
       activateTimeStop,
+      setPaused,
     },
   } = skillsAPI;
 
   const onKeyDown = (event) => {
     const { code, key } = event;
 
-    if (!gameOver) {
+    if (!gameOver && !paused) {
       if (key === '1' || code === 'Numpad1') {
         movePlayer(-1);
       } else if (key === '2' || code === 'Numpad2') {
@@ -64,7 +66,11 @@ export const useControllers = (skillsAPI, gameStatusAPI, playerAPI, stageAPI, te
         activateMimic();
       } else if (key === '0' || code === 'Numpad0') {
         activateTimeStop();
+      } else if (key === 'p' || code === 'keyP') {
+        setPaused((prev) => !prev);
       }
+    } else if (paused && (key === 'p' || code === 'keyP')) {
+      setPaused((prev) => !prev);
     }
   };
 

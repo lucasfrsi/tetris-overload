@@ -39,6 +39,7 @@ export const useTetris = (skillsAPI, gameStatusAPI, playerAPI, stageAPI) => {
 
   const {
     state: {
+      paused,
       timeStop,
     },
   } = skillsAPI;
@@ -86,7 +87,7 @@ export const useTetris = (skillsAPI, gameStatusAPI, playerAPI, stageAPI) => {
   };
 
   useInterval(() => {
-    if (!timeStop.active) drop();
+    if (!paused && !timeStop.active) drop();
   }, dropTime);
 
   return {
