@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.6rem;
     font-weight: 400;
     color: ${colors['black-1']};
+    background-color: black;
   }
 
   button,
