@@ -1,6 +1,4 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setInGameAction as setInGame } from 'store/actions/tetris';
+import React, { useState } from 'react';
 
 // Custom Hooks
 import { usePlayer } from 'hooks/usePlayer';
@@ -10,6 +8,8 @@ import { usePieceHolders } from 'hooks/usePieceHolders';
 import { useControllers } from 'hooks/useControllers';
 import { useTetris } from 'hooks/useTetris';
 import { useSkills } from 'hooks/useSkills';
+import { useBGM } from 'hooks/useBGM';
+import { useSFX } from 'hooks/useSFX';
 
 // Components
 import Stage from '../Stage';
@@ -21,6 +21,9 @@ import Score from '../Score';
 import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
 const Tetris = () => {
+  const BGM_API = useBGM();
+  const SFX_API = useSFX();
+
   const skillsAPI = useSkills();
   const gameStatusAPI = useGameStatus(skillsAPI);
   const playerAPI = usePlayer(skillsAPI);
@@ -31,9 +34,27 @@ const Tetris = () => {
 
   const controllersAPI = useControllers(skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI);
 
-  const inGame = useSelector((state) => state.tetris.inGame);
-  const dispatch = useDispatch();
-  const goToMenu = () => dispatch(setInGame(false));
+  const [inGame, setInGame] = useState(false);
+  const goToMenu = () => setInGame(false);
+  const goToTetris = () => setInGame(true);
+
+  const {
+    state: {
+      BGM,
+    },
+    actions: {
+      toggleMuteBGM,
+    },
+  } = BGM_API;
+
+  const {
+    state: {
+      SFX,
+    },
+    actions: {
+      toggleMuteSFX,
+    },
+  } = SFX_API;
 
   const {
     state: {
@@ -113,7 +134,15 @@ const Tetris = () => {
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
-    ) : <Menu />
+    ) : (
+      <Menu
+        play={goToTetris}
+        SFX={SFX.mute}
+        BGM={BGM.mute}
+        toggleSFX={toggleMuteSFX}
+        toggleBGM={toggleMuteBGM}
+      />
+    )
   );
 };
 
@@ -134,6 +163,8 @@ export default Tetris;
   8. Check all the useEffect dependencies and update functions accordingly, using useCallback
   9. Rethink the tetrominos randomization (not totally random, like the original game)
   10. Improve responsiveness when pressing to drop (small delay to begin with)
+    a. Make useInterval ACCURATE (check bookmarks)
+    b. Move from using setState, avoiding async calls
 
   Next feats to implement:
   4. Perfectionist
