@@ -21,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
     font-weight: 400;
     color: ${colors['black-1']};
     background-color: black;
+    user-select: none;
   }
 
   button,
