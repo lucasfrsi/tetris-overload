@@ -25,14 +25,21 @@ const Tetris = () => {
   const SFX_API = useSFX();
 
   const skillsAPI = useSkills();
-  const gameStatusAPI = useGameStatus(skillsAPI);
-  const playerAPI = usePlayer(skillsAPI);
-  const stageAPI = useStage(skillsAPI, gameStatusAPI, playerAPI);
-  const pieceHoldersAPI = usePieceHolders(skillsAPI, playerAPI);
+  const gameStatusAPI = useGameStatus({ skillsAPI });
+  const playerAPI = usePlayer({ skillsAPI, SFX_API });
+  const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
+  const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
 
-  const tetrisAPI = useTetris(skillsAPI, gameStatusAPI, playerAPI, stageAPI);
+  const tetrisAPI = useTetris({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API });
 
-  const controllersAPI = useControllers(skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI);
+  const controllersAPI = useControllers({
+    skillsAPI,
+    gameStatusAPI,
+    playerAPI,
+    stageAPI,
+    tetrisAPI,
+    SFX_API,
+  });
 
   const [inGame, setInGame] = useState(false);
   const goToMenu = () => setInGame(false);
@@ -53,6 +60,7 @@ const Tetris = () => {
     },
     actions: {
       toggleMuteSFX,
+      playSFX,
     },
   } = SFX_API;
 
@@ -141,6 +149,7 @@ const Tetris = () => {
         BGM={BGM.mute}
         toggleSFX={toggleMuteSFX}
         toggleBGM={toggleMuteBGM}
+        playSFX={playSFX}
       />
     )
   );

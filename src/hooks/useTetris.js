@@ -1,8 +1,9 @@
 import { useInterval } from 'hooks/useInterval';
 
 import { checkCollision, createMainStage } from 'utils/gameHelpers';
+import { TETROMINO_MERGE } from 'utils/SFXPaths';
 
-export const useTetris = (skillsAPI, gameStatusAPI, playerAPI, stageAPI) => {
+export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API }) => {
   const {
     state: {
       player,
@@ -44,6 +45,12 @@ export const useTetris = (skillsAPI, gameStatusAPI, playerAPI, stageAPI) => {
     },
   } = skillsAPI;
 
+  const {
+    actions: {
+      playSFX,
+    },
+  } = SFX_API;
+
   const movePlayer = (xDir, yDir = 0) => {
     if (!checkCollision(player, stage, { x: xDir, y: yDir })) {
       updatePlayerPos({ x: xDir, y: yDir });
@@ -78,6 +85,7 @@ export const useTetris = (skillsAPI, gameStatusAPI, playerAPI, stageAPI) => {
         setDropTime(null);
       }
       updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
+      playSFX(TETROMINO_MERGE);
     }
   };
 

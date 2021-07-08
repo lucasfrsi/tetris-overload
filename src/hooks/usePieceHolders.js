@@ -7,7 +7,7 @@ const SINGLE_STAGE_WIDTH = 5;
 const DOUBLE_STAGE_HEIGHT = SINGLE_STAGE_HEIGHT * 2;
 const DOUBLE_STAGE_WIDTH = SINGLE_STAGE_WIDTH;
 
-export const usePieceHolders = (skillsAPI, playerAPI) => {
+export const usePieceHolders = ({ skillsAPI, playerAPI }) => {
   const [holdStage, setHoldStage] = useState(
     createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH),
   );

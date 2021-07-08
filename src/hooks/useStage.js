@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createMainStage, checkCollision } from 'utils/gameHelpers';
 
-export const useStage = (skillsAPI, gameStatusAPI, playerAPI) => {
+export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
   const [stage, setStage] = useState(createMainStage());
 
   const {

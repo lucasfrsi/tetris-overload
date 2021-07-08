@@ -3,7 +3,9 @@ import { useState, useCallback } from 'react';
 import { TETROMINOS, randomTetromino, createNextPiecesArray } from 'utils/tetrominos';
 import { STAGE_WIDTH, checkCollision } from 'utils/gameHelpers';
 
-export const usePlayer = (skillsAPI) => {
+import { TETROMINO_ROTATE } from 'utils/SFXPaths';
+
+export const usePlayer = ({ skillsAPI, SFX_API }) => {
   const [hold, setHold] = useState([]);
   const [nextPieces, setNextPieces] = useState(createNextPiecesArray(3));
   const [preCollisionY, setPreCollisionY] = useState(0);
@@ -27,6 +29,12 @@ export const usePlayer = (skillsAPI) => {
       setMimic,
     },
   } = skillsAPI;
+
+  const {
+    actions: {
+      playSFX,
+    },
+  } = SFX_API;
 
   function rotate(matrix, dir) {
     // Make the rows to become cols (transpose)
@@ -52,6 +60,7 @@ export const usePlayer = (skillsAPI) => {
       }
     }
     setPlayer(clonedPlayer);
+    playSFX(TETROMINO_ROTATE);
   }
 
   const updatePreCollisionY = useCallback((y) => {

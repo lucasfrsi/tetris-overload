@@ -1,8 +1,8 @@
 import { PAUSE_IN, PAUSE_OUT } from 'utils/SFXPaths';
 
-export const useControllers = (
+export const useControllers = ({
   skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI, SFX_API,
-) => {
+}) => {
   const {
     actions: {
       playerRotate,
