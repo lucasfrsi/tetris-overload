@@ -22,7 +22,7 @@ export const useBGM = () => {
     mute: !prev.mute,
   }));
 
-  const [play, { stop }] = useSound(BGM.current, { loop: true });
+  const [play, { stop }] = useSound(BGM.current, { loop: true, volume: 1 });
 
   useEffect(() => {
     if (!BGM.mute) {

@@ -4,6 +4,7 @@ import buttonToggle from 'assets/sfx/button_toggle.ogg';
 
 import tetrominoRotate from 'assets/sfx/tetromino_rotate.wav';
 import tetrominoMerge from 'assets/sfx/tetromino_merge.wav';
+import tetrominoMove from 'assets/sfx/tetromino_move.wav';
 
 import pauseIn from 'assets/sfx/pause_in.wav';
 import pauseOut from 'assets/sfx/pause_out.wav';
@@ -14,6 +15,7 @@ export const BUTTON_TOGGLE = 'BUTTON_TOGGLE';
 
 export const TETROMINO_ROTATE = 'TETROMINO_ROTATE';
 export const TETROMINO_MERGE = 'TETROMINO_MERGE';
+export const TETROMINO_MOVE = 'TETROMINO_MOVE';
 
 export const PAUSE_IN = 'PAUSE_IN';
 export const PAUSE_OUT = 'PAUSE_OUT';
@@ -26,6 +28,7 @@ export default {
   // TETROMINOS
   [TETROMINO_ROTATE]: tetrominoRotate,
   [TETROMINO_MERGE]: tetrominoMerge,
+  [TETROMINO_MOVE]: tetrominoMove,
   // SKILLS
   // GAME
   [PAUSE_IN]: pauseIn,
@@ -40,11 +43,6 @@ export default {
   - Button select (OK)
 
   == TETRIS ==
-  - Tetrominoes
-    - fix position (when merged / more than 1 sound)
-    - rotate (?)
-    - move any directions
-
   - Skills
     - Pixel Pocket
     - Mimic
