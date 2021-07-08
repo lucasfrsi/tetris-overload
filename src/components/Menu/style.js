@@ -14,11 +14,13 @@ export const menu = css`
   font-family: ${fonts.secondary};
   color: white;
   text-transform: uppercase;
+`;
 
-  img {
-    width: 5rem;
-    user-select: none;
-  }
+export const buttons = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   button {
     cursor: pointer;
@@ -52,5 +54,14 @@ export const title = css`
   
   &:nth-of-type(2) {
     margin-bottom: 8rem;
+  }
+`;
+
+export const icons = css`
+  margin: 1rem 0 0 auto;
+
+  img {
+    width: 4.8rem;
+    cursor: pointer;
   }
 `;
