@@ -16,10 +16,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: ${fonts.primary};
+    font-family: ${fonts.secondary};
     font-size: 1.6rem;
     font-weight: 400;
-    color: ${colors['black-1']};
+    color: ${colors.white};
     background-color: black;
     user-select: none;
   }
