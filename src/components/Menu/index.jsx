@@ -5,7 +5,7 @@ import sfxOff from 'assets/sfx_off.svg';
 import musicOn from 'assets/music_on.svg';
 import musicOff from 'assets/music_off.svg';
 import { BUTTON_HOVER, BUTTON_SELECT, BUTTON_TOGGLE } from 'utils/SFXPaths';
-import { MENU } from 'utils/BGMPaths';
+import { MENU, INGAME } from 'utils/BGMPaths';
 
 import * as styles from './style';
 
@@ -22,8 +22,11 @@ const Menu = ({ play, SFX, BGM, toggleSFX, toggleBGM, playSFX, changeBGM, stopBG
   useEffect(() => {
     changeBGM(MENU);
     playBGM();
-    return () => stopBGM();
-  }, [changeBGM, stopBGM, playBGM]);
+    return () => {
+      stopBGM();
+      changeBGM(INGAME);
+    };
+  }, [changeBGM, playBGM, stopBGM]);
 
   return (
     <div css={styles.menu}>
