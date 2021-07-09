@@ -6,6 +6,7 @@ export const useBGM = () => {
   const BGMPlayer = useRef({
     source: undefined,
     howl: undefined,
+    mute: true,
   });
 
   const [BGM, setBGM] = useState({
@@ -18,14 +19,22 @@ export const useBGM = () => {
   }));
 
   const playBGM = useCallback(() => {
-    if (!BGM.mute && BGMPlayer.current.howl) {
+    console.log('playBGM');
+    if (!BGMPlayer.current.mute && BGMPlayer.current.howl) {
       BGMPlayer.current.howl.play();
+      BGMPlayer.current.howl.fade(0, 1, 500);
     }
-  }, [BGM.mute]);
+  }, []);
 
   const stopBGM = useCallback(() => {
     if (BGMPlayer.current.howl) {
       BGMPlayer.current.howl.stop();
+    }
+  }, []);
+
+  const pauseBGM = useCallback(() => {
+    if (BGMPlayer.current.howl) {
+      BGMPlayer.current.howl.pause();
     }
   }, []);
 
@@ -37,6 +46,7 @@ export const useBGM = () => {
   }, []);
 
   useEffect(() => {
+    BGMPlayer.current.mute = BGM.mute;
     if (BGM.mute) {
       stopBGM();
     } else {
@@ -53,6 +63,7 @@ export const useBGM = () => {
       playBGM,
       stopBGM,
       changeBGM,
+      pauseBGM,
     },
   };
 };
