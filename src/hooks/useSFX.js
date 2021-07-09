@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { Howl } from 'howler';
 import SFXPaths from 'utils/SFXPaths';
 
@@ -17,7 +17,7 @@ export const useSFX = () => {
     mute: !prev.mute,
   }));
 
-  const playSFX = (type) => {
+  const playSFX = useCallback((type) => {
     if (!SFX.mute) {
       if (SFXPlayer.current.source !== type) {
         SFXPlayer.current.source = type;
@@ -27,7 +27,7 @@ export const useSFX = () => {
         SFXPlayer.current.howl.play();
       }
     }
-  };
+  }, [SFX.mute]);
 
   return {
     state: {
