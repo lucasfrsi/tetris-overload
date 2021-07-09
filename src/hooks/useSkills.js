@@ -1,7 +1,7 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useInterval } from 'hooks/useInterval';
 
-export const useSkills = () => {
+export const useSkills = ({ BGM_API }) => {
   const INTERVAL_DELAY = 1000;
   const EXP_POINTS = useMemo(() => [10, 30, 50, 70], []);
 
@@ -94,6 +94,58 @@ export const useSkills = () => {
     }
   };
 
+  const resetSkills = useCallback(() => {
+    setExp(0);
+
+    setClairvoyance((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setPixelPocket((prev) => ({
+      ...prev,
+      currentLevel: 0,
+    }));
+
+    setIntuition((prev) => ({
+      ...prev,
+      currentLevel: 0,
+    }));
+
+    setBlink((prev) => ({
+      ...prev,
+      currentLevel: 0,
+    }));
+
+    setGreedy((prev) => ({
+      ...prev,
+      currentLevel: 0,
+    }));
+
+    setTimeStop((prev) => ({
+      ...prev,
+      currentLevel: 0,
+      durationTimer: null,
+      active: 0,
+      cooldownTimer: null,
+      onCooldown: 0,
+    }));
+
+    setMimic((prev) => ({
+      ...prev,
+      currentLevel: 0,
+      cooldownTimer: null,
+      onCooldown: 0,
+    }));
+
+    setPerfectionism((prev) => ({
+      ...prev,
+      currentLevel: 0,
+      cooldownTimer: null,
+      onCooldown: 0,
+    }));
+  }, []);
+
   // TIMERS
   // Using setInterval for now, even though it's not perfectly accurate
   useInterval(() => {
@@ -161,6 +213,21 @@ export const useSkills = () => {
     return false;
   };
 
+  const {
+    actions: {
+      playBGM,
+      pauseBGM,
+    },
+  } = BGM_API;
+
+  useEffect(() => {
+    if (paused) {
+      pauseBGM();
+    } else {
+      playBGM();
+    }
+  }, [pauseBGM, paused, playBGM]);
+
   return {
     constants: {
       INTERVAL_DELAY,
@@ -191,6 +258,7 @@ export const useSkills = () => {
       setTimeStop,
       activateTimeStop,
       levelUpSkill,
+      resetSkills,
     },
     skills: {
       greedy: {
