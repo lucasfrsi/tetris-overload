@@ -17,6 +17,8 @@ import Menu from '../Menu';
 import PieceHolder from '../PieceHolder';
 import Skills from '../SkillsContainer';
 import Score from '../Score';
+import Pause from '../Pause';
+import SideButton from '../SideButton';
 
 import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
@@ -24,13 +26,13 @@ const Tetris = () => {
   const BGM_API = useBGM();
   const SFX_API = useSFX();
 
-  const skillsAPI = useSkills();
+  const skillsAPI = useSkills({ BGM_API });
   const gameStatusAPI = useGameStatus({ skillsAPI });
   const playerAPI = usePlayer({ skillsAPI, SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
 
-  const tetrisAPI = useTetris({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API });
+  const tetrisAPI = useTetris({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API });
 
   const controllersAPI = useControllers({
     skillsAPI,
@@ -40,10 +42,6 @@ const Tetris = () => {
     tetrisAPI,
     SFX_API,
   });
-
-  const [inGame, setInGame] = useState(false);
-  const goToMenu = () => setInGame(false);
-  const goToTetris = () => setInGame(true);
 
   const {
     state: {
@@ -117,6 +115,13 @@ const Tetris = () => {
     onKeyUp(event);
   };
 
+  const [inGame, setInGame] = useState(false);
+  const goToMenu = () => {
+    stopBGM();
+    setInGame(false);
+  };
+  const goToTetris = () => setInGame(true);
+
   return (
     inGame ? (
       <StyledTetrisWrapper
@@ -125,6 +130,7 @@ const Tetris = () => {
         onKeyDown={onKeyDownHandler}
         onKeyUp={onKeyUpHandler}
       >
+        {paused && <Pause />}
         <StyledTetrisLayout>
           <aside>
             <PieceHolder pieceHolderStage={holdStage} />
@@ -138,10 +144,8 @@ const Tetris = () => {
             <Score name="Score" value={score} />
             <Score name="Level" value={level} />
             <Score name="Rows" value={rows} />
-            <h1 style={{ textAlign: 'center', color: 'white' }}>{paused ? 'Paused' : 'Not Paused'}</h1>
-            <button type="button" onClick={startGame}>start</button>
-            <br />
-            <button type="button" onClick={goToMenu}>menu</button>
+            <SideButton buttonName="start" onClick={startGame} playSFX={playSFX} />
+            <SideButton buttonName="menu" onClick={goToMenu} playSFX={playSFX} />
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
