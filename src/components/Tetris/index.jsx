@@ -51,6 +51,9 @@ const Tetris = () => {
     },
     actions: {
       toggleMuteBGM,
+      changeBGM,
+      stopBGM,
+      playBGM,
     },
   } = BGM_API;
 
@@ -150,6 +153,9 @@ const Tetris = () => {
         toggleSFX={toggleMuteSFX}
         toggleBGM={toggleMuteBGM}
         playSFX={playSFX}
+        changeBGM={changeBGM}
+        stopBGM={stopBGM}
+        playBGM={playBGM}
       />
     )
   );
