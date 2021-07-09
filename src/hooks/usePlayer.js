@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { TETROMINOS, randomTetromino, createNextPiecesArray } from 'utils/tetrominos';
 import { STAGE_WIDTH, checkCollision } from 'utils/gameHelpers';
 
-import { TETROMINO_ROTATE } from 'utils/SFXPaths';
+import { TETROMINO_ROTATE, TETROMINO_MERGE } from 'utils/SFXPaths';
 
 export const usePlayer = ({ skillsAPI, SFX_API }) => {
   const [hold, setHold] = useState([]);
@@ -128,13 +128,10 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
 
   const activateBlink = useCallback(() => {
     if (blink.currentLevel) {
+      playSFX(TETROMINO_MERGE);
       updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
     }
-  }, [
-    blink.currentLevel,
-    preCollisionY,
-    updatePlayerPos,
-  ]);
+  }, [blink.currentLevel, playSFX, preCollisionY, updatePlayerPos]);
 
   return {
     state: {
