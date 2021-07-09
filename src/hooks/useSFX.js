@@ -19,14 +19,12 @@ export const useSFX = () => {
 
   const playSFX = (type) => {
     if (!SFX.mute) {
-      let { source, howl } = SFXPlayer.current;
-
-      if (source !== type) {
-        source = type;
-        howl = new Howl({ src: SFXPaths[type], volume: 0.5 });
-        howl.play();
+      if (SFXPlayer.current.source !== type) {
+        SFXPlayer.current.source = type;
+        SFXPlayer.current.howl = new Howl({ src: SFXPaths[type], volume: 0.5 });
+        SFXPlayer.current.howl.play();
       } else {
-        howl.play();
+        SFXPlayer.current.howl.play();
       }
     }
   };

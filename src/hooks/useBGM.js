@@ -1,19 +1,14 @@
-import { useState, useMemo, useEffect } from 'react';
-import useSound from 'use-sound';
-
-// BGM Imports
-import menu from 'assets/bgm/BoxCat_Games_-_Mission.mp3';
-import ingame from 'assets/bgm/BoxCat_Games_-_Against_the_Wall.mp3';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Howl } from 'howler';
+import BGMPaths from 'utils/BGMPaths';
 
 export const useBGM = () => {
-  // useRef or useMemo ?? hmm
-  const BGM_LIST = useMemo(() => ({
-    menu,
-    ingame,
-  }), []);
+  const BGMPlayer = useRef({
+    source: undefined,
+    howl: undefined,
+  });
 
   const [BGM, setBGM] = useState({
-    current: BGM_LIST.menu,
     mute: true,
   });
 
@@ -22,15 +17,32 @@ export const useBGM = () => {
     mute: !prev.mute,
   }));
 
-  const [play, { stop }] = useSound(BGM.current, { loop: true, volume: 1 });
+  const playBGM = useCallback(() => {
+    if (!BGM.mute && BGMPlayer.current.howl) {
+      BGMPlayer.current.howl.play();
+    }
+  }, [BGM.mute]);
+
+  const stopBGM = useCallback(() => {
+    if (BGMPlayer.current.howl) {
+      BGMPlayer.current.howl.stop();
+    }
+  }, []);
+
+  const changeBGM = useCallback((type) => {
+    if (BGMPlayer.current.source !== type) {
+      BGMPlayer.current.source = type;
+      BGMPlayer.current.howl = new Howl({ src: BGMPaths[type], volume: 1, loop: true });
+    }
+  }, []);
 
   useEffect(() => {
-    if (!BGM.mute) {
-      play();
+    if (BGM.mute) {
+      stopBGM();
+    } else {
+      playBGM();
     }
-
-    return () => stop();
-  }, [BGM.mute, play, stop]);
+  }, [BGM.mute, playBGM, stopBGM]);
 
   return {
     state: {
@@ -38,6 +50,13 @@ export const useBGM = () => {
     },
     actions: {
       toggleMuteBGM,
+      playBGM,
+      stopBGM,
+      changeBGM,
     },
   };
 };
+
+// Menu: play song
+// Game: stop playing songs
+// When game starts: play again

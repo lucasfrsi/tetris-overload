@@ -37,11 +37,6 @@ export default {
 
 /*
   SFX List
-
-  == MENU ==
-  - Button hover (OK)
-  - Button select (OK)
-
   == TETRIS ==
   - Skills
     - Pixel Pocket
@@ -59,4 +54,10 @@ export default {
     - Initial countdown and start
     - Game Over
     - Rows cleared (separate sounds for: 1, 2, 3 or 4 rows cleared)
+*/
+
+/*
+  CREDITS:
+  - kenney
+  - The Essential Retro Video Game Sound Effects Collection [512 sounds]
 */
