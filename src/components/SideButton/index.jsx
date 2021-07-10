@@ -7,6 +7,7 @@ import * as styles from './style';
 const SideButton = ({ buttonName, onClick, playSFX }) => (
   <button
     type="button"
+    tabIndex={-1}
     css={styles.sideButton}
     onClick={() => {
       onClick();
