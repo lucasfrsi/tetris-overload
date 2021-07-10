@@ -1,12 +1,10 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useInterval } from 'hooks/useInterval';
+import { useState, useCallback, useMemo } from 'react';
 
-export const useSkills = ({ BGM_API }) => {
+export const useSkills = () => {
   const INTERVAL_DELAY = 1000;
   const EXP_POINTS = useMemo(() => [10, 30, 50, 70], []);
 
   const [exp, setExp] = useState(0);
-  const [paused, setPaused] = useState(false);
 
   const [clairvoyance, setClairvoyance] = useState({
     name: 'Clairvoyance',
@@ -146,54 +144,6 @@ export const useSkills = ({ BGM_API }) => {
     }));
   }, []);
 
-  // TIMERS
-  // Using setInterval for now, even though it's not perfectly accurate
-  useInterval(() => {
-    // console.log('useInterval: timeStop cooldownTimer');
-    if (!paused && timeStop.onCooldown > 0) {
-      setTimeStop((prev) => ({
-        ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
-      }));
-    }
-  }, timeStop.cooldownTimer);
-
-  useInterval(() => {
-    // console.log('useInterval: timeStop durationTimer');
-    if (!paused && timeStop.active > 0) {
-      setTimeStop((prev) => ({
-        ...prev,
-        active: prev.active - 1,
-        onCooldown: prev.active === 1 ? prev.cooldown[prev.currentLevel] : prev.onCooldown,
-        durationTimer: prev.active === 1 ? null : INTERVAL_DELAY,
-        cooldownTimer: prev.active === 1 ? INTERVAL_DELAY : null,
-      }));
-    }
-  }, timeStop.durationTimer);
-
-  useInterval(() => {
-    // console.log('useInterval: mimic cooldownTimer');
-    if (!paused && mimic.onCooldown > 0) {
-      setMimic((prev) => ({
-        ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
-      }));
-    }
-  }, mimic.cooldownTimer);
-
-  useInterval(() => {
-    // console.log('useInterval: perfectionism cooldownTimer');
-    if (!paused && perfectionism.onCooldown > 0) {
-      setPerfectionism((prev) => ({
-        ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
-      }));
-    }
-  }, perfectionism.cooldownTimer);
-
   const levelUpSkill = (skill, setSkill) => {
     const currentSkillLevel = skill.currentLevel;
     const skillMaxLevel = skill.expCost.length - 1;
@@ -213,28 +163,12 @@ export const useSkills = ({ BGM_API }) => {
     return false;
   };
 
-  const {
-    actions: {
-      playBGM,
-      pauseBGM,
-    },
-  } = BGM_API;
-
-  useEffect(() => {
-    if (paused) {
-      pauseBGM();
-    } else {
-      playBGM();
-    }
-  }, [pauseBGM, paused, playBGM]);
-
   return {
     constants: {
       INTERVAL_DELAY,
     },
     state: {
       exp,
-      paused,
       perfectionism,
       clairvoyance,
       blink,
@@ -247,7 +181,6 @@ export const useSkills = ({ BGM_API }) => {
     actions: {
       setExp,
       calcExp,
-      setPaused,
       setPerfectionism,
       setClairvoyance,
       setBlink,

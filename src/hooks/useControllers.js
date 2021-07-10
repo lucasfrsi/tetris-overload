@@ -22,9 +22,11 @@ export const useControllers = ({
     state: {
       level,
       gameOver,
+      paused,
     },
     actions: {
       setDropTime,
+      setPaused,
     },
   } = gameStatusAPI;
 
@@ -37,12 +39,10 @@ export const useControllers = ({
 
   const {
     state: {
-      paused,
       timeStop,
     },
     actions: {
       activateTimeStop,
-      setPaused,
     },
   } = skillsAPI;
 
