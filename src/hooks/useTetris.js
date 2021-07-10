@@ -27,6 +27,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       level,
       rows,
       dropTime,
+      paused,
     },
     actions: {
       setLevel,
@@ -39,7 +40,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
 
   const {
     state: {
-      paused,
       timeStop,
     },
     actions: {
