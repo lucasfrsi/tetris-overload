@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // Custom Hooks
 import { usePlayer } from 'hooks/usePlayer';
@@ -20,6 +20,7 @@ import Skills from '../SkillsContainer';
 import Score from '../Score';
 import Pause from '../Pause';
 import SideButton from '../SideButton';
+import ConfirmationDialog from '../ConfirmationDialog';
 
 import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
@@ -51,9 +52,6 @@ const Tetris = () => {
     },
     actions: {
       toggleMuteBGM,
-      changeBGM,
-      stopBGM,
-      playBGM,
     },
   } = BGM_API;
 
@@ -93,12 +91,16 @@ const Tetris = () => {
       rows,
       score,
       paused,
+      dialogIsOpen,
     },
   } = gameStatusAPI;
 
   const {
+    state: {
+      inGame,
+    },
     actions: {
-      startGame,
+      goToTetris,
     },
   } = tetrisAPI;
 
@@ -117,13 +119,6 @@ const Tetris = () => {
     onKeyUp(event);
   };
 
-  const [inGame, setInGame] = useState(false);
-  const goToMenu = () => {
-    stopBGM();
-    setInGame(false);
-  };
-  const goToTetris = () => setInGame(true);
-
   return (
     inGame ? (
       <StyledTetrisWrapper
@@ -132,7 +127,13 @@ const Tetris = () => {
         onKeyDown={onKeyDownHandler}
         onKeyUp={onKeyUpHandler}
       >
-        {paused && <Pause />}
+        {paused && <Pause dialog={dialogIsOpen} />}
+        {dialogIsOpen && (
+          <ConfirmationDialog
+            cancel={cancelConfirmationDialog}
+            confirm={confirmConfirmationDialog}
+          />
+        )}
         <StyledTetrisLayout>
           <aside>
             <PieceHolder pieceHolderStage={holdStage} />
@@ -146,8 +147,8 @@ const Tetris = () => {
             <Score name="Score" value={score} />
             <Score name="Level" value={level} />
             <Score name="Rows" value={rows} />
-            <SideButton buttonName="start" onClick={startGame} playSFX={playSFX} />
-            <SideButton buttonName="menu" onClick={goToMenu} playSFX={playSFX} />
+            <SideButton buttonName="start" onClick={startCountdown} playSFX={playSFX} />
+            <SideButton buttonName="menu" onClick={openConfirmationDialog} playSFX={playSFX} />
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
@@ -159,9 +160,6 @@ const Tetris = () => {
         toggleSFX={toggleMuteSFX}
         toggleBGM={toggleMuteBGM}
         playSFX={playSFX}
-        changeBGM={changeBGM}
-        stopBGM={stopBGM}
-        playBGM={playBGM}
       />
     )
   );
