@@ -33,9 +33,9 @@ const Menu = ({ play, SFX, BGM, toggleSFX, toggleBGM, playSFX, changeBGM, stopBG
       <span css={styles.title}>Tetris</span>
       <span css={styles.title}>Overload</span>
       <div css={styles.buttons}>
-        <button type="button" onClick={() => onClickHandler(play, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Play</button>
-        <button type="button" onClick={() => onClickHandler(null, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Options</button>
-        <button type="button" onClick={() => onClickHandler(null, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Credits</button>
+        <button type="button" tabIndex={-1} onClick={() => onClickHandler(play, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Play</button>
+        <button type="button" tabIndex={-1} onClick={() => onClickHandler(null, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Options</button>
+        <button type="button" tabIndex={-1} onClick={() => onClickHandler(null, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Credits</button>
         <div css={styles.icons}>
           <img
             role="presentation"

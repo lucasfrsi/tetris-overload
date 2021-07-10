@@ -19,10 +19,12 @@ const Skill = ({ state, setState, levelUpSkill, exp }) => {
       onClick={() => levelUpSkill(state, setState)}
       state={state}
       exp={exp}
+      tabIndex={-1}
     >
       <img src={Icon} alt="skill_icon" />
       <span css={styles.skillLvl}>{currentLevel}/{expCost.length - 1}</span>
       <span css={styles.skillName}>{name}</span>
+      <span css={styles.skillName}> D: {active || 0} | CD: {onCooldown || 'Ready'}</span>
     </styles.SkillIcon>
   );
 };
