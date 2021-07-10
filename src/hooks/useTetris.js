@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 import { checkCollision, createMainStage } from 'utils/gameHelpers';
 import { TETROMINO_MERGE, TETROMINO_MOVE } from 'utils/SFXPaths';
+import { MENU, INGAME } from 'utils/BGMPaths';
 
 export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API }) => {
+  const [inGame, setInGame] = useState(false);
+
   const {
     state: {
       player,
@@ -35,6 +39,8 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       setScore,
       setGameOver,
       setDropTime,
+      setDialogIsOpen,
+      setPaused,
     },
   } = gameStatusAPI;
 
@@ -57,6 +63,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     actions: {
       playBGM,
       stopBGM,
+      changeBGM,
     },
   } = BGM_API;
 
@@ -124,12 +131,31 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     if (!paused && !timeStop.active) drop();
   }, dropTime);
 
+  const goToTetris = () => {
+    setInGame(true);
+    stopBGM();
+    changeBGM(INGAME);
+  };
+
+  const goToMenu = () => {
+    setInGame(false);
+    setDialogIsOpen(false);
+    setPaused(false);
+    stopBGM();
+    changeBGM(MENU);
+    playBGM();
+  };
+
   return {
+    state: {
+      inGame,
+    },
     actions: {
       dropPlayer,
       movePlayer,
       startGame,
-      setDropTime,
+      goToMenu,
+      goToTetris,
     },
   };
 };
