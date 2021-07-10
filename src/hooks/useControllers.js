@@ -77,11 +77,11 @@ export const useControllers = ({
       } else if (key === '0' || code === 'Numpad0') {
         activateTimeStop();
       } else if (key === 'p' || code === 'keyP') {
-        setPaused((prev) => !prev);
+        setPaused(true);
         playSFX(PAUSE_IN);
       }
     } else if (paused && (key === 'p' || code === 'keyP')) {
-      setPaused((prev) => !prev);
+      setPaused(false);
       playSFX(PAUSE_OUT);
     }
   };

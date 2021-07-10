@@ -4,12 +4,52 @@ export const useGameStatus = ({ skillsAPI, BGM_API }) => {
   const [score, setScore] = useState(0);
   const [rows, setRows] = useState(0);
   const [level, setLevel] = useState(0);
+  const [rowsCleared, setRowsCleared] = useState(0);
 
   const [dropTime, setDropTime] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
-  const [paused, setPaused] = useState(false);
 
-  const [rowsCleared, setRowsCleared] = useState(0);
+  const [gameState, setGameState] = useState({
+    running: false,
+    onCountdown: false,
+    paused: false,
+    gameOver: false,
+    dialogIsOpen: false,
+  });
+
+  const setRunning = useCallback((state) => {
+    setGameState((prev) => ({
+      ...prev,
+      running: state,
+    }));
+  }, []);
+
+  const setOnCountdown = useCallback((state) => {
+    setGameState((prev) => ({
+      ...prev,
+      onCountdown: state,
+    }));
+  }, []);
+
+  const setPaused = useCallback((state) => {
+    setGameState((prev) => ({
+      ...prev,
+      paused: state,
+    }));
+  }, []);
+
+  const setGameOver = useCallback((state) => {
+    setGameState((prev) => ({
+      ...prev,
+      gameOver: state,
+    }));
+  }, []);
+
+  const setDialogIsOpen = useCallback((state) => {
+    setGameState((prev) => ({
+      ...prev,
+      dialogIsOpen: state,
+    }));
+  }, []);
 
   const {
     actions: { calcExp },
@@ -23,12 +63,12 @@ export const useGameStatus = ({ skillsAPI, BGM_API }) => {
   } = BGM_API;
 
   useEffect(() => {
-    if (paused) {
+    if (gameState.paused) {
       pauseBGM();
     } else {
       playBGM();
     }
-  }, [pauseBGM, paused, playBGM]);
+  }, [gameState.paused, pauseBGM, playBGM]);
 
   const calcScore = useCallback(() => {
     const linePoints = [40, 100, 300, 1200];
@@ -51,19 +91,25 @@ export const useGameStatus = ({ skillsAPI, BGM_API }) => {
       score,
       rows,
       level,
-      gameOver,
       dropTime,
       rowsCleared,
-      paused,
+      running: gameState.running,
+      onCountdown: gameState.onCountdown,
+      paused: gameState.paused,
+      gameOver: gameState.gameOver,
+      dialogIsOpen: gameState.dialogIsOpen,
     },
     actions: {
       setScore,
       setRows,
       setLevel,
-      setGameOver,
       setDropTime,
       setRowsCleared,
+      setRunning,
+      setOnCountdown,
       setPaused,
+      setGameOver,
+      setDialogIsOpen,
     },
   };
 };
