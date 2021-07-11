@@ -6,7 +6,7 @@ export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
 
   const {
     state: { player },
-    actions: { resetPlayer, updatePreCollisionY },
+    actions: { getPlayerNextPiece, updatePreCollisionY },
   } = playerAPI;
 
   const {
@@ -74,14 +74,23 @@ export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
 
       // Check for score
       if (player.collided && !gameOver) {
-        resetPlayer();
+        getPlayerNextPiece();
         return sweepRows(newStage);
       }
       return newStage;
     };
 
     setStage((prev) => updateStage(prev));
-  }, [gameOver, intuition.currentLevel, player, resetPlayer, setRowsCleared, updatePreCollisionY]);
+  }, [
+    gameOver,
+    intuition.currentLevel,
+    player, getPlayerNextPiece,
+    setRowsCleared, updatePreCollisionY,
+  ]);
+
+  const resetStage = () => {
+    setStage(createMainStage());
+  };
 
   return {
     state: {
@@ -89,6 +98,7 @@ export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
     },
     actions: {
       setStage,
+      resetStage,
     },
   };
 };

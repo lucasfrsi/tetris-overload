@@ -75,7 +75,7 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
     }));
   }, []);
 
-  const resetPlayer = useCallback(() => {
+  const getPlayerNextPiece = useCallback(() => {
     const newNextPieces = [...nextPieces];
     const nextPiece = newNextPieces.shift();
     // Mimic Check
@@ -93,7 +93,7 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
     if (pixelPocket.currentLevel) {
       if (hold.length === 0) {
         setHold([player.tetromino]);
-        resetPlayer();
+        getPlayerNextPiece();
       } else {
         const holdPiece = hold[0];
         setHold([player.tetromino]);
@@ -104,7 +104,7 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
         }));
       }
     }
-  }, [hold, pixelPocket.currentLevel, player.tetromino, resetPlayer]);
+  }, [hold, pixelPocket.currentLevel, player.tetromino, getPlayerNextPiece]);
 
   const activateMimic = useCallback(() => {
     if (mimic.currentLevel && !mimic.onCooldown) {
@@ -133,6 +133,14 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
     }
   }, [blink.currentLevel, playSFX, preCollisionY, updatePlayerPos]);
 
+  const resetPlayer = () => {
+    setPlayer({
+      pos: { x: 0, y: 0 },
+      tetromino: TETROMINOS[0],
+      collided: false,
+    });
+  };
+
   return {
     state: {
       player,
@@ -144,9 +152,10 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
       activateMimic,
       activateBlink,
       updatePlayerPos,
-      resetPlayer,
+      getPlayerNextPiece,
       playerRotate,
       updatePreCollisionY,
+      resetPlayer,
     },
   };
 };
