@@ -19,7 +19,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
 
   const {
     state: {
-      paused,
+      ticking,
       onCountdown,
       gameStarted,
     },
@@ -40,18 +40,18 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
 
   // Time Stop - Cooldown
   useInterval(() => {
-    if (!paused && timeStop.onCooldown > 0) {
+    if (timeStop.onCooldown > 0) {
       setTimeStop((prev) => ({
         ...prev,
         onCooldown: prev.onCooldown - 1,
         cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
       }));
     }
-  }, timeStop.cooldownTimer);
+  }, ticking ? timeStop.cooldownTimer : null);
 
   // Time Stop - Duration
   useInterval(() => {
-    if (!paused && timeStop.active > 0) {
+    if (timeStop.active > 0) {
       setTimeStop((prev) => ({
         ...prev,
         active: prev.active - 1,
@@ -60,29 +60,29 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
         cooldownTimer: prev.active === 1 ? INTERVAL_DELAY : null,
       }));
     }
-  }, timeStop.durationTimer);
+  }, ticking ? timeStop.durationTimer : null);
 
   // Mimic - Cooldown
   useInterval(() => {
-    if (!paused && mimic.onCooldown > 0) {
+    if (mimic.onCooldown > 0) {
       setMimic((prev) => ({
         ...prev,
         onCooldown: prev.onCooldown - 1,
         cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
       }));
     }
-  }, mimic.cooldownTimer);
+  }, ticking ? mimic.cooldownTimer : null);
 
   // Perfectionism - Cooldown
   useInterval(() => {
-    if (!paused && perfectionism.onCooldown > 0) {
+    if (perfectionism.onCooldown > 0) {
       setPerfectionism((prev) => ({
         ...prev,
         onCooldown: prev.onCooldown - 1,
         cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
       }));
     }
-  }, perfectionism.cooldownTimer);
+  }, ticking ? perfectionism.cooldownTimer : null);
 
   // Countdown Timer
   const [onCountdownTimer, setOnCountdownTimer] = useState(null);
@@ -104,7 +104,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
     if (onCountdown === true) {
       setCountdown(3);
       setOnCountdownTimer(1000);
-    } else if (onCountdown === false) {
+    } else {
       setCountdown(null);
       setOnCountdownTimer(null);
     }
