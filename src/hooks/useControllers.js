@@ -1,8 +1,4 @@
-import { PAUSE_IN, PAUSE_OUT } from 'utils/SFXPaths';
-
-export const useControllers = ({
-  skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI, SFX_API,
-}) => {
+export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI }) => {
   const {
     actions: {
       playerRotate,
@@ -23,6 +19,9 @@ export const useControllers = ({
       level,
       gameOver,
       paused,
+      ticking,
+      onCountdown,
+      dialogIsOpen,
     },
     actions: {
       setDropTime,
@@ -47,16 +46,10 @@ export const useControllers = ({
     },
   } = skillsAPI;
 
-  const {
-    actions: {
-      playSFX,
-    },
-  } = SFX_API;
-
   const onKeyDown = (event) => {
     const { code, key } = event;
 
-    if (!gameOver && !paused) {
+    if (ticking) {
       if (key === '1' || code === 'Numpad1') {
         movePlayer(-1);
       } else if (key === '2' || code === 'Numpad2') {
@@ -79,11 +72,13 @@ export const useControllers = ({
         activateTimeStop();
       } else if (key === 'p' || code === 'keyP') {
         pause();
-        playSFX(PAUSE_IN);
       }
-    } else if (paused && (key === 'p' || code === 'keyP')) {
-      unpause();
-      playSFX(PAUSE_OUT);
+    } else if (key === 'p' || code === 'keyP') {
+      if (onCountdown) {
+        pause();
+      } else if (paused && !dialogIsOpen) {
+        unpause();
+      }
     }
   };
 
