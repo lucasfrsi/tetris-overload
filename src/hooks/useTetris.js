@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 import { checkCollision } from 'utils/gameHelpers';
-import { TETROMINO_MERGE, TETROMINO_MOVE } from 'utils/SFXPaths';
+import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
 export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API }) => {
@@ -35,6 +35,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       onCountdown,
       gameStarted,
       ticking,
+      paused,
     },
     actions: {
       setLevel,
@@ -149,23 +150,21 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   const pause = () => {
     if (onCountdown) cancelCountdown();
     pauseBGM();
+    playSFX(PAUSE_IN);
     setTicking(false);
     setPaused(true);
   };
 
   const unpause = () => {
+    playSFX(PAUSE_OUT);
     setPaused(false);
     startCountdown();
   };
 
   // MENU BUTTON - CONFIRMATION DIALOG
   const openConfirmationDialog = () => {
-    if (!onCountdown && !gameStarted) {
-      goToMenu();
-    } else {
-      pause();
-      setDialogIsOpen(true);
-    }
+    pause();
+    setDialogIsOpen(true);
   };
 
   const closeConfirmationDialog = () => {
@@ -194,6 +193,38 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     resumeGame();
   };
 
+  // BUTTONS
+  const handleStartButton = () => {
+    startCountdown();
+  };
+
+  const handlePauseButton = () => {
+    if (paused) {
+      unpause();
+    } else {
+      pause();
+    }
+  };
+
+  const handleResetButton = () => {
+    // use confirmation dialog
+    resetGame();
+  };
+
+  const handleMenuButton = () => {
+    if (!gameStarted) {
+      goToMenu();
+    } else {
+      openConfirmationDialog();
+    }
+  };
+
+  // TO-DOS
+  // Double check all the logic
+  // Check when controllers should respond
+  //  - Most of them should respond only when ticking
+  //  - Except for pause (deal with P button, when dialog is open, block it)
+
   return {
     state: {
       inGame,
@@ -203,14 +234,16 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       movePlayer,
       goToMenu,
       goToTetris,
-      startCountdown,
-      openConfirmationDialog,
       confirmDialog,
       cancelDialog,
       pause,
       unpause,
       startGame,
       resumeGame,
+      handleStartButton,
+      handlePauseButton,
+      handleResetButton,
+      handleMenuButton,
     },
   };
 };
