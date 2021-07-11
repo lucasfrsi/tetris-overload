@@ -81,9 +81,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     }
   };
 
-  // pixelpocket can only be used ONCE per piece falling
-  // once it is used, a piece need to merge for it to be reusable again
-
   const drop = () => {
     // Increase level when player has cleared 10 rows
     if (rows > (level + 1) * 10) {
@@ -220,12 +217,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       openConfirmationDialog();
     }
   };
-
-  // TO-DOS
-  // Double check all the logic
-  // Check when controllers should respond
-  //  - Most of them should respond only when ticking
-  //  - Except for pause (deal with P button, when dialog is open, block it)
 
   return {
     state: {
