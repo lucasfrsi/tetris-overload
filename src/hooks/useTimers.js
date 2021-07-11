@@ -1,6 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useInterval } from './useInterval';
 
-export const useTimers = ({ skillsAPI, gameStatusAPI }) => {
+export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
   const INTERVAL_DELAY = 1000;
 
   const {
@@ -19,13 +20,26 @@ export const useTimers = ({ skillsAPI, gameStatusAPI }) => {
   const {
     state: {
       paused,
+      onCountdown,
+      gameStarted,
+    },
+    actions: {
+      setOnCountdown,
     },
   } = gameStatusAPI;
 
+  const {
+    actions: {
+      startGame,
+      resumeGame,
+    },
+  } = tetrisAPI;
+
   // TIMERS
   // Using setInterval for now, even though it's not perfectly accurate
+
+  // Time Stop - Cooldown
   useInterval(() => {
-    // console.log('useInterval: timeStop cooldownTimer');
     if (!paused && timeStop.onCooldown > 0) {
       setTimeStop((prev) => ({
         ...prev,
@@ -35,8 +49,8 @@ export const useTimers = ({ skillsAPI, gameStatusAPI }) => {
     }
   }, timeStop.cooldownTimer);
 
+  // Time Stop - Duration
   useInterval(() => {
-    // console.log('useInterval: timeStop durationTimer');
     if (!paused && timeStop.active > 0) {
       setTimeStop((prev) => ({
         ...prev,
@@ -48,8 +62,8 @@ export const useTimers = ({ skillsAPI, gameStatusAPI }) => {
     }
   }, timeStop.durationTimer);
 
+  // Mimic - Cooldown
   useInterval(() => {
-    // console.log('useInterval: mimic cooldownTimer');
     if (!paused && mimic.onCooldown > 0) {
       setMimic((prev) => ({
         ...prev,
@@ -59,8 +73,8 @@ export const useTimers = ({ skillsAPI, gameStatusAPI }) => {
     }
   }, mimic.cooldownTimer);
 
+  // Perfectionism - Cooldown
   useInterval(() => {
-    // console.log('useInterval: perfectionism cooldownTimer');
     if (!paused && perfectionism.onCooldown > 0) {
       setPerfectionism((prev) => ({
         ...prev,
@@ -69,4 +83,36 @@ export const useTimers = ({ skillsAPI, gameStatusAPI }) => {
       }));
     }
   }, perfectionism.cooldownTimer);
+
+  // Countdown Timer
+  const [onCountdownTimer, setOnCountdownTimer] = useState(null);
+  const [countdown, setCountdown] = useState(null);
+  useInterval(() => {
+    if (countdown > 0) {
+      setCountdown((prev) => prev - 1);
+    } else if (countdown === 0) {
+      if (gameStarted) {
+        resumeGame();
+      } else {
+        startGame();
+      }
+      setOnCountdown(false);
+    }
+  }, onCountdownTimer);
+
+  useEffect(() => {
+    if (onCountdown === true) {
+      setCountdown(3);
+      setOnCountdownTimer(1000);
+    } else if (onCountdown === false) {
+      setCountdown(null);
+      setOnCountdownTimer(null);
+    }
+  }, [onCountdown]);
+
+  return {
+    state: {
+      countdown,
+    },
+  };
 };
