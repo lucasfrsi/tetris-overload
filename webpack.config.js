@@ -37,7 +37,7 @@ const config = {
         },
       },
       {
-        test: /\.(png|jpg|jpeg|gif|svg|mp3|wav|ogg)$/i,
+        test: /\.(png|jpg|jpeg|gif|svg|mp3|wav|ogg|flac)$/i,
         type: 'asset/resource',
       },
     ],
