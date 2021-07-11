@@ -21,6 +21,7 @@ import Score from '../Score';
 import Pause from '../Pause';
 import SideButton from '../SideButton';
 import ConfirmationDialog from '../ConfirmationDialog';
+import Countdown from '../Countdown';
 
 import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
@@ -29,13 +30,13 @@ const Tetris = () => {
   const SFX_API = useSFX();
 
   const skillsAPI = useSkills();
-  const gameStatusAPI = useGameStatus({ skillsAPI, BGM_API });
+  const gameStatusAPI = useGameStatus({ skillsAPI });
   const playerAPI = usePlayer({ skillsAPI, SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
   const tetrisAPI = useTetris({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API });
 
-  useTimers({ skillsAPI, gameStatusAPI });
+  const timersAPI = useTimers({ skillsAPI, gameStatusAPI, tetrisAPI });
 
   const controllersAPI = useControllers({
     skillsAPI,
@@ -92,6 +93,7 @@ const Tetris = () => {
       score,
       paused,
       dialogIsOpen,
+      onCountdown,
     },
   } = gameStatusAPI;
 
@@ -101,6 +103,10 @@ const Tetris = () => {
     },
     actions: {
       goToTetris,
+      startCountdown,
+      openConfirmationDialog,
+      confirmDialog,
+      cancelDialog,
     },
   } = tetrisAPI;
 
@@ -110,6 +116,12 @@ const Tetris = () => {
       onKeyUp,
     },
   } = controllersAPI;
+
+  const {
+    state: {
+      countdown,
+    },
+  } = timersAPI;
 
   const onKeyDownHandler = (event) => {
     onKeyDown(event);
@@ -127,11 +139,12 @@ const Tetris = () => {
         onKeyDown={onKeyDownHandler}
         onKeyUp={onKeyUpHandler}
       >
+        {onCountdown && <Countdown count={countdown} />}
         {paused && <Pause dialog={dialogIsOpen} />}
         {dialogIsOpen && (
           <ConfirmationDialog
-            cancel={cancelConfirmationDialog}
-            confirm={confirmConfirmationDialog}
+            cancel={cancelDialog}
+            confirm={confirmDialog}
           />
         )}
         <StyledTetrisLayout>
