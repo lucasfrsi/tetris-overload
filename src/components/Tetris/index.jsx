@@ -164,10 +164,10 @@ const Tetris = () => {
             <Score name="Level" value={level} />
             <Score name="Rows" value={rows} />
             {(onCountdown || gameStarted || paused)
-              ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} />
+              ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} playSFXOnClick={false} />
               : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} />}
             <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
-            <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} />
+            <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} playSFXOnClick={false} />
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
