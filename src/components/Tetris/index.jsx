@@ -94,6 +94,7 @@ const Tetris = () => {
       paused,
       dialogIsOpen,
       onCountdown,
+      gameStarted,
     },
   } = gameStatusAPI;
 
@@ -103,10 +104,12 @@ const Tetris = () => {
     },
     actions: {
       goToTetris,
-      startCountdown,
-      openConfirmationDialog,
+      handleMenuButton,
       confirmDialog,
       cancelDialog,
+      handleStartButton,
+      handlePauseButton,
+      handleResetButton,
     },
   } = tetrisAPI;
 
@@ -160,8 +163,11 @@ const Tetris = () => {
             <Score name="Score" value={score} />
             <Score name="Level" value={level} />
             <Score name="Rows" value={rows} />
-            <SideButton buttonName="start" onClick={startCountdown} playSFX={playSFX} />
-            <SideButton buttonName="menu" onClick={openConfirmationDialog} playSFX={playSFX} />
+            {(onCountdown || gameStarted || paused)
+              ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} />
+              : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} />}
+            <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
+            <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} />
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
