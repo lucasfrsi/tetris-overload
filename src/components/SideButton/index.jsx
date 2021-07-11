@@ -4,7 +4,7 @@ import { BUTTON_HOVER, BUTTON_SELECT } from 'utils/SFXPaths';
 
 import * as styles from './style';
 
-const SideButton = ({ buttonName, onClick, playSFX }) => (
+const SideButton = ({ buttonName, onClick, playSFX, disabled }) => (
   <button
     type="button"
     tabIndex={-1}
@@ -14,6 +14,7 @@ const SideButton = ({ buttonName, onClick, playSFX }) => (
       playSFX(BUTTON_SELECT);
     }}
     onMouseEnter={() => playSFX(BUTTON_HOVER)}
+    disabled={disabled}
   >
     { buttonName }
   </button>
@@ -23,6 +24,11 @@ SideButton.propTypes = {
   buttonName: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   playSFX: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
+
+SideButton.defaultProps = {
+  disabled: false,
 };
 
 export default SideButton;
