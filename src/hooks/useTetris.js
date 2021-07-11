@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 import { checkCollision } from 'utils/gameHelpers';
-import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT } from 'utils/SFXPaths';
+import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
 export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API }) => {
@@ -173,6 +173,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   };
 
   const confirmDialog = () => {
+    playSFX(BUTTON_SELECT);
     goToMenu();
   };
 
@@ -213,6 +214,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
 
   const handleMenuButton = () => {
     if (!gameStarted) {
+      playSFX(BUTTON_SELECT);
       goToMenu();
     } else {
       openConfirmationDialog();
