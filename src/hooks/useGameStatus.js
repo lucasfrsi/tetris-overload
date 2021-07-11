@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export const useGameStatus = ({ skillsAPI, BGM_API }) => {
+export const useGameStatus = ({ skillsAPI }) => {
   const [score, setScore] = useState(0);
   const [rows, setRows] = useState(0);
   const [level, setLevel] = useState(0);
@@ -8,67 +8,16 @@ export const useGameStatus = ({ skillsAPI, BGM_API }) => {
 
   const [dropTime, setDropTime] = useState(null);
 
-  const [gameState, setGameState] = useState({
-    running: false,
-    onCountdown: false,
-    paused: false,
-    gameOver: false,
-    dialogIsOpen: false,
-  });
-
-  const setRunning = useCallback((state) => {
-    setGameState((prev) => ({
-      ...prev,
-      running: state,
-    }));
-  }, []);
-
-  const setOnCountdown = useCallback((state) => {
-    setGameState((prev) => ({
-      ...prev,
-      onCountdown: state,
-    }));
-  }, []);
-
-  const setPaused = useCallback((state) => {
-    setGameState((prev) => ({
-      ...prev,
-      paused: state,
-    }));
-  }, []);
-
-  const setGameOver = useCallback((state) => {
-    setGameState((prev) => ({
-      ...prev,
-      gameOver: state,
-    }));
-  }, []);
-
-  const setDialogIsOpen = useCallback((state) => {
-    setGameState((prev) => ({
-      ...prev,
-      dialogIsOpen: state,
-    }));
-  }, []);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [onCountdown, setOnCountdown] = useState(null);
+  const [paused, setPaused] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  const [ticking, setTicking] = useState(false);
 
   const {
     actions: { calcExp },
   } = skillsAPI;
-
-  const {
-    actions: {
-      playBGM,
-      pauseBGM,
-    },
-  } = BGM_API;
-
-  useEffect(() => {
-    if (gameState.paused) {
-      pauseBGM();
-    } else {
-      playBGM();
-    }
-  }, [gameState.paused, pauseBGM, playBGM]);
 
   const calcScore = useCallback(() => {
     const linePoints = [40, 100, 300, 1200];
@@ -86,6 +35,19 @@ export const useGameStatus = ({ skillsAPI, BGM_API }) => {
     calcScore();
   }, [calcScore]);
 
+  const resetGameStatus = () => {
+    setScore(0);
+    setLevel(0);
+    setRows(0);
+    setDropTime(null);
+    setGameStarted(false);
+    setOnCountdown(null);
+    setPaused(false);
+    setGameOver(false);
+    setDialogIsOpen(false);
+    setTicking(false);
+  };
+
   return {
     state: {
       score,
@@ -93,11 +55,12 @@ export const useGameStatus = ({ skillsAPI, BGM_API }) => {
       level,
       dropTime,
       rowsCleared,
-      running: gameState.running,
-      onCountdown: gameState.onCountdown,
-      paused: gameState.paused,
-      gameOver: gameState.gameOver,
-      dialogIsOpen: gameState.dialogIsOpen,
+      gameStarted,
+      onCountdown,
+      paused,
+      gameOver,
+      dialogIsOpen,
+      ticking,
     },
     actions: {
       setScore,
@@ -105,11 +68,13 @@ export const useGameStatus = ({ skillsAPI, BGM_API }) => {
       setLevel,
       setDropTime,
       setRowsCleared,
-      setRunning,
+      setGameStarted,
       setOnCountdown,
       setPaused,
       setGameOver,
       setDialogIsOpen,
+      setTicking,
+      resetGameStatus,
     },
   };
 };
