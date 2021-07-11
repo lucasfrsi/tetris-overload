@@ -26,7 +26,6 @@ export const useControllers = ({
     },
     actions: {
       setDropTime,
-      setPaused,
     },
   } = gameStatusAPI;
 
@@ -34,6 +33,8 @@ export const useControllers = ({
     actions: {
       dropPlayer,
       movePlayer,
+      pause,
+      unpause,
     },
   } = tetrisAPI;
 
@@ -77,11 +78,11 @@ export const useControllers = ({
       } else if (key === '0' || code === 'Numpad0') {
         activateTimeStop();
       } else if (key === 'p' || code === 'keyP') {
-        setPaused(true);
+        pause();
         playSFX(PAUSE_IN);
       }
     } else if (paused && (key === 'p' || code === 'keyP')) {
-      setPaused(false);
+      unpause();
       playSFX(PAUSE_OUT);
     }
   };
