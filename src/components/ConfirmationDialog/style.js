@@ -4,7 +4,7 @@ export const dialogBoxWrapper = css`
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 1001;
+  z-index: 2000;
 
   display: flex;
   flex-direction: column;
