@@ -14,3 +14,5 @@ export default {
   - inGame: BoxCat Games - Against the Wall
   - menu: BoxCat Games - Mission
 */
+
+// CONVERT TO A SMALLER SIZE
