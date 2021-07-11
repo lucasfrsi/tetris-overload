@@ -142,7 +142,7 @@ const Tetris = () => {
         onKeyDown={onKeyDownHandler}
         onKeyUp={onKeyUpHandler}
       >
-        {onCountdown && <Countdown count={countdown} />}
+        {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
         {paused && <Pause dialog={dialogIsOpen} />}
         {dialogIsOpen && (
           <ConfirmationDialog

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useInterval } from './useInterval';
 
 export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
-  const INTERVAL_DELAY = 1000;
+  const INTERVAL_DELAY = useMemo(() => 1000, []);
 
   const {
     state: {

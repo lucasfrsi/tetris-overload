@@ -28,10 +28,10 @@ export const TETROMINO_MOVE = 'TETROMINO_MOVE';
 export const PAUSE_IN = 'PAUSE_IN';
 export const PAUSE_OUT = 'PAUSE_OUT';
 
-export const THREE = 'THREE';
-export const TWO = 'TWO';
-export const ONE = 'ONE';
-export const GO = 'GO';
+// export const THREE = 'THREE';
+// export const TWO = 'TWO';
+// export const ONE = 'ONE';
+// export const GO = 'GO';
 export const GAME_OVER = 'GAME_OVER';
 export const CONGRATULATIONS = 'CONGRATULATIONS';
 export const NEW_HIGHSCORE = 'NEW_HIGHSCORE';
@@ -51,10 +51,10 @@ export default {
   [PAUSE_IN]: pauseIn,
   [PAUSE_OUT]: pauseOut,
   // VOICE
-  [ONE]: one,
-  [TWO]: two,
-  [THREE]: three,
-  [GO]: go,
+  1: one,
+  2: two,
+  3: three,
+  0: go,
   [GAME_OVER]: gameOver,
   [CONGRATULATIONS]: congratulations,
   [NEW_HIGHSCORE]: newHighscore,

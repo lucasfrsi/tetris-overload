@@ -9,4 +9,27 @@ export const countdownBox = css`
   display: flex;
   justify-content: center;
   margin: 20vh 0 0;
+
+  span {
+    font-size: 4.8rem;
+    text-shadow: 0 0 1rem black;
+    animation: 1s ease-in-out appear;
+  }
+
+  @keyframes appear {
+    0% {
+      transform: translateY(5rem);
+      opacity: 0;
+    }
+
+    30% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(-5rem);
+      opacity: 0;
+    }
+  }
 `;
