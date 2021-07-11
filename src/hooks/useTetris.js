@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
-import { checkCollision, createMainStage } from 'utils/gameHelpers';
+import { checkCollision } from 'utils/gameHelpers';
 import { TETROMINO_MERGE, TETROMINO_MOVE } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
@@ -13,6 +13,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     },
     actions: {
       updatePlayerPos,
+      getPlayerNextPiece,
       resetPlayer,
     },
   } = playerAPI;
@@ -22,7 +23,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       stage,
     },
     actions: {
-      setStage,
+      resetStage,
     },
   } = stageAPI;
 
@@ -31,16 +32,20 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       level,
       rows,
       dropTime,
-      paused,
+      onCountdown,
+      gameStarted,
+      ticking,
     },
     actions: {
       setLevel,
-      setRows,
-      setScore,
       setGameOver,
       setDropTime,
       setDialogIsOpen,
       setPaused,
+      setOnCountdown,
+      setGameStarted,
+      setTicking,
+      resetGameStatus,
     },
   } = gameStatusAPI;
 
@@ -64,6 +69,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       playBGM,
       stopBGM,
       changeBGM,
+      pauseBGM,
     },
   } = BGM_API;
 
@@ -73,29 +79,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       playSFX(TETROMINO_MOVE);
     }
   };
-
-  const resetGame = () => {
-    resetSkills();
-    setStage(createMainStage());
-    setGameOver(false);
-    resetPlayer();
-    setScore(0);
-    setLevel(0);
-    setRows(0);
-    setDropTime(null);
-    stopBGM();
-  };
-
-  const startGame = () => {
-    resetGame();
-    setDropTime(1000);
-    playBGM();
-  };
-
-  // separate start game from reset game
-  // reset everything when leaving ingame
-  // popup for confirmation when leaving
-  // maybe removing start button once game is running?
 
   // pixelpocket can only be used ONCE per piece falling
   // once it is used, a piece need to merge for it to be reusable again
@@ -128,8 +111,15 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   };
 
   useInterval(() => {
-    if (!paused && !timeStop.active) drop();
+    if (ticking && !timeStop.active) drop();
   }, dropTime);
+
+  const resetGame = () => {
+    resetSkills();
+    resetGameStatus();
+    resetPlayer();
+    resetStage();
+  };
 
   const goToTetris = () => {
     setInGame(true);
@@ -139,11 +129,69 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
 
   const goToMenu = () => {
     setInGame(false);
-    setDialogIsOpen(false);
-    setPaused(false);
+    resetGame();
+
     stopBGM();
     changeBGM(MENU);
     playBGM();
+  };
+
+  // START BUTTON - COUNTDOWN
+  const startCountdown = () => {
+    setOnCountdown(true);
+  };
+
+  const cancelCountdown = () => {
+    setOnCountdown(false);
+  };
+
+  // PAUSE and UNPAUSE
+  const pause = () => {
+    if (onCountdown) cancelCountdown();
+    pauseBGM();
+    setTicking(false);
+    setPaused(true);
+  };
+
+  const unpause = () => {
+    setPaused(false);
+    startCountdown();
+  };
+
+  // MENU BUTTON - CONFIRMATION DIALOG
+  const openConfirmationDialog = () => {
+    if (!onCountdown && !gameStarted) {
+      goToMenu();
+    } else {
+      pause();
+      setDialogIsOpen(true);
+    }
+  };
+
+  const closeConfirmationDialog = () => {
+    unpause();
+    setDialogIsOpen(false);
+  };
+
+  const confirmDialog = () => {
+    goToMenu();
+  };
+
+  const cancelDialog = () => {
+    closeConfirmationDialog();
+  };
+
+  // START AND RESUME GAME
+  const resumeGame = () => {
+    playBGM();
+    setTicking(true);
+    setDropTime(1000);
+  };
+
+  const startGame = () => {
+    setGameStarted(true);
+    getPlayerNextPiece();
+    resumeGame();
   };
 
   return {
@@ -153,9 +201,16 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     actions: {
       dropPlayer,
       movePlayer,
-      startGame,
       goToMenu,
       goToTetris,
+      startCountdown,
+      openConfirmationDialog,
+      confirmDialog,
+      cancelDialog,
+      pause,
+      unpause,
+      startGame,
+      resumeGame,
     },
   };
 };
