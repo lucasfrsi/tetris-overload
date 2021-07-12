@@ -10,8 +10,9 @@ const Countdown = ({ count, playSFX }) => {
   return (
     <div css={styles.countdownWrapper}>
       <div css={styles.countdownBox}>
-        {/* Improve logic below? '-' */}
-        <span key={count}>{(count === null) ? null : (count || 'GO!')}</span>
+        <span css={styles.countdownAnimated} key={count}>
+          {(count === null) ? null : (count || 'GO!')}
+        </span>
       </div>
     </div>
   );

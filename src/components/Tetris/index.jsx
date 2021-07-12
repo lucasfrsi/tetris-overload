@@ -97,6 +97,8 @@ const Tetris = () => {
       onCountdown,
       gameStarted,
       gameOver,
+      newHighScore,
+      storedScores,
     },
   } = gameStatusAPI;
 

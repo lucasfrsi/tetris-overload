@@ -22,19 +22,22 @@ export const dialogBox = css`
 
   border: 2px solid white;
   padding: 2rem;
+  background-color: black;
 
   button {
     cursor: pointer;
     background-color: transparent;
     border: none;
     text-transform: uppercase;
+    min-width: 12rem;
+    padding: 1rem;
 
     &:hover {
       color: gold;
     }
 
     &:first-of-type {
-      margin-right: auto;
+      margin-right: 4rem;
     }
   }
 `;
@@ -48,4 +51,5 @@ export const dialogText = css`
 
 export const buttonsWrapper = css`
   display: flex;
+  justify-content: center;
 `;

@@ -11,7 +11,7 @@ const ConfirmationDialog = ({ cancel, confirm }) => (
       </p>
       <div css={styles.buttonsWrapper}>
         <button type="button" onClick={cancel}>Cancel</button>
-        <button type="button" onClick={confirm}>Go to Menu</button>
+        <button type="button" onClick={confirm}>Yes</button>
       </div>
     </div>
   </div>

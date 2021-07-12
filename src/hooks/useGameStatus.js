@@ -1,28 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
-import { checkLocalStorageAvailability, initializeScores } from 'utils/localStorage';
+import { checkLocalStorageAvailability, initializeScores, setKeyValue } from 'utils/localStorage';
 
 export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [isLocalStorageAvailable, setIsLocalStorageAvailable] = useState();
   const [storedScores, setStoredScores] = useState();
 
-  useEffect(() => {
-    const localStorageAvailability = checkLocalStorageAvailability();
-
-    setIsLocalStorageAvailable(localStorageAvailability);
-    setStoredScores(initializeScores(localStorageAvailability));
-  }, []);
-
-  // just for testing
-  useEffect(() => {
-    console.log(isLocalStorageAvailable);
-    console.log(storedScores);
-  }, [isLocalStorageAvailable, storedScores]);
-
   const [score, setScore] = useState(0);
-  const [rows, setRows] = useState(0);
   const [level, setLevel] = useState(0);
+  const [rows, setRows] = useState(0);
   const [rowsCleared, setRowsCleared] = useState(0);
+  const [newHighScore, setNewHighScore] = useState(false);
 
   const [dropTime, setDropTime] = useState(null);
 
@@ -70,6 +58,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     setScore(0);
     setLevel(0);
     setRows(0);
+    setNewHighScore(false);
     setDropTime(null);
     setGameStarted(false);
     setOnCountdown(null);
@@ -79,11 +68,47 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     setTicking(false);
   };
 
+  const updateScores = () => {
+    const scores = [...storedScores];
+
+    if (scores.length < 5) {
+      scores.push(score);
+    } else if (score > scores[scores.length - 1]) {
+      scores.pop();
+      scores.push(score);
+    } else {
+      return;
+    }
+
+    if (scores.length === 1) {
+      setNewHighScore(true);
+    } else {
+      const firstEl = scores[0];
+      const lastEl = scores[scores.length - 1];
+
+      if (lastEl > firstEl) {
+        setNewHighScore(true);
+      }
+
+      scores.sort((a, b) => b - a);
+    }
+
+    setStoredScores(scores);
+    if (isLocalStorageAvailable) setKeyValue(scores);
+  };
+
+  useEffect(() => {
+    const localStorageAvailability = checkLocalStorageAvailability();
+
+    setIsLocalStorageAvailable(localStorageAvailability);
+    setStoredScores(initializeScores(localStorageAvailability));
+  }, []);
+
   return {
     state: {
       score,
-      rows,
       level,
+      rows,
       dropTime,
       rowsCleared,
       gameStarted,
@@ -92,6 +117,8 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       gameOver,
       dialogIsOpen,
       ticking,
+      newHighScore,
+      storedScores,
     },
     actions: {
       setScore,
@@ -106,6 +133,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       setDialogIsOpen,
       setTicking,
       resetGameStatus,
+      updateScores,
     },
   };
 };

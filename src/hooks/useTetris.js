@@ -47,6 +47,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       setGameStarted,
       setTicking,
       resetGameStatus,
+      updateScores,
     },
   } = gameStatusAPI;
 
@@ -155,6 +156,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
 
   // GAME OVER
   const gameIsOver = () => {
+    updateScores();
     setGameOver(true);
 
     setTicking(false);
