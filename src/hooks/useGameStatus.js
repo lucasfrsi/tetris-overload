@@ -1,7 +1,24 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
+import { checkLocalStorageAvailability, initializeScores } from 'utils/localStorage';
 
 export const useGameStatus = ({ skillsAPI, SFX_API }) => {
+  const [isLocalStorageAvailable, setIsLocalStorageAvailable] = useState();
+  const [storedScores, setStoredScores] = useState();
+
+  useEffect(() => {
+    const localStorageAvailability = checkLocalStorageAvailability();
+
+    setIsLocalStorageAvailable(localStorageAvailability);
+    setStoredScores(initializeScores(localStorageAvailability));
+  }, []);
+
+  // just for testing
+  useEffect(() => {
+    console.log(isLocalStorageAvailable);
+    console.log(storedScores);
+  }, [isLocalStorageAvailable, storedScores]);
+
   const [score, setScore] = useState(0);
   const [rows, setRows] = useState(0);
   const [level, setLevel] = useState(0);
