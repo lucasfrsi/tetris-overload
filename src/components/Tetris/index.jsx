@@ -29,14 +29,14 @@ const Tetris = () => {
   const BGM_API = useBGM();
   const SFX_API = useSFX();
 
-  const skillsAPI = useSkills();
-  const gameStatusAPI = useGameStatus({ skillsAPI });
+  const skillsAPI = useSkills({ SFX_API });
+  const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API });
   const playerAPI = usePlayer({ skillsAPI, SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
   const tetrisAPI = useTetris({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API });
 
-  const timersAPI = useTimers({ skillsAPI, gameStatusAPI, tetrisAPI });
+  const timersAPI = useTimers({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API });
 
   const controllersAPI = useControllers({
     skillsAPI,
@@ -187,13 +187,9 @@ const Tetris = () => {
 export default Tetris;
 
 /*
-  In-game Menus
-  - Pause
-
   TO-DOS
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
   4. Add sound effects and cell animations
-  5. Add song
   6. Style the entire game
   7. Play the game, tweak the math calculations + balance
   5. Add controls and the ability to choose all the keys
