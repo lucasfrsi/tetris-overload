@@ -23,6 +23,7 @@ import SideButton from '../SideButton';
 import ConfirmationDialog from '../ConfirmationDialog';
 import Countdown from '../Countdown';
 import GameOver from '../GameOver';
+import HighScores from '../HighScores';
 
 import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
@@ -97,8 +98,9 @@ const Tetris = () => {
       onCountdown,
       gameStarted,
       gameOver,
-      newHighScore,
+      showHighScores,
       storedScores,
+      newHighScore,
     },
   } = gameStatusAPI;
 
@@ -147,6 +149,7 @@ const Tetris = () => {
         onKeyUp={onKeyUpHandler}
       >
         {gameOver && <GameOver />}
+        {showHighScores && <HighScores scores={storedScores} newHighScore={newHighScore} />}
         {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
         {paused && <Pause dialog={dialogIsOpen} />}
         {dialogIsOpen && (

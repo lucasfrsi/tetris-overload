@@ -11,6 +11,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [rows, setRows] = useState(0);
   const [rowsCleared, setRowsCleared] = useState(0);
   const [newHighScore, setNewHighScore] = useState(false);
+  const [showHighScores, setShowHighScores] = useState(false);
 
   const [dropTime, setDropTime] = useState(null);
 
@@ -18,8 +19,8 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [onCountdown, setOnCountdown] = useState(null);
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [ticking, setTicking] = useState(false);
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   const clearTable = useMemo(() => ({
     1: CLEAR_SINGLE,
@@ -119,6 +120,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       ticking,
       newHighScore,
       storedScores,
+      showHighScores,
     },
     actions: {
       setScore,
