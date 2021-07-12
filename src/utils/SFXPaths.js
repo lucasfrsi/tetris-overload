@@ -83,20 +83,20 @@ export default {
   [SKILL_LEARNED]: skillLearned,
   [SKILL_IS_UP]: skillIsUp,
   [SKILL_ERROR]: skillError,
-  [TIME_STOP_ACTIVATED]: timeStopActivated,
-  [TIME_STOP_DOWN]: timeStopDown,
-  [TIME_STOP_UP]: timeStopUp,
-  [MIMIC]: mimic,
-  [PIXEL_POCKET]: pixelPocket,
+  [TIME_STOP_ACTIVATED]: timeStopActivated, // ok
+  [TIME_STOP_DOWN]: timeStopDown, // ok
+  [TIME_STOP_UP]: timeStopUp, // ok
+  [MIMIC]: mimic, // ok
+  [PIXEL_POCKET]: pixelPocket, // ok
   [PERFECTIONISM]: perfectionism,
   // GAME
   [PAUSE_IN]: pauseIn, // ok
   [PAUSE_OUT]: pauseOut, // ok
   [GAME_OVER]: gameOver,
-  [CLEAR_SINGLE]: clearSingle,
-  [CLEAR_DOUBLE]: clearDouble,
-  [CLEAR_TRIPLE]: clearTriple,
-  [CLEAR_TETRIS]: clearTetris,
+  [CLEAR_SINGLE]: clearSingle, // ok
+  [CLEAR_DOUBLE]: clearDouble, // ok
+  [CLEAR_TRIPLE]: clearTriple, // ok
+  [CLEAR_TETRIS]: clearTetris, // ok
   // VOICE
   1: one, // ok
   2: two, // ok
@@ -105,11 +105,13 @@ export default {
   [VO_GAME_OVER]: gameOverVO,
   [VO_CONGRATULATIONS]: congratulationsVO,
   [VO_NEW_HIGHSCORE]: newHighscoreVO,
-  [VO_LEVEL_UP]: levelUpVO,
+  [VO_LEVEL_UP]: levelUpVO, // ok
 };
 
 // pixelpocket can only be used ONCE per piece falling
 // once it is used, a piece need to merge for it to be reusable again
+// make gameover + score postscreen
+// add all the other sounds
 
 /*
   CREDITS:

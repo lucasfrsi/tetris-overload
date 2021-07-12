@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 import { checkCollision } from 'utils/gameHelpers';
-import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT } from 'utils/SFXPaths';
+import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
 export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API }) => {
@@ -84,6 +84,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   const drop = () => {
     // Increase level when player has cleared 10 rows
     if (rows > (level + 1) * 10) {
+      playSFX(VO_LEVEL_UP);
       setLevel((prev) => prev + 1);
       // Also increase speed
       setDropTime(1000 / (level + 1) + 200);
@@ -95,6 +96,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       // Game over!
       if (player.pos.y < 1) {
         setGameOver(true);
+        setTicking(false);
         setDropTime(null);
         stopBGM();
       }

@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
 
-export const useGameStatus = ({ skillsAPI }) => {
+export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [score, setScore] = useState(0);
   const [rows, setRows] = useState(0);
   const [level, setLevel] = useState(0);
@@ -15,21 +16,34 @@ export const useGameStatus = ({ skillsAPI }) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [ticking, setTicking] = useState(false);
 
+  const clearTable = useMemo(() => ({
+    1: CLEAR_SINGLE,
+    2: CLEAR_DOUBLE,
+    3: CLEAR_TRIPLE,
+    4: CLEAR_TETRIS,
+  }), []);
+
   const {
     actions: { calcExp },
   } = skillsAPI;
+
+  const {
+    actions: { playSFX },
+  } = SFX_API;
 
   const calcScore = useCallback(() => {
     const linePoints = [40, 100, 300, 1200];
 
     // We have score
     if (rowsCleared > 0) {
+      playSFX(clearTable[rowsCleared]);
+
       // This is how original Tetris score is calculated
       setScore((prev) => prev + linePoints[rowsCleared - 1] * (level + 1));
       setRows((prev) => prev + rowsCleared);
       calcExp(rowsCleared);
     }
-  }, [calcExp, level, rowsCleared]);
+  }, [calcExp, clearTable, level, playSFX, rowsCleared]);
 
   useEffect(() => {
     calcScore();

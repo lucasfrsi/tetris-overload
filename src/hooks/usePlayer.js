@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { TETROMINOS, randomTetromino, createNextPiecesArray } from 'utils/tetrominos';
 import { STAGE_WIDTH, checkCollision } from 'utils/gameHelpers';
 
-import { TETROMINO_ROTATE, TETROMINO_MERGE } from 'utils/SFXPaths';
+import { TETROMINO_ROTATE, TETROMINO_MERGE, MIMIC, PIXEL_POCKET } from 'utils/SFXPaths';
 
 export const usePlayer = ({ skillsAPI, SFX_API }) => {
   const [hold, setHold] = useState([]);
@@ -103,11 +103,13 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
           tetromino: holdPiece,
         }));
       }
+      playSFX(PIXEL_POCKET);
     }
-  }, [hold, pixelPocket.currentLevel, player.tetromino, getPlayerNextPiece]);
+  }, [pixelPocket.currentLevel, hold, playSFX, player.tetromino, getPlayerNextPiece]);
 
   const activateMimic = useCallback(() => {
     if (mimic.currentLevel && !mimic.onCooldown) {
+      playSFX(MIMIC);
       setMimic((prev) => ({
         ...prev,
         onCooldown: prev.cooldown[prev.currentLevel],
@@ -124,6 +126,7 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
     nextPieces,
     player.tetromino,
     setMimic,
+    playSFX,
   ]);
 
   const activateBlink = useCallback(() => {

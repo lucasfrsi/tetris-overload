@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
+import { TIME_STOP_UP } from 'utils/SFXPaths';
 import { useInterval } from './useInterval';
 
-export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
+export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
   const INTERVAL_DELAY = useMemo(() => 1000, []);
 
   const {
@@ -35,6 +36,12 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
     },
   } = tetrisAPI;
 
+  const {
+    actions: {
+      playSFX,
+    },
+  } = SFX_API;
+
   // TIMERS
   // Using setInterval for now, even though it's not perfectly accurate
 
@@ -59,6 +66,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI }) => {
         durationTimer: prev.active === 1 ? null : INTERVAL_DELAY,
         cooldownTimer: prev.active === 1 ? INTERVAL_DELAY : null,
       }));
+      if (timeStop.active === 2) playSFX(TIME_STOP_UP);
     }
   }, ticking ? timeStop.durationTimer : null);
 

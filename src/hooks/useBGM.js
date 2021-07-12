@@ -34,7 +34,7 @@ export const useBGM = () => {
   }, []);
 
   const changeBGM = useCallback((type) => {
-    BGMPlayer.current.howl = new Howl({ src: BGMPaths[type], volume: 1, loop: true });
+    BGMPlayer.current.howl = new Howl({ src: BGMPaths[type], volume: 0.5, loop: true });
   }, []);
 
   useEffect(() => {

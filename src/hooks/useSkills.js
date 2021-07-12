@@ -1,7 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
+import { TIME_STOP_ACTIVATED, TIME_STOP_DOWN, TIME_STOP_UP } from 'utils/SFXPaths';
 
-export const useSkills = () => {
-  const INTERVAL_DELAY = 1000;
+export const useSkills = ({ SFX_API }) => {
+  const INTERVAL_DELAY = useMemo(() => 1000, []);
   const EXP_POINTS = useMemo(() => [10, 30, 50, 70], []);
 
   const [exp, setExp] = useState(0);
@@ -67,6 +68,10 @@ export const useSkills = () => {
     currentLevel: 0,
   });
 
+  const {
+    actions: { playSFX },
+  } = SFX_API;
+
   const calcExp = useCallback((rowsCleared) => {
     const expFormula = EXP_POINTS[rowsCleared - 1] * greedy.multiplier[greedy.currentLevel];
     setExp((prev) => prev + expFormula);
@@ -80,6 +85,8 @@ export const useSkills = () => {
           active: prev.duration[prev.currentLevel],
           durationTimer: INTERVAL_DELAY,
         }));
+        playSFX(TIME_STOP_ACTIVATED);
+        playSFX(TIME_STOP_DOWN);
       } else if (timeStop.active) {
         setTimeStop((prev) => ({
           ...prev,
@@ -88,6 +95,7 @@ export const useSkills = () => {
           durationTimer: null,
           cooldownTimer: INTERVAL_DELAY,
         }));
+        if (timeStop.active > 2) playSFX(TIME_STOP_UP);
       }
     }
   };
