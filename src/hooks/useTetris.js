@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 import { checkCollision } from 'utils/gameHelpers';
-import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP } from 'utils/SFXPaths';
+import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
 export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API }) => {
@@ -73,46 +73,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       pauseBGM,
     },
   } = BGM_API;
-
-  const movePlayer = (xDir, yDir = 0) => {
-    if (!checkCollision(player, stage, { x: xDir, y: yDir })) {
-      updatePlayerPos({ x: xDir, y: yDir });
-      playSFX(TETROMINO_MOVE);
-    }
-  };
-
-  const drop = () => {
-    // Increase level when player has cleared 10 rows
-    if (rows > (level + 1) * 10) {
-      playSFX(VO_LEVEL_UP);
-      setLevel((prev) => prev + 1);
-      // Also increase speed
-      setDropTime(1000 / (level + 1) + 200);
-    }
-
-    if (!checkCollision(player, stage, { x: 0, y: 1 })) {
-      updatePlayerPos({ x: 0, y: 1, collided: false });
-    } else {
-      // Game over!
-      if (player.pos.y < 1) {
-        setGameOver(true);
-        setTicking(false);
-        setDropTime(null);
-        stopBGM();
-      }
-      updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
-      playSFX(TETROMINO_MERGE);
-    }
-  };
-
-  const dropPlayer = () => {
-    setDropTime(null);
-    drop();
-  };
-
-  useInterval(() => {
-    if (ticking && !timeStop.active) drop();
-  }, dropTime);
 
   const resetGame = () => {
     resetSkills();
@@ -193,6 +153,18 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     resumeGame();
   };
 
+  // GAME OVER
+  const gameIsOver = () => {
+    setGameOver(true);
+
+    setTicking(false);
+    setDropTime(null);
+
+    stopBGM();
+    playSFX(GAME_OVER);
+    playSFX(VO_GAME_OVER);
+  };
+
   // BUTTONS
   const handleStartButton = () => {
     startCountdown();
@@ -219,6 +191,43 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       openConfirmationDialog();
     }
   };
+
+  const movePlayer = (xDir, yDir = 0) => {
+    if (!checkCollision(player, stage, { x: xDir, y: yDir })) {
+      updatePlayerPos({ x: xDir, y: yDir });
+      playSFX(TETROMINO_MOVE);
+    }
+  };
+
+  const drop = () => {
+    // Increase level when player has cleared 10 rows
+    if (rows > (level + 1) * 10) {
+      playSFX(VO_LEVEL_UP);
+      setLevel((prev) => prev + 1);
+      // Also increase speed
+      setDropTime(1000 / (level + 1) + 200);
+    }
+
+    if (!checkCollision(player, stage, { x: 0, y: 1 })) {
+      updatePlayerPos({ x: 0, y: 1, collided: false });
+    } else {
+      // Game over!
+      if (player.pos.y < 1) {
+        gameIsOver();
+      }
+      updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
+      playSFX(TETROMINO_MERGE);
+    }
+  };
+
+  const dropPlayer = () => {
+    setDropTime(null);
+    drop();
+  };
+
+  useInterval(() => {
+    if (ticking && !timeStop.active) drop();
+  }, dropTime);
 
   return {
     state: {

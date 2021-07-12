@@ -22,6 +22,7 @@ import Pause from '../Pause';
 import SideButton from '../SideButton';
 import ConfirmationDialog from '../ConfirmationDialog';
 import Countdown from '../Countdown';
+import GameOver from '../GameOver';
 
 import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
 
@@ -95,6 +96,7 @@ const Tetris = () => {
       dialogIsOpen,
       onCountdown,
       gameStarted,
+      gameOver,
     },
   } = gameStatusAPI;
 
@@ -142,6 +144,7 @@ const Tetris = () => {
         onKeyDown={onKeyDownHandler}
         onKeyUp={onKeyUpHandler}
       >
+        {gameOver && <GameOver />}
         {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
         {paused && <Pause dialog={dialogIsOpen} />}
         {dialogIsOpen && (
