@@ -116,6 +116,8 @@ const Tetris = () => {
       handleStartButton,
       handlePauseButton,
       handleResetButton,
+      handleHighScoresMenuButton,
+      handlePlayAgainButton,
     },
   } = tetrisAPI;
 
@@ -149,7 +151,14 @@ const Tetris = () => {
         onKeyUp={onKeyUpHandler}
       >
         {gameOver && <GameOver />}
-        {showHighScores && <HighScores scores={storedScores} newHighScore={newHighScore} />}
+        {showHighScores && (
+          <HighScores
+            scores={storedScores}
+            newHighScore={newHighScore}
+            menuButtonAction={handleHighScoresMenuButton}
+            playAgainButtonAction={handlePlayAgainButton}
+          />
+        )}
         {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
         {paused && <Pause dialog={dialogIsOpen} />}
         {dialogIsOpen && (

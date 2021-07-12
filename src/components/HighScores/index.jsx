@@ -29,8 +29,20 @@ const HighScores = ({ scores, newHighScore, menuButtonAction, playAgainButtonAct
       </table>
 
       <div css={styles.highScoresButtons}>
-        <button type="button" tabIndex={-1}>Menu</button>
-        <button type="button" tabIndex={-1}>Play Again</button>
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={menuButtonAction}
+        >
+          Menu
+        </button>
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={playAgainButtonAction}
+        >
+          Play Again
+        </button>
       </div>
     </div>
   </div>

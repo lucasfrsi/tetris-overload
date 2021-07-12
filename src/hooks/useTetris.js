@@ -158,12 +158,9 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
 
   // HIGH SCORES
   const displayHighScores = () => {
-    console.log('called');
     setShowHighScores(true);
 
-    // NOT PLAYING
-    // most likely due to not being updated at the time of the check
-    if (newHighScoreRef) {
+    if (newHighScoreRef.current === true) {
       playSFX(VO_CONGRATULATIONS);
       setTimeout(() => playSFX(VO_NEW_HIGHSCORE), 1200);
     }
@@ -181,7 +178,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     playSFX(GAME_OVER);
     playSFX(VO_GAME_OVER);
 
-    setTimeout(() => displayHighScores(), 1500);
+    setTimeout(() => displayHighScores(), 1250);
   };
 
   // BUTTONS
@@ -209,6 +206,15 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     } else {
       openConfirmationDialog();
     }
+  };
+
+  const handleHighScoresMenuButton = () => {
+    goToMenu();
+  };
+
+  const handlePlayAgainButton = () => {
+    resetGame();
+    startCountdown();
   };
 
   const movePlayer = (xDir, yDir = 0) => {
@@ -267,6 +273,8 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       handlePauseButton,
       handleResetButton,
       handleMenuButton,
+      handlePlayAgainButton,
+      handleHighScoresMenuButton,
     },
   };
 };
