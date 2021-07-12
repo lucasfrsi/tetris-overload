@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
 import { checkLocalStorageAvailability, initializeScores, setKeyValue } from 'utils/localStorage';
 
@@ -12,6 +12,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [rowsCleared, setRowsCleared] = useState(0);
   const [newHighScore, setNewHighScore] = useState(false);
   const [showHighScores, setShowHighScores] = useState(false);
+  const newHighScoreRef = useRef(false);
 
   const [dropTime, setDropTime] = useState(null);
 
@@ -60,6 +61,8 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     setLevel(0);
     setRows(0);
     setNewHighScore(false);
+    newHighScoreRef.current = false;
+    setShowHighScores(false);
     setDropTime(null);
     setGameStarted(false);
     setOnCountdown(null);
@@ -82,13 +85,17 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     }
 
     if (scores.length === 1) {
-      setNewHighScore(true);
+      if (scores[0] > 0) {
+        setNewHighScore(true);
+        newHighScoreRef.current = true;
+      }
     } else {
       const firstEl = scores[0];
       const lastEl = scores[scores.length - 1];
 
       if (lastEl > firstEl) {
         setNewHighScore(true);
+        newHighScoreRef.current = true;
       }
 
       scores.sort((a, b) => b - a);
@@ -119,6 +126,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       dialogIsOpen,
       ticking,
       newHighScore,
+      newHighScoreRef,
       storedScores,
       showHighScores,
     },
@@ -136,6 +144,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       setTicking,
       resetGameStatus,
       updateScores,
+      setShowHighScores,
     },
   };
 };

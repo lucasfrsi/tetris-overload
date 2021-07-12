@@ -16,27 +16,9 @@ export const StyledScore = styled.div`
 
 export const Title = styled.span`
   margin: 0 0 1rem;
-
-  background-image: repeating-linear-gradient(45deg, violet, indigo, blue, green, yellow, orange, red, violet);
-  background-size: 800% 800%;
-  /* background-clip: text; */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: rainbow 8s ease infinite;
+  color: white;
   text-transform: uppercase;
   font-size: 2rem;
-
-  @keyframes rainbow {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 25%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
 `;
 
 export const Value = styled.span`

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useInterval } from 'hooks/useInterval';
 import { checkCollision } from 'utils/gameHelpers';
-import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER } from 'utils/SFXPaths';
+import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
 export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API }) => {
@@ -36,6 +36,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       gameStarted,
       ticking,
       paused,
+      newHighScoreRef,
     },
     actions: {
       setLevel,
@@ -48,6 +49,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       setTicking,
       resetGameStatus,
       updateScores,
+      setShowHighScores,
     },
   } = gameStatusAPI;
 
@@ -154,6 +156,19 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     resumeGame();
   };
 
+  // HIGH SCORES
+  const displayHighScores = () => {
+    console.log('called');
+    setShowHighScores(true);
+
+    // NOT PLAYING
+    // most likely due to not being updated at the time of the check
+    if (newHighScoreRef) {
+      playSFX(VO_CONGRATULATIONS);
+      setTimeout(() => playSFX(VO_NEW_HIGHSCORE), 1200);
+    }
+  };
+
   // GAME OVER
   const gameIsOver = () => {
     updateScores();
@@ -165,6 +180,8 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     stopBGM();
     playSFX(GAME_OVER);
     playSFX(VO_GAME_OVER);
+
+    setTimeout(() => displayHighScores(), 1500);
   };
 
   // BUTTONS
