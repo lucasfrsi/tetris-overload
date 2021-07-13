@@ -74,7 +74,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     actions: {
       playBGM,
       stopBGM,
-      changeBGM,
       pauseBGM,
     },
   } = BGM_API;
@@ -89,7 +88,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   const goToTetris = () => {
     setInGame(true);
     stopBGM();
-    changeBGM(INGAME);
   };
 
   const goToMenu = () => {
@@ -97,8 +95,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     resetGame();
 
     stopBGM();
-    changeBGM(MENU);
-    playBGM();
+    playBGM(MENU);
   };
 
   // START BUTTON - COUNTDOWN
@@ -147,7 +144,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
 
   // START AND RESUME GAME
   const resumeGame = () => {
-    playBGM();
+    playBGM(INGAME);
     setTicking(true);
     setDropTime(1000);
   };

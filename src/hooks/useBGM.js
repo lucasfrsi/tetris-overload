@@ -1,10 +1,26 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Howl } from 'howler';
-import BGMPaths, { MENU } from 'utils/BGMPaths';
+import BGMSprite from 'assets/bgm/bgm_sprite.mp3';
+import { MENU, INGAME } from 'utils/BGMPaths';
 
 export const useBGM = () => {
   const BGMPlayer = useRef({
-    howl: new Howl({ src: BGMPaths[MENU], volume: 1, loop: true }),
+    howl: new Howl({
+      src: [BGMSprite],
+      sprite: {
+        [INGAME]: [
+          0,
+          204930.61224489796,
+        ],
+        [MENU]: [
+          206000,
+          81397.55102040817,
+        ],
+      },
+      volume: 1,
+      loop: true,
+      preload: true,
+    }),
     mute: true,
   });
 
@@ -17,24 +33,22 @@ export const useBGM = () => {
     mute: !prev.mute,
   }));
 
-  const playBGM = useCallback(() => {
+  const playBGM = useCallback((spriteKey) => {
     if (!BGMPlayer.current.mute) {
-      console.log('playBGM');
-      BGMPlayer.current.howl.play();
+      BGMPlayer.current.howl.play(spriteKey);
       BGMPlayer.current.howl.fade(0, 1, 500);
     }
   }, []);
 
   const stopBGM = useCallback(() => {
-    BGMPlayer.current.howl.stop();
+    BGMPlayer.current.howl.fade(1, 0, 250);
+    BGMPlayer.current.howl.once('fade', () => {
+      BGMPlayer.current.howl.stop();
+    });
   }, []);
 
   const pauseBGM = useCallback(() => {
     BGMPlayer.current.howl.pause();
-  }, []);
-
-  const changeBGM = useCallback((type) => {
-    BGMPlayer.current.howl = new Howl({ src: BGMPaths[type], volume: 0.5, loop: true });
   }, []);
 
   useEffect(() => {
@@ -42,7 +56,7 @@ export const useBGM = () => {
     if (BGM.mute) {
       stopBGM();
     } else {
-      playBGM();
+      playBGM(MENU);
     }
   }, [BGM.mute, playBGM, stopBGM]);
 
@@ -54,7 +68,6 @@ export const useBGM = () => {
       toggleMuteBGM,
       playBGM,
       stopBGM,
-      changeBGM,
       pauseBGM,
     },
   };

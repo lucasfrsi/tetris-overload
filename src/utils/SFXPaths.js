@@ -1,60 +1,18 @@
-import buttonHover from 'assets/sfx/button_hover.wav';
-import buttonSelect from 'assets/sfx/button_select.ogg';
-import buttonStart from 'assets/sfx/button_start.ogg';
-import buttonToggle from 'assets/sfx/button_toggle.ogg';
-
-import tetrominoRotate from 'assets/sfx/tetromino_rotate.wav';
-import tetrominoMerge from 'assets/sfx/tetromino_merge.wav';
-import tetrominoMove from 'assets/sfx/tetromino_move.wav';
-
-import skillOnCooldown from 'assets/sfx/skill_on_cooldown.ogg';
-import skillLearned from 'assets/sfx/skill_learned.wav';
-import skillIsUp from 'assets/sfx/skill_is_up.wav';
-import timeStopActivated from 'assets/sfx/time_stop_activated.wav';
-import timeStopDown from 'assets/sfx/time_stop_down.wav';
-import timeStopUp from 'assets/sfx/time_stop_up.wav';
-import mimic from 'assets/sfx/mimic.wav';
-import pixelPocket from 'assets/sfx/pixel_pocket.wav';
-import perfectionism from 'assets/sfx/clear_tetris_old.mp3';
-
-import pauseIn from 'assets/sfx/pause_in.wav';
-import pauseOut from 'assets/sfx/pause_out.wav';
-import gameOver from 'assets/sfx/game_over.wav';
-import clearSingle from 'assets/sfx/clear_single.wav';
-import clearDouble from 'assets/sfx/clear_double.wav';
-import clearTriple from 'assets/sfx/clear_triple.wav';
-import clearTetris from 'assets/sfx/clear_tetris_new.wav';
-import levelUp from 'assets/sfx/level_up.wav';
-import newHighscore from 'assets/sfx/new_highscore.wav';
-
-import one from 'assets/sfx/1.ogg';
-import two from 'assets/sfx/2.ogg';
-import three from 'assets/sfx/3.ogg';
-import go from 'assets/sfx/go.ogg';
-import gameOverVO from 'assets/sfx/game_over_vo.ogg';
-import congratulationsVO from 'assets/sfx/congratulations.ogg';
-import newHighscoreVO from 'assets/sfx/new_highscore_vo.ogg';
-import levelUpVO from 'assets/sfx/level_up_vo.ogg';
-
 export const BUTTON_HOVER = 'BUTTON_HOVER';
 export const BUTTON_SELECT = 'BUTTON_SELECT';
 export const BUTTON_START = 'BUTTON_START';
 export const BUTTON_TOGGLE = 'BUTTON_TOGGLE';
-
 export const TETROMINO_ROTATE = 'TETROMINO_ROTATE';
 export const TETROMINO_MERGE = 'TETROMINO_MERGE';
 export const TETROMINO_MOVE = 'TETROMINO_MOVE';
-
 export const SKILL_ON_COOLDOWN = 'SKILL_ON_COOLDOWN';
 export const SKILL_LEARNED = 'SKILL_LEARNED';
 export const SKILL_IS_UP = 'SKILL_IS_UP';
-export const TIME_STOP_ACTIVATED = 'TIME_STOP_ACTIVATED';
 export const TIME_STOP_DOWN = 'TIME_STOP_DOWN';
 export const TIME_STOP_UP = 'TIME_STOP_UP';
 export const MIMIC = 'MIMIC';
 export const PIXEL_POCKET = 'PIXEL_POCKET';
 export const PERFECTIONISM = 'PERFECTIONISM';
-
 export const PAUSE_IN = 'PAUSE_IN';
 export const PAUSE_OUT = 'PAUSE_OUT';
 export const GAME_OVER = 'GAME_OVER';
@@ -64,57 +22,14 @@ export const CLEAR_TRIPLE = 'CLEAR_TRIPLE';
 export const CLEAR_TETRIS = 'CLEAR_TETRIS';
 export const LEVEL_UP = 'LEVEL_UP';
 export const NEW_HIGHSCORE = 'NEW_HIGHSCORE';
-
+export const VO_1 = 'VO_1';
+export const VO_2 = 'VO_2';
+export const VO_3 = 'VO_3';
+export const VO_GO = 'VO_GO';
 export const VO_GAME_OVER = 'VO_GAME_OVER';
 export const VO_CONGRATULATIONS = 'VO_CONGRATULATIONS';
 export const VO_NEW_HIGHSCORE = 'VO_NEW_HIGHSCORE';
 export const VO_LEVEL_UP = 'VO_LEVEL_UP';
-
-export default {
-  // MENU
-  [BUTTON_HOVER]: buttonHover, // ok
-  [BUTTON_SELECT]: buttonSelect, // ok
-  [BUTTON_START]: buttonStart, // ok
-  [BUTTON_TOGGLE]: buttonToggle, // ok
-  // TETROMINOS
-  [TETROMINO_ROTATE]: tetrominoRotate, // ok
-  [TETROMINO_MERGE]: tetrominoMerge, // ok
-  [TETROMINO_MOVE]: tetrominoMove, // ok
-  // SKILLS
-  [SKILL_ON_COOLDOWN]: skillOnCooldown,
-  [SKILL_LEARNED]: skillLearned,
-  [SKILL_IS_UP]: skillIsUp,
-  [TIME_STOP_ACTIVATED]: timeStopActivated, // ok
-  [TIME_STOP_DOWN]: timeStopDown, // ok
-  [TIME_STOP_UP]: timeStopUp, // ok
-  [MIMIC]: mimic, // ok
-  [PIXEL_POCKET]: pixelPocket, // ok
-  [PERFECTIONISM]: perfectionism,
-  // GAME
-  [PAUSE_IN]: pauseIn, // ok
-  [PAUSE_OUT]: pauseOut, // ok
-  [GAME_OVER]: gameOver, // ok
-  [CLEAR_SINGLE]: clearSingle, // ok
-  [CLEAR_DOUBLE]: clearDouble, // ok
-  [CLEAR_TRIPLE]: clearTriple, // ok
-  [CLEAR_TETRIS]: clearTetris, // ok
-  [LEVEL_UP]: levelUp, // ok
-  [NEW_HIGHSCORE]: newHighscore, // ok
-  // VOICE
-  1: one, // ok
-  2: two, // ok
-  3: three, // ok
-  0: go, // ok
-  [VO_GAME_OVER]: gameOverVO, // ok
-  [VO_CONGRATULATIONS]: congratulationsVO, // ok
-  [VO_NEW_HIGHSCORE]: newHighscoreVO, // ok
-  [VO_LEVEL_UP]: levelUpVO, // ok
-};
-
-// NEXT:
-// Check all other sfx to confirm their use
-// Normalize the volume of all sfx
-// Create sprite with all sfx
 
 /*
   CREDITS:
