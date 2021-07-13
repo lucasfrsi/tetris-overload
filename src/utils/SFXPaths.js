@@ -1,5 +1,6 @@
 import buttonHover from 'assets/sfx/button_hover.wav';
 import buttonSelect from 'assets/sfx/button_select.ogg';
+import buttonStart from 'assets/sfx/button_start.ogg';
 import buttonToggle from 'assets/sfx/button_toggle.ogg';
 
 import tetrominoRotate from 'assets/sfx/tetromino_rotate.wav';
@@ -24,6 +25,8 @@ import clearSingle from 'assets/sfx/clear_single.wav';
 import clearDouble from 'assets/sfx/clear_double.wav';
 import clearTriple from 'assets/sfx/clear_triple.wav';
 import clearTetris from 'assets/sfx/clear_tetris_new.wav';
+import levelUp from 'assets/sfx/level_up.wav';
+import newHighscore from 'assets/sfx/new_highscore.wav';
 
 import one from 'assets/sfx/1.ogg';
 import two from 'assets/sfx/2.ogg';
@@ -31,11 +34,12 @@ import three from 'assets/sfx/3.ogg';
 import go from 'assets/sfx/go.ogg';
 import gameOverVO from 'assets/sfx/game_over_vo.ogg';
 import congratulationsVO from 'assets/sfx/congratulations.ogg';
-import newHighscoreVO from 'assets/sfx/new_highscore.ogg';
-import levelUpVO from 'assets/sfx/level_up.ogg';
+import newHighscoreVO from 'assets/sfx/new_highscore_vo.ogg';
+import levelUpVO from 'assets/sfx/level_up_vo.ogg';
 
 export const BUTTON_HOVER = 'BUTTON_HOVER';
 export const BUTTON_SELECT = 'BUTTON_SELECT';
+export const BUTTON_START = 'BUTTON_START';
 export const BUTTON_TOGGLE = 'BUTTON_TOGGLE';
 
 export const TETROMINO_ROTATE = 'TETROMINO_ROTATE';
@@ -60,6 +64,8 @@ export const CLEAR_SINGLE = 'CLEAR_SINGLE';
 export const CLEAR_DOUBLE = 'CLEAR_DOUBLE';
 export const CLEAR_TRIPLE = 'CLEAR_TRIPLE';
 export const CLEAR_TETRIS = 'CLEAR_TETRIS';
+export const LEVEL_UP = 'LEVEL_UP';
+export const NEW_HIGHSCORE = 'NEW_HIGHSCORE';
 
 export const VO_GAME_OVER = 'VO_GAME_OVER';
 export const VO_CONGRATULATIONS = 'VO_CONGRATULATIONS';
@@ -70,6 +76,7 @@ export default {
   // MENU
   [BUTTON_HOVER]: buttonHover, // ok
   [BUTTON_SELECT]: buttonSelect, // ok
+  [BUTTON_START]: buttonStart, // ok
   [BUTTON_TOGGLE]: buttonToggle, // ok
   // TETROMINOS
   [TETROMINO_ROTATE]: tetrominoRotate, // ok
@@ -94,6 +101,8 @@ export default {
   [CLEAR_DOUBLE]: clearDouble, // ok
   [CLEAR_TRIPLE]: clearTriple, // ok
   [CLEAR_TETRIS]: clearTetris, // ok
+  [LEVEL_UP]: levelUp, // ok
+  [NEW_HIGHSCORE]: newHighscore, // ok
   // VOICE
   1: one, // ok
   2: two, // ok
@@ -106,9 +115,7 @@ export default {
 };
 
 // NEXT:
-// Find a better pixelpocket sfx
-// Check all other sfx to confirm their use, and change button click
-// Add start game / play again sfx
+// Check all other sfx to confirm their use
 // Normalize the volume of all sfx
 // Create sprite with all sfx
 
