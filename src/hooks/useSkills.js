@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { TIME_STOP_ACTIVATED, TIME_STOP_DOWN, TIME_STOP_UP } from 'utils/SFXPaths';
+import { TIME_STOP_ACTIVATED, TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN } from 'utils/SFXPaths';
 
 export const useSkills = ({ SFX_API }) => {
   const INTERVAL_DELAY = useMemo(() => 1000, []);
@@ -16,7 +16,8 @@ export const useSkills = ({ SFX_API }) => {
   const [pixelPocket, setPixelPocket] = useState({
     name: 'Pixel Pocket',
     expCost: [0, 50],
-    currentLevel: 0,
+    currentLevel: 1,
+    onCooldown: false,
   });
 
   const [intuition, setIntuition] = useState({
@@ -47,7 +48,7 @@ export const useSkills = ({ SFX_API }) => {
     cooldown: [0, 90, 75, 60],
     cooldownTimer: null,
     onCooldown: 0,
-    currentLevel: 0,
+    currentLevel: 3,
   });
 
   const [mimic, setMimic] = useState({
@@ -56,7 +57,7 @@ export const useSkills = ({ SFX_API }) => {
     cooldown: [0, 60, 45, 30],
     onCooldown: 0,
     cooldownTimer: null,
-    currentLevel: 0,
+    currentLevel: 3,
   });
 
   const [perfectionism, setPerfectionism] = useState({
@@ -96,7 +97,11 @@ export const useSkills = ({ SFX_API }) => {
           cooldownTimer: INTERVAL_DELAY,
         }));
         if (timeStop.active > 2) playSFX(TIME_STOP_UP);
+      } else {
+        playSFX(SKILL_ON_COOLDOWN);
       }
+    } else {
+      playSFX(SKILL_ON_COOLDOWN);
     }
   };
 
@@ -111,6 +116,7 @@ export const useSkills = ({ SFX_API }) => {
     setPixelPocket((prev) => ({
       ...prev,
       currentLevel: 0,
+      onCooldown: false,
     }));
 
     setIntuition((prev) => ({
