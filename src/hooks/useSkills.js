@@ -16,7 +16,7 @@ export const useSkills = ({ SFX_API }) => {
   const [pixelPocket, setPixelPocket] = useState({
     name: 'Pixel Pocket',
     expCost: [0, 50],
-    currentLevel: 1,
+    currentLevel: 0,
     onCooldown: false,
   });
 
@@ -48,7 +48,7 @@ export const useSkills = ({ SFX_API }) => {
     cooldown: [0, 90, 75, 60],
     cooldownTimer: null,
     onCooldown: 0,
-    currentLevel: 3,
+    currentLevel: 0,
   });
 
   const [mimic, setMimic] = useState({
@@ -57,7 +57,7 @@ export const useSkills = ({ SFX_API }) => {
     cooldown: [0, 60, 45, 30],
     onCooldown: 0,
     cooldownTimer: null,
-    currentLevel: 3,
+    currentLevel: 0,
   });
 
   const [perfectionism, setPerfectionism] = useState({
