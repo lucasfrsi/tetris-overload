@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { TIME_STOP_UP } from 'utils/SFXPaths';
+import { TIME_STOP_UP, SKILL_IS_UP } from 'utils/SFXPaths';
 import { useInterval } from './useInterval';
 
 export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
@@ -53,6 +53,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
         onCooldown: prev.onCooldown - 1,
         cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
       }));
+      if (timeStop.onCooldown === 1) playSFX(SKILL_IS_UP);
     }
   }, ticking ? timeStop.cooldownTimer : null);
 
@@ -78,6 +79,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
         onCooldown: prev.onCooldown - 1,
         cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
       }));
+      if (mimic.onCooldown === 1) playSFX(SKILL_IS_UP);
     }
   }, ticking ? mimic.cooldownTimer : null);
 
@@ -89,6 +91,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
         onCooldown: prev.onCooldown - 1,
         cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
       }));
+      if (perfectionism.onCooldown === 1) playSFX(SKILL_IS_UP);
     }
   }, ticking ? perfectionism.cooldownTimer : null);
 
