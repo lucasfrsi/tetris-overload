@@ -85,7 +85,7 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
   const onKeyUp = (event) => {
     const { code, key } = event;
 
-    if (!gameOver) {
+    if (ticking) {
       // Activate the interval again when user releases down arrow.
       if (key === '2' || code === 'Numpad2') {
         setDropTime(1000 / (level + 1));
