@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { TIME_STOP_ACTIVATED, TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN } from 'utils/SFXPaths';
+import { TIME_STOP_ACTIVATED, TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN, SKILL_LEARNED } from 'utils/SFXPaths';
 
 export const useSkills = ({ SFX_API }) => {
   const INTERVAL_DELAY = useMemo(() => 1000, []);
@@ -170,10 +170,11 @@ export const useSkills = ({ SFX_API }) => {
           currentLevel: prev.currentLevel + 1,
         }));
         setExp((prev) => prev - costToLevel);
+        playSFX(SKILL_LEARNED);
         return true;
       }
     }
-
+    playSFX(SKILL_ON_COOLDOWN);
     return false;
   };
 
