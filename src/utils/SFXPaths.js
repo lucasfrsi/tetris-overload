@@ -10,7 +10,6 @@ import skillExpEnough from 'assets/sfx/skill_exp_enough.wav';
 import skillOnCooldown from 'assets/sfx/skill_on_cooldown.wav';
 import skillLearned from 'assets/sfx/skill_learned.flac';
 import skillIsUp from 'assets/sfx/skill_is_up.ogg';
-import skillError from 'assets/sfx/skill_error.wav';
 import timeStopActivated from 'assets/sfx/time_stop_activated.wav';
 import timeStopDown from 'assets/sfx/time_stop_down.wav';
 import timeStopUp from 'assets/sfx/time_stop_up.wav';
@@ -47,7 +46,6 @@ export const SKILL_EXP_ENOUGH = 'SKILL_EXP_ENOUGH';
 export const SKILL_ON_COOLDOWN = 'SKILL_ON_COOLDOWN';
 export const SKILL_LEARNED = 'SKILL_LEARNED';
 export const SKILL_IS_UP = 'SKILL_IS_UP';
-export const SKILL_ERROR = 'SKILL_ERROR';
 export const TIME_STOP_ACTIVATED = 'TIME_STOP_ACTIVATED';
 export const TIME_STOP_DOWN = 'TIME_STOP_DOWN';
 export const TIME_STOP_UP = 'TIME_STOP_UP';
@@ -82,7 +80,6 @@ export default {
   [SKILL_ON_COOLDOWN]: skillOnCooldown,
   [SKILL_LEARNED]: skillLearned,
   [SKILL_IS_UP]: skillIsUp,
-  [SKILL_ERROR]: skillError,
   [TIME_STOP_ACTIVATED]: timeStopActivated, // ok
   [TIME_STOP_DOWN]: timeStopDown, // ok
   [TIME_STOP_UP]: timeStopUp, // ok
@@ -92,7 +89,7 @@ export default {
   // GAME
   [PAUSE_IN]: pauseIn, // ok
   [PAUSE_OUT]: pauseOut, // ok
-  [GAME_OVER]: gameOver,
+  [GAME_OVER]: gameOver, // ok
   [CLEAR_SINGLE]: clearSingle, // ok
   [CLEAR_DOUBLE]: clearDouble, // ok
   [CLEAR_TRIPLE]: clearTriple, // ok
@@ -102,16 +99,18 @@ export default {
   2: two, // ok
   3: three, // ok
   0: go, // ok
-  [VO_GAME_OVER]: gameOverVO,
-  [VO_CONGRATULATIONS]: congratulationsVO,
-  [VO_NEW_HIGHSCORE]: newHighscoreVO,
+  [VO_GAME_OVER]: gameOverVO, // ok
+  [VO_CONGRATULATIONS]: congratulationsVO, // ok
+  [VO_NEW_HIGHSCORE]: newHighscoreVO, // ok
   [VO_LEVEL_UP]: levelUpVO, // ok
 };
 
-// pixelpocket can only be used ONCE per piece falling
-// once it is used, a piece need to merge for it to be reusable again
-// make gameover + score postscreen
-// add all the other sounds
+// NEXT:
+// Find a better pixelpocket sfx
+// Check all other sfx to confirm their use, and change button click
+// Add start game / play again sfx
+// Normalize the volume of all sfx
+// Create sprite with all sfx
 
 /*
   CREDITS:
