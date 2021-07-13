@@ -17,7 +17,6 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
   const {
     state: {
       level,
-      gameOver,
       paused,
       ticking,
       onCountdown,
