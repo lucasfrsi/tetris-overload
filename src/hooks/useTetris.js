@@ -56,9 +56,11 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   const {
     state: {
       timeStop,
+      pixelPocket,
     },
     actions: {
       resetSkills,
+      setPixelPocket,
     },
   } = skillsAPI;
 
@@ -242,6 +244,13 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       }
       updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
       playSFX(TETROMINO_MERGE);
+
+      if (pixelPocket.onCooldown) {
+        setPixelPocket((prev) => ({
+          ...prev,
+          onCooldown: false,
+        }));
+      }
     }
   };
 
