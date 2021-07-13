@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { BUTTON_SELECT, BUTTON_HOVER, BUTTON_START } from 'utils/SFXPaths';
 import * as styles from './style';
 
-const HighScores = ({ scores, newHighScore, menuButtonAction, playAgainButtonAction }) => (
+const HighScores = ({ scores, newHighScore, menuButtonAction, playAgainButtonAction, playSFX }) => (
   <div css={styles.highScoresWrapper}>
     <div css={styles.highScoresBox}>
       {newHighScore && (
@@ -32,14 +33,22 @@ const HighScores = ({ scores, newHighScore, menuButtonAction, playAgainButtonAct
         <button
           type="button"
           tabIndex={-1}
-          onClick={menuButtonAction}
+          onMouseEnter={() => playSFX(BUTTON_HOVER)}
+          onClick={() => {
+            menuButtonAction();
+            playSFX(BUTTON_SELECT);
+          }}
         >
           Menu
         </button>
         <button
           type="button"
           tabIndex={-1}
-          onClick={playAgainButtonAction}
+          onMouseEnter={() => playSFX(BUTTON_HOVER)}
+          onClick={() => {
+            playAgainButtonAction();
+            playSFX(BUTTON_START);
+          }}
         >
           Play Again
         </button>
@@ -53,6 +62,7 @@ HighScores.propTypes = {
   newHighScore: PropTypes.bool.isRequired,
   menuButtonAction: PropTypes.func.isRequired,
   playAgainButtonAction: PropTypes.func.isRequired,
+  playSFX: PropTypes.func.isRequired,
 };
 
 export default HighScores;
