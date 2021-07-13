@@ -31,7 +31,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   }), []);
 
   const {
-    actions: { calcExp },
+    actions: { calcExp, activatePerfectionism },
   } = skillsAPI;
 
   const {
@@ -44,13 +44,14 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     // We have score
     if (rowsCleared > 0) {
       playSFX(clearTable[rowsCleared]);
+      if (rowsCleared === 4) activatePerfectionism();
 
       // This is how original Tetris score is calculated
       setScore((prev) => prev + linePoints[rowsCleared - 1] * (level + 1));
       setRows((prev) => prev + rowsCleared);
       calcExp(rowsCleared);
     }
-  }, [calcExp, clearTable, level, playSFX, rowsCleared]);
+  }, [activatePerfectionism, calcExp, clearTable, level, playSFX, rowsCleared]);
 
   useEffect(() => {
     calcScore();

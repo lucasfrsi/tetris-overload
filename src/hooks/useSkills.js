@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { TIME_STOP_ACTIVATED, TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN, SKILL_LEARNED } from 'utils/SFXPaths';
+import { TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
 
 export const useSkills = ({ SFX_API }) => {
   const INTERVAL_DELAY = useMemo(() => 1000, []);
@@ -86,7 +86,6 @@ export const useSkills = ({ SFX_API }) => {
           active: prev.duration[prev.currentLevel],
           durationTimer: INTERVAL_DELAY,
         }));
-        playSFX(TIME_STOP_ACTIVATED);
         playSFX(TIME_STOP_DOWN);
       } else if (timeStop.active) {
         setTimeStop((prev) => ({
@@ -178,6 +177,18 @@ export const useSkills = ({ SFX_API }) => {
     return false;
   };
 
+  const activatePerfectionism = useCallback(() => {
+    if (perfectionism.currentLevel && !perfectionism.onCooldown) {
+      playSFX(PERFECTIONISM);
+      setPerfectionism((prev) => ({
+        ...prev,
+        onCooldown: prev.cooldown[prev.currentLevel],
+        cooldownTimer: INTERVAL_DELAY,
+      }));
+    }
+    // It only plays SFX for now
+  }, [INTERVAL_DELAY, perfectionism.currentLevel, perfectionism.onCooldown, playSFX]);
+
   return {
     constants: {
       INTERVAL_DELAY,
@@ -207,6 +218,7 @@ export const useSkills = ({ SFX_API }) => {
       activateTimeStop,
       levelUpSkill,
       resetSkills,
+      activatePerfectionism,
     },
     skills: {
       greedy: {
