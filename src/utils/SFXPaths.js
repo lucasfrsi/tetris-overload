@@ -7,10 +7,9 @@ import tetrominoRotate from 'assets/sfx/tetromino_rotate.wav';
 import tetrominoMerge from 'assets/sfx/tetromino_merge.wav';
 import tetrominoMove from 'assets/sfx/tetromino_move.wav';
 
-import skillExpEnough from 'assets/sfx/skill_exp_enough.wav';
-import skillOnCooldown from 'assets/sfx/skill_on_cooldown.wav';
-import skillLearned from 'assets/sfx/skill_learned.flac';
-import skillIsUp from 'assets/sfx/skill_is_up.ogg';
+import skillOnCooldown from 'assets/sfx/skill_on_cooldown.ogg';
+import skillLearned from 'assets/sfx/skill_learned.wav';
+import skillIsUp from 'assets/sfx/skill_is_up.wav';
 import timeStopActivated from 'assets/sfx/time_stop_activated.wav';
 import timeStopDown from 'assets/sfx/time_stop_down.wav';
 import timeStopUp from 'assets/sfx/time_stop_up.wav';
@@ -46,7 +45,6 @@ export const TETROMINO_ROTATE = 'TETROMINO_ROTATE';
 export const TETROMINO_MERGE = 'TETROMINO_MERGE';
 export const TETROMINO_MOVE = 'TETROMINO_MOVE';
 
-export const SKILL_EXP_ENOUGH = 'SKILL_EXP_ENOUGH';
 export const SKILL_ON_COOLDOWN = 'SKILL_ON_COOLDOWN';
 export const SKILL_LEARNED = 'SKILL_LEARNED';
 export const SKILL_IS_UP = 'SKILL_IS_UP';
@@ -83,7 +81,6 @@ export default {
   [TETROMINO_MERGE]: tetrominoMerge, // ok
   [TETROMINO_MOVE]: tetrominoMove, // ok
   // SKILLS
-  [SKILL_EXP_ENOUGH]: skillExpEnough,
   [SKILL_ON_COOLDOWN]: skillOnCooldown,
   [SKILL_LEARNED]: skillLearned,
   [SKILL_IS_UP]: skillIsUp,
