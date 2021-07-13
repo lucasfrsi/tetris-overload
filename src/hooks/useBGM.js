@@ -11,14 +11,15 @@ export const useBGM = () => {
         [INGAME]: [
           0,
           204930.61224489796,
+          true,
         ],
         [MENU]: [
           206000,
           81397.55102040817,
+          true,
         ],
       },
       volume: 1,
-      loop: true,
       preload: true,
     }),
     mute: true,
@@ -41,14 +42,11 @@ export const useBGM = () => {
   }, []);
 
   const stopBGM = useCallback(() => {
-    BGMPlayer.current.howl.fade(1, 0, 250);
-    BGMPlayer.current.howl.once('fade', () => {
-      BGMPlayer.current.howl.stop();
-    });
+    BGMPlayer.current.howl.stop();
   }, []);
 
   const pauseBGM = useCallback(() => {
-    BGMPlayer.current.howl.pause();
+    BGMPlayer.current.howl.pause(); // not resuming from where it stoped
   }, []);
 
   useEffect(() => {
