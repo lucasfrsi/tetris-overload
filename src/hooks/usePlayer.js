@@ -3,9 +3,9 @@ import { useState, useCallback } from 'react';
 import { TETROMINOS, randomTetromino, createNextPiecesArray } from 'utils/tetrominos';
 import { STAGE_WIDTH, checkCollision } from 'utils/gameHelpers';
 
-import { TETROMINO_ROTATE, TETROMINO_MERGE, MIMIC, PIXEL_POCKET, SKILL_ON_COOLDOWN } from 'utils/SFXPaths';
+import { TETROMINO_ROTATE } from 'utils/SFXPaths';
 
-export const usePlayer = ({ skillsAPI, SFX_API }) => {
+export const usePlayer = ({ SFX_API }) => {
   const [hold, setHold] = useState([]);
   const [nextPieces, setNextPieces] = useState(createNextPiecesArray(3));
   const [preCollisionY, setPreCollisionY] = useState(0);
@@ -15,21 +15,6 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
     tetromino: TETROMINOS[0],
     collided: false,
   });
-
-  const {
-    constants: {
-      INTERVAL_DELAY,
-    },
-    state: {
-      blink,
-      mimic,
-      pixelPocket,
-    },
-    actions: {
-      setMimic,
-      setPixelPocket,
-    },
-  } = skillsAPI;
 
   const {
     actions: {
@@ -90,68 +75,30 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
     setNextPieces(newNextPieces);
   }, [nextPieces]);
 
-  const activateHold = useCallback(() => {
-    if (pixelPocket.currentLevel && !pixelPocket.onCooldown) {
-      if (hold.length === 0) {
-        setHold([player.tetromino]);
-        getPlayerNextPiece();
-      } else {
-        const holdPiece = hold[0];
-        setHold([player.tetromino]);
-        setPlayer((prev) => ({
-          ...prev,
-          pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-          tetromino: holdPiece,
-        }));
-      }
-      playSFX(PIXEL_POCKET);
-      setPixelPocket((prev) => ({
-        ...prev,
-        onCooldown: true,
-      }));
+  const holdPlayerTetromino = useCallback(() => {
+    if (hold.length === 0) {
+      setHold([player.tetromino]);
+      getPlayerNextPiece();
     } else {
-      playSFX(SKILL_ON_COOLDOWN);
-    }
-  }, [
-    pixelPocket.currentLevel,
-    pixelPocket.onCooldown,
-    playSFX,
-    hold,
-    setPixelPocket,
-    player.tetromino,
-    getPlayerNextPiece,
-  ]);
-
-  const activateMimic = useCallback(() => {
-    if (mimic.currentLevel && !mimic.onCooldown) {
-      playSFX(MIMIC);
-      setMimic((prev) => ({
+      const holdPiece = hold[0];
+      setHold([player.tetromino]);
+      setPlayer((prev) => ({
         ...prev,
-        onCooldown: prev.cooldown[prev.currentLevel],
-        cooldownTimer: INTERVAL_DELAY,
+        pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+        tetromino: holdPiece,
       }));
-      const newNextPieces = [...nextPieces];
-      newNextPieces.unshift(player.tetromino);
-      setNextPieces(newNextPieces);
-    } else {
-      playSFX(SKILL_ON_COOLDOWN);
     }
-  }, [
-    INTERVAL_DELAY,
-    mimic.currentLevel,
-    mimic.onCooldown,
-    nextPieces,
-    player.tetromino,
-    setMimic,
-    playSFX,
-  ]);
+  }, [getPlayerNextPiece, hold, player.tetromino]);
 
-  const activateBlink = useCallback(() => {
-    if (blink.currentLevel) {
-      playSFX(TETROMINO_MERGE);
-      updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
-    }
-  }, [blink.currentLevel, playSFX, preCollisionY, updatePlayerPos]);
+  const unshiftPlayerTetrominoCopy = useCallback(() => {
+    const newNextPieces = [...nextPieces];
+    newNextPieces.unshift(player.tetromino);
+    setNextPieces(newNextPieces);
+  }, [nextPieces, player.tetromino]);
+
+  const hardDrop = useCallback(() => {
+    updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
+  }, [preCollisionY, updatePlayerPos]);
 
   const resetPlayer = () => {
     setPlayer({
@@ -168,14 +115,14 @@ export const usePlayer = ({ skillsAPI, SFX_API }) => {
       hold,
     },
     actions: {
-      activateHold,
-      activateMimic,
-      activateBlink,
+      holdPlayerTetromino,
+      hardDrop,
       updatePlayerPos,
       getPlayerNextPiece,
       playerRotate,
       updatePreCollisionY,
       resetPlayer,
+      unshiftPlayerTetrominoCopy,
     },
   };
 };
