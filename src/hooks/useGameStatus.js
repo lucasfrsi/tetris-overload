@@ -31,7 +31,10 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   }), []);
 
   const {
-    actions: { calcExp, activatePerfectionism },
+    actions: {
+      calcExp,
+      activatePerfectionism,
+    },
   } = skillsAPI;
 
   const {

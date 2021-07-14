@@ -2,9 +2,9 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
   const {
     actions: {
       playerRotate,
-      activateHold,
-      activateMimic,
-      activateBlink,
+      unshiftPlayerTetrominoCopy,
+      hardDrop,
+      holdPlayerTetromino,
     },
   } = playerAPI;
 
@@ -42,6 +42,9 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
     },
     actions: {
       activateTimeStop,
+      activateMimic,
+      activateBlink,
+      activateHold,
     },
   } = skillsAPI;
 
@@ -62,11 +65,11 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
       } else if (key === '6' || code === 'Numpad6') {
         playerRotate(stage, 1);
       } else if (key === '7' || code === 'Numpad7') {
-        activateHold();
+        activateHold(holdPlayerTetromino);
       } else if (key === '8' || code === 'Numpad8') {
-        activateBlink();
+        activateBlink(hardDrop);
       } else if (key === '9' || code === 'Numpad9') {
-        activateMimic();
+        activateMimic(unshiftPlayerTetrominoCopy);
       } else if (key === '0' || code === 'Numpad0') {
         activateTimeStop();
       } else if (key === 'p' || code === 'keyP') {
