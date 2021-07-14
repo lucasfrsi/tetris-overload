@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
+import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
 
 export const useSkills = ({ SFX_API }) => {
   const INTERVAL_DELAY = useMemo(() => 1000, []);
@@ -29,13 +29,6 @@ export const useSkills = ({ SFX_API }) => {
   const [blink, setBlink] = useState({
     name: 'Blink',
     expCost: [0, 100],
-    currentLevel: 0,
-  });
-
-  const [greedy, setGreedy] = useState({
-    name: 'Greedy',
-    expCost: [0, 50, 75, 100],
-    multiplier: [1, 1.25, 1.5, 1.75],
     currentLevel: 0,
   });
 
@@ -74,9 +67,9 @@ export const useSkills = ({ SFX_API }) => {
   } = SFX_API;
 
   const calcExp = useCallback((rowsCleared) => {
-    const expFormula = EXP_POINTS[rowsCleared - 1] * greedy.multiplier[greedy.currentLevel];
+    const expFormula = EXP_POINTS[rowsCleared - 1];
     setExp((prev) => prev + expFormula);
-  }, [EXP_POINTS, greedy.currentLevel, greedy.multiplier]);
+  }, [EXP_POINTS]);
 
   const activateTimeStop = () => {
     if (timeStop.currentLevel) {
@@ -124,11 +117,6 @@ export const useSkills = ({ SFX_API }) => {
     }));
 
     setBlink((prev) => ({
-      ...prev,
-      currentLevel: 0,
-    }));
-
-    setGreedy((prev) => ({
       ...prev,
       currentLevel: 0,
     }));
@@ -189,6 +177,52 @@ export const useSkills = ({ SFX_API }) => {
     // It only plays SFX for now
   }, [INTERVAL_DELAY, perfectionism.currentLevel, perfectionism.onCooldown, playSFX]);
 
+  const activateMimic = useCallback((unshiftPlayerTetrominoCopy) => {
+    if (mimic.currentLevel && !mimic.onCooldown) {
+      playSFX(MIMIC);
+      setMimic((prev) => ({
+        ...prev,
+        onCooldown: prev.cooldown[prev.currentLevel],
+        cooldownTimer: INTERVAL_DELAY,
+      }));
+      unshiftPlayerTetrominoCopy();
+    } else {
+      playSFX(SKILL_ON_COOLDOWN);
+    }
+  }, [INTERVAL_DELAY, mimic.currentLevel, mimic.onCooldown, playSFX]);
+
+  const putPixelPocketOnCooldown = () => {
+    setPixelPocket((prev) => ({
+      ...prev,
+      onCooldown: true,
+    }));
+  };
+
+  const removePixelPocketCooldown = () => {
+    setPixelPocket((prev) => ({
+      ...prev,
+      onCooldown: false,
+    }));
+  };
+
+  const activateBlink = useCallback((hardDrop) => {
+    if (blink.currentLevel) {
+      playSFX(TETROMINO_MERGE);
+      hardDrop();
+      removePixelPocketCooldown();
+    }
+  }, [blink.currentLevel, playSFX]);
+
+  const activateHold = useCallback((holdPlayerTetromino) => {
+    if (pixelPocket.currentLevel && !pixelPocket.onCooldown) {
+      holdPlayerTetromino();
+      playSFX(PIXEL_POCKET);
+      putPixelPocketOnCooldown();
+    } else {
+      playSFX(SKILL_ON_COOLDOWN);
+    }
+  }, [pixelPocket.currentLevel, pixelPocket.onCooldown, playSFX]);
+
   return {
     constants: {
       INTERVAL_DELAY,
@@ -199,92 +233,42 @@ export const useSkills = ({ SFX_API }) => {
       clairvoyance,
       blink,
       intuition,
-      greedy,
       pixelPocket,
       mimic,
       timeStop,
     },
     actions: {
-      setExp,
       calcExp,
       setPerfectionism,
-      setClairvoyance,
-      setBlink,
-      setIntuition,
-      setGreedy,
-      setPixelPocket,
       setMimic,
       setTimeStop,
       activateTimeStop,
       levelUpSkill,
       resetSkills,
       activatePerfectionism,
+      activateMimic,
+      activateBlink,
+      activateHold,
+      removePixelPocketCooldown,
     },
-    skills: {
-      greedy: {
-        state: greedy,
-        setState: setGreedy,
-      },
-      clairvoyance: {
-        state: clairvoyance,
-        setState: setClairvoyance,
-      },
-      pixelPocket: {
-        state: pixelPocket,
-        setState: setPixelPocket,
-      },
-      mimic: {
-        state: mimic,
-        setState: setMimic,
-      },
-      intuition: {
-        state: intuition,
-        setState: setIntuition,
-      },
-      blink: {
-        state: blink,
-        setState: setBlink,
-      },
-      timeStop: {
-        state: timeStop,
-        setState: setTimeStop,
-      },
-      perfectionism: {
-        state: perfectionism,
-        setState: setPerfectionism,
-      },
-    },
+    skills: [
+      clairvoyance,
+      pixelPocket,
+      mimic,
+      intuition,
+      blink,
+      timeStop,
+      perfectionism,
+    ],
   };
 };
 
-// - Clairvoyance [OK]
-// =PASSIVE=
-// = Allow the player to see the next piece(s)
-
-// - Time Stop [OK]
-// =ACTIVE=
-// = Allow the player to freely move the piece for a certain period of time
-
-// - Mimic [OK]
-// =ACTIVE=
-// = Set the next piece to be equal to the current one
-
-// - Pixel Pocket [OK]
-// =ACTIVE=
-// = Stores a piece to be used later on
-
-// - Perfectionist
-// =PASSIVE=
-// = Clearing 4 rows at once resets all abilities cooldown
-
-// - Intuition [OK]
-// =PASSIVE=
-// = Shows a mark of where the piece will fall at
-
-// - Greedy [OK]
-// =PASSIVE=
-// = Earns more exp/money per coin and rows cleared
-
-// - Blink [OK]
-// =ACTIVE=
-// = Immediately set the piece to the intuition location mark
+// Bring back all activations to useSkills
+// - activateHold, activateMimic, setPixelPocket (cooldown or not)
+// Expose only what is needed (avoid exposing setState)
+// Change the logic on how INTERVAL_DELAY is being used
+// Change how levelUpSkill works
+// - abstract the setState, so that it doesn't need to be passed over
+// - perhaps create a hashtable internally, and use it to associate
+// - a skill name to its setState?
+// Create progression? One skill is dependant on the previous one?
