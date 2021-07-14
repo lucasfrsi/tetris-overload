@@ -33,7 +33,7 @@ const Tetris = () => {
 
   const skillsAPI = useSkills({ SFX_API });
   const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API });
-  const playerAPI = usePlayer({ skillsAPI, SFX_API });
+  const playerAPI = usePlayer({ SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
   const tetrisAPI = useTetris({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API });
@@ -206,9 +206,14 @@ export default Tetris;
 
 /*
   TO-DOS
+  1. Design the skill icon (how are they gonna look like?)
+    - Green arrow pointing up: means skill can be learned or leveled
+  2. Design the pop-up message to alert the player that a skill is up
+    - Only for Mimic, Time Stop and Perfectionism
+  3. Think of how props and states are managed, how to improve performance?
+    - Would it be better not to pass the entire API, and only some actions?
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
-  4. Add sound effects and cell animations
-  6. Style the entire game
+  4. Add cell animations?
   7. Play the game, tweak the math calculations + balance
   5. Add controls and the ability to choose all the keys
   x. Add switch case in place of all the ifs (use switch(true))
