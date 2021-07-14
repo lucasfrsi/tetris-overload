@@ -22,6 +22,7 @@ export const useBGM = () => {
       volume: 1,
       preload: true,
     }),
+    currentID: undefined,
     mute: true,
   });
 
@@ -35,18 +36,30 @@ export const useBGM = () => {
   }));
 
   const playBGM = useCallback((spriteKey) => {
-    if (!BGMPlayer.current.mute) {
-      BGMPlayer.current.howl.play(spriteKey);
-      BGMPlayer.current.howl.fade(0, 1, 500);
+    const { mute } = BGMPlayer.current;
+
+    if (!mute) {
+      let id = BGMPlayer.current.currentID;
+
+      if (id) {
+        BGMPlayer.current.howl.play(id);
+      } else {
+        id = BGMPlayer.current.howl.play(spriteKey);
+        BGMPlayer.current.currentID = id;
+      }
+
+      BGMPlayer.current.howl.fade(0, 1, 500, id);
     }
   }, []);
 
   const stopBGM = useCallback(() => {
     BGMPlayer.current.howl.stop();
+    BGMPlayer.current.currentID = undefined;
   }, []);
 
   const pauseBGM = useCallback(() => {
-    BGMPlayer.current.howl.pause(); // not resuming from where it stoped
+    const id = BGMPlayer.current.currentID;
+    if (id) BGMPlayer.current.howl.pause(id);
   }, []);
 
   useEffect(() => {
