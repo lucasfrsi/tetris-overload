@@ -1,26 +1,26 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { TIME_STOP_UP, SKILL_IS_UP } from 'utils/SFXPaths';
 import { useInterval } from './useInterval';
 
 export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
-  const INTERVAL_DELAY = useMemo(() => 1000, []);
-
   const {
     state: {
-      timeStop,
       mimic,
+      timeStop,
       perfectionism,
     },
     actions: {
-      setTimeStop,
-      setMimic,
-      setPerfectionism,
+      removeMimicCooldown,
+      putTimeStopOnCooldown,
+      removeTimeStopCooldown,
+      removePerfectionismCooldown,
     },
   } = skillsAPI;
 
   const {
     state: {
       ticking,
+      dropTime,
       onCountdown,
       gameStarted,
     },
@@ -33,6 +33,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
     actions: {
       startGame,
       resumeGame,
+      drop,
     },
   } = tetrisAPI;
 
@@ -43,60 +44,96 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
   } = SFX_API;
 
   // TIMERS
-  // Using setInterval for now, even though it's not perfectly accurate
+  const mimicCounter = useRef({
+    cooldown: 0,
+  });
 
-  // Time Stop - Cooldown
-  useInterval(() => {
-    if (timeStop.onCooldown > 0) {
-      setTimeStop((prev) => ({
-        ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
-      }));
-      if (timeStop.onCooldown === 1) playSFX(SKILL_IS_UP);
-    }
-  }, ticking ? timeStop.cooldownTimer : null);
+  const timeStopCounter = useRef({
+    duration: 0,
+    cooldown: 0,
+  });
 
-  // Time Stop - Duration
-  useInterval(() => {
-    if (timeStop.active > 0) {
-      setTimeStop((prev) => ({
-        ...prev,
-        active: prev.active - 1,
-        onCooldown: prev.active === 1 ? prev.cooldown[prev.currentLevel] : prev.onCooldown,
-        durationTimer: prev.active === 1 ? null : INTERVAL_DELAY,
-        cooldownTimer: prev.active === 1 ? INTERVAL_DELAY : null,
-      }));
-      if (timeStop.active === 2) playSFX(TIME_STOP_UP);
-    }
-  }, ticking ? timeStop.durationTimer : null);
+  const perfectionismCounter = useRef({
+    cooldown: 0,
+  });
 
-  // Mimic - Cooldown
-  useInterval(() => {
-    if (mimic.onCooldown > 0) {
-      setMimic((prev) => ({
-        ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
-      }));
-      if (mimic.onCooldown === 1) playSFX(SKILL_IS_UP);
+  const INTERVAL_DELAY = useMemo(() => {
+    if (ticking) {
+      if (
+        timeStop.active
+        || timeStop.onCooldown
+        || mimic.onCooldown
+        || perfectionism.onCooldown
+      ) return 1000;
     }
-  }, ticking ? mimic.cooldownTimer : null);
+    return null;
+  }, [mimic.onCooldown, perfectionism.onCooldown, ticking, timeStop.active, timeStop.onCooldown]);
 
-  // Perfectionism - Cooldown
-  useInterval(() => {
-    if (perfectionism.onCooldown > 0) {
-      setPerfectionism((prev) => ({
-        ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
-      }));
-      if (perfectionism.onCooldown === 1) playSFX(SKILL_IS_UP);
+  // MIGHT RESET COOLDOWN ON SKILL LEVEL, CHECK!
+  useEffect(() => {
+    if (timeStop.active) {
+      timeStopCounter.current.duration = timeStop.duration[timeStop.currentLevel];
+    } else if (timeStop.onCooldown) {
+      timeStopCounter.current.cooldown = timeStop.cooldown[timeStop.currentLevel];
+      timeStopCounter.current.duration = 0;
     }
-  }, ticking ? perfectionism.cooldownTimer : null);
+  }, [
+    timeStop.duration,
+    timeStop.cooldown,
+    timeStop.active,
+    timeStop.onCooldown,
+    timeStop.currentLevel,
+  ]);
+
+  useEffect(() => {
+    if (mimic.onCooldown) {
+      mimicCounter.current.cooldown = mimic.cooldown[mimic.currentLevel];
+    }
+  }, [mimic.cooldown, mimic.currentLevel, mimic.onCooldown]);
+
+  useEffect(() => {
+    if (perfectionism.onCooldown) {
+      perfectionismCounter.current.cooldown = perfectionism.cooldown[perfectionism.currentLevel];
+    }
+  }, [perfectionism.cooldown, perfectionism.currentLevel, perfectionism.onCooldown]);
+
+  // Skills Timer
+  useInterval(() => {
+    if (timeStopCounter.current.duration > 0) {
+      timeStopCounter.current.duration--;
+      if (timeStopCounter.current.duration === 0) {
+        putTimeStopOnCooldown();
+        playSFX(TIME_STOP_UP);
+      }
+    }
+
+    if (timeStopCounter.current.cooldown > 0) {
+      timeStopCounter.current.cooldown--;
+      if (timeStopCounter.current.cooldown === 0) {
+        removeTimeStopCooldown();
+        playSFX(SKILL_IS_UP);
+      }
+    }
+
+    if (mimicCounter.current.cooldown > 0) {
+      mimicCounter.current.cooldown--;
+      if (mimicCounter.current.cooldown === 0) {
+        removeMimicCooldown();
+        playSFX(SKILL_IS_UP);
+      }
+    }
+
+    if (perfectionismCounter.current.cooldown > 0) {
+      perfectionismCounter.current.cooldown--;
+      if (perfectionismCounter.current.cooldown === 0) {
+        removePerfectionismCooldown();
+        playSFX(SKILL_IS_UP);
+      }
+    }
+  }, INTERVAL_DELAY);
 
   // Countdown Timer
-  const [onCountdownTimer, setOnCountdownTimer] = useState(null);
+  const onCountdownTimer = useRef(null);
   const [countdown, setCountdown] = useState(null);
   useInterval(() => {
     if (countdown > 0) {
@@ -109,17 +146,24 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
       }
       setOnCountdown(false);
     }
-  }, onCountdownTimer);
+  }, onCountdownTimer.current);
 
   useEffect(() => {
     if (onCountdown === true) {
       setCountdown(3);
-      setOnCountdownTimer(1000);
+      onCountdownTimer.current = 1000;
     } else {
       setCountdown(null);
-      setOnCountdownTimer(null);
+      onCountdownTimer.current = null;
     }
   }, [onCountdown]);
+
+  // Tetris Timer - Ticking
+  // Depending on browsers, dropping when null is pretty different
+  // Firefox is much slower, while on chrome and opera it's much faster
+  useInterval(() => {
+    if (!timeStop.active) drop();
+  }, dropTime);
 
   return {
     state: {

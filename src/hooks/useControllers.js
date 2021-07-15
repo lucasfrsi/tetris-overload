@@ -16,14 +16,13 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
 
   const {
     state: {
-      level,
       paused,
       ticking,
       onCountdown,
       dialogIsOpen,
     },
     actions: {
-      setDropTime,
+      coreAutoDrop,
     },
   } = gameStatusAPI;
 
@@ -90,7 +89,7 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
     if (ticking) {
       // Activate the interval again when user releases down arrow.
       if (key === '2' || code === 'Numpad2') {
-        setDropTime(1000 / (level + 1));
+        coreAutoDrop();
       }
     }
   };
@@ -105,3 +104,8 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
     },
   };
 };
+
+// What I want:
+// when down is pressed, it triggers only ONCE, and not fire all the time
+
+// What I need to do:

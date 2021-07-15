@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, TIME_STOP_DOWN, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
+import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
 import * as S from 'utils/skillsMap';
 
 export const useSkills = ({ SFX_API }) => {
@@ -176,7 +176,7 @@ export const useSkills = ({ SFX_API }) => {
         playSFX(TIME_STOP_DOWN);
       } else if (timeStop.active) {
         putTimeStopOnCooldown();
-        // if (timeStop.active > 2) playSFX(TIME_STOP_UP);
+        playSFX(TIME_STOP_UP);
       } else {
         playSFX(SKILL_ON_COOLDOWN);
       }
@@ -286,6 +286,7 @@ export const useSkills = ({ SFX_API }) => {
       activatePerfectionism,
       removePixelPocketCooldown,
       removeMimicCooldown,
+      putTimeStopOnCooldown,
       removeTimeStopCooldown,
       removePerfectionismCooldown,
     },
@@ -300,9 +301,3 @@ export const useSkills = ({ SFX_API }) => {
     ],
   };
 };
-
-// Expose only what is needed (avoid exposing setState)
-// Create progression? One skill is dependant on the previous one?
-// Remove drop timer from Tetris and put on useTimers
-// Idea: use one single timer, and take everything into account inside it?
-// Stop passing SFX_API, and only PlaySFX

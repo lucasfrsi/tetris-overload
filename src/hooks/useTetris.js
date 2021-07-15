@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useInterval } from 'hooks/useInterval';
 import { checkCollision } from 'utils/gameHelpers';
 import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, LEVEL_UP, NEW_HIGHSCORE } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
@@ -31,25 +30,25 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     state: {
       level,
       rows,
-      dropTime,
       onCountdown,
       gameStarted,
-      ticking,
       paused,
       newHighScoreRef,
     },
     actions: {
       setLevel,
       setGameOver,
-      setDropTime,
       setDialogIsOpen,
       setPaused,
       setOnCountdown,
       setGameStarted,
-      setTicking,
       resetGameStatus,
       updateScores,
       setShowHighScores,
+      corePause,
+      coreResume,
+      coreManualDrop,
+      coreAutoDrop,
     },
   } = gameStatusAPI;
 
@@ -111,7 +110,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     if (onCountdown) cancelCountdown();
     pauseBGM();
     playSFX(PAUSE_IN);
-    setTicking(false);
+    corePause();
     setPaused(true);
   };
 
@@ -144,8 +143,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   // START AND RESUME GAME
   const resumeGame = () => {
     playBGM(INGAME);
-    setTicking(true);
-    setDropTime(1000);
+    coreResume();
   };
 
   const startGame = () => {
@@ -170,8 +168,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     updateScores();
     setGameOver(true);
 
-    setTicking(false);
-    setDropTime(null);
+    corePause();
 
     stopBGM();
     playSFX(GAME_OVER);
@@ -229,8 +226,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       playSFX(LEVEL_UP);
       playSFX(VO_LEVEL_UP);
       setLevel((prev) => prev + 1);
-      // Also increase speed
-      setDropTime(1000 / (level + 1) + 200);
     }
 
     if (!checkCollision(player, stage, { x: 0, y: 1 })) {
@@ -241,25 +236,24 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
         gameIsOver();
       }
       updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
+      coreAutoDrop();
       playSFX(TETROMINO_MERGE);
       removePixelPocketCooldown();
     }
   };
 
   const dropPlayer = () => {
-    setDropTime(null);
+    coreManualDrop();
     drop();
   };
-
-  useInterval(() => {
-    if (ticking && !timeStop.active) drop();
-  }, dropTime);
 
   return {
     state: {
       inGame,
     },
     actions: {
+      // Review what actions are being actually used
+      drop, // useCallback later
       dropPlayer,
       movePlayer,
       goToMenu,

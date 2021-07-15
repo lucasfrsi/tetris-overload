@@ -16,7 +16,7 @@ import { useSFX } from 'hooks/useSFX';
 import Stage from '../Stage';
 import Menu from '../Menu';
 import PieceHolder from '../PieceHolder';
-import Skills from '../SkillsContainer';
+import Skills from '../Skills';
 import Score from '../Score';
 import Pause from '../Pause';
 import SideButton from '../SideButton';

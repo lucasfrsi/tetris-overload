@@ -14,14 +14,16 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [showHighScores, setShowHighScores] = useState(false);
   const newHighScoreRef = useRef(false);
 
-  const [dropTime, setDropTime] = useState(null);
-
   const [gameStarted, setGameStarted] = useState(false);
   const [onCountdown, setOnCountdown] = useState(null);
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [ticking, setTicking] = useState(false);
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
+
+  // CORE
+  const [ticking, setTicking] = useState(false);
+  const [dropTime, setDropTime] = useState(null);
+  const speed = useRef(0);
 
   const clearTable = useMemo(() => ({
     1: CLEAR_SINGLE,
@@ -60,6 +62,38 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     calcScore();
   }, [calcScore]);
 
+  const coreReset = () => {
+    setTicking(false);
+    setDropTime(null);
+    speed.current = 1000;
+  };
+
+  const coreResume = () => {
+    setTicking(true);
+    setDropTime(speed.current);
+  };
+
+  const corePause = () => {
+    setTicking(false);
+    setDropTime(null);
+  };
+
+  const coreManualDrop = () => {
+    setDropTime(null);
+  };
+
+  const coreAutoDrop = () => {
+    setDropTime(speed.current);
+  };
+
+  const coreUpdateSpeed = useCallback(() => {
+    speed.current = 1000 - (level * 50);
+  }, [level]);
+
+  useEffect(() => {
+    coreUpdateSpeed();
+  }, [coreUpdateSpeed]);
+
   const resetGameStatus = () => {
     setScore(0);
     setLevel(0);
@@ -67,13 +101,12 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     setNewHighScore(false);
     newHighScoreRef.current = false;
     setShowHighScores(false);
-    setDropTime(null);
     setGameStarted(false);
     setOnCountdown(null);
     setPaused(false);
     setGameOver(false);
     setDialogIsOpen(false);
-    setTicking(false);
+    coreReset();
   };
 
   const updateScores = () => {
@@ -121,7 +154,6 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       score,
       level,
       rows,
-      dropTime,
       rowsCleared,
       gameStarted,
       onCountdown,
@@ -129,6 +161,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       gameOver,
       dialogIsOpen,
       ticking,
+      dropTime,
       newHighScore,
       newHighScoreRef,
       storedScores,
@@ -138,17 +171,19 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       setScore,
       setRows,
       setLevel,
-      setDropTime,
       setRowsCleared,
       setGameStarted,
       setOnCountdown,
       setPaused,
       setGameOver,
       setDialogIsOpen,
-      setTicking,
       resetGameStatus,
       updateScores,
       setShowHighScores,
+      coreResume,
+      corePause,
+      coreManualDrop,
+      coreAutoDrop,
     },
   };
 };
