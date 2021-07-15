@@ -133,7 +133,7 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
   }, INTERVAL_DELAY);
 
   // Countdown Timer
-  const onCountdownTimer = useRef(null);
+  const [onCountdownTimer, setOnCountdownTimer] = useState(null);
   const [countdown, setCountdown] = useState(null);
   useInterval(() => {
     if (countdown > 0) {
@@ -146,15 +146,15 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
       }
       setOnCountdown(false);
     }
-  }, onCountdownTimer.current);
+  }, onCountdownTimer);
 
   useEffect(() => {
     if (onCountdown === true) {
       setCountdown(3);
-      onCountdownTimer.current = 1000;
+      setOnCountdownTimer(1000);
     } else {
       setCountdown(null);
-      onCountdownTimer.current = null;
+      setOnCountdownTimer(null);
     }
   }, [onCountdown]);
 
