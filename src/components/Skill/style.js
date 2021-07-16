@@ -21,10 +21,6 @@ export const skill = css`
     margin: 0 auto;
   }
 
-  span {
-    position: absolute;
-  }
-
   p {
     font-size: 1.4rem;
     text-align: center;
@@ -35,26 +31,49 @@ export const skill = css`
   z-index: 1000;
 `;
 
-export const status = css`
-  width: 2rem;
-  height: 2rem;
-  background-color: purple;
-  border: 4px solid black;
+const wrapper = css`
+  position: absolute;
+  background-color: black;
   border-radius: 50%;
-
-  bottom: -1rem;
-  right: -1rem;
+  padding: .6rem;
 `;
 
-export const currentLevel = css`
-  bottom: -0.8rem;
+export const levelWrapper = css`
+  ${wrapper}
+  bottom: -1rem;
   left: -0.8rem;
-  /* margin: .1rem; */
-  background-color: black;
-  text-shadow: 0 0 0.5rem black;
+`;
+
+export const statusWrapper = css`
+  ${wrapper}
+  bottom: -0.8rem;
+  right: -0.8rem;
+`;
+
+export const level = css`
+  /* a */
+`;
+
+export const status = css`
+  display: inline-block;
+
+  width: 1.6rem;
+  height: 1.6rem;
+  background-color: purple;
+  border-radius: 50%;
+`;
+
+export const expCost = css`
+  position: absolute;
+  font-size: 2rem;
+  color: rgba(51, 51, 51, .5);
+
+  bottom: 1rem;
+  right: 2.4rem;
 `;
 
 export const arrow = css`
+  position: absolute;
   top: .5rem;
   left: -.5rem;
 
@@ -79,15 +98,4 @@ export const arrow = css`
       top: -.5rem;
     }
   }
-`;
-
-export const expCost = css`
-  font-size: 2.6rem;
-  color: rgba(51, 51, 51, .5);
-
-  align-self: center;
-  bottom: 0rem;
-  right: .25rem;
-
-  z-index: -1;
 `;

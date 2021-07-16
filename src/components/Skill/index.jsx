@@ -21,8 +21,13 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
     >
       <p>{name}</p>
       <img src={icons[name]} alt={name} />
-      <span css={styles.currentLevel}>{currentLevel}</span>
-      <span css={styles.status} />
+      <div css={styles.levelWrapper}>
+        <span css={styles.level}>{currentLevel}</span>
+      </div>
+      <div css={styles.statusWrapper}>
+        <span css={styles.status} />
+        <span css={styles.expCost}>{expCost[currentLevel + 1]}</span>
+      </div>
       {/* Possible status:
         - Not learned
         - Passive
@@ -31,7 +36,7 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
         - On cooldown
       */}
       {canSkillBeLeveled(name) && <span css={styles.arrow} />}
-      <span css={styles.expCost}>{expCost[currentLevel + 1]}</span>
+      {/* <span css={styles.expCost}>{expCost[currentLevel + 1]}</span> */}
     </div>
   );
 };
