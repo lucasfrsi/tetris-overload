@@ -77,8 +77,8 @@ export const useSkills = ({ SFX_API }) => {
     [S.PERFECTIONISM]: [perfectionism, setPerfectionism],
   }), [blink, clairvoyance, intuition, mimic, perfectionism, pixelPocket, timeStop]);
 
-  const levelUpSkill = useCallback((skillKey) => {
-    const [skill, setSkill] = skillsMap[skillKey];
+  const canSkillBeLeveled = useCallback((skillKey) => {
+    const [skill] = skillsMap[skillKey];
 
     const currentSkillLevel = skill.currentLevel;
     const skillMaxLevel = skill.expCost.length - 1;
@@ -86,18 +86,32 @@ export const useSkills = ({ SFX_API }) => {
     if (currentSkillLevel < skillMaxLevel) {
       const costToLevel = skill.expCost[currentSkillLevel + 1];
       if (exp > costToLevel) {
-        setSkill((prev) => ({
-          ...prev,
-          currentLevel: prev.currentLevel + 1,
-        }));
-        setExp((prev) => prev - costToLevel);
-        playSFX(SKILL_LEARNED);
-        return;
+        return true;
       }
     }
 
+    return false;
+  }, [exp, skillsMap]);
+
+  const levelUpSkill = useCallback((skillKey) => {
+    if (canSkillBeLeveled(skillKey)) {
+      const [skill, setSkill] = skillsMap[skillKey];
+      const currentSkillLevel = skill.currentLevel;
+      const costToLevel = skill.expCost[currentSkillLevel + 1];
+
+      setSkill((prev) => ({
+        ...prev,
+        currentLevel: prev.currentLevel + 1,
+      }));
+
+      setExp((prev) => prev - costToLevel);
+
+      playSFX(SKILL_LEARNED);
+      return;
+    }
+
     playSFX(SKILL_ON_COOLDOWN);
-  }, [exp, playSFX, skillsMap]);
+  }, [canSkillBeLeveled, playSFX, skillsMap]);
 
   const resetSkills = useCallback(() => {
     setExp(0);
@@ -277,6 +291,7 @@ export const useSkills = ({ SFX_API }) => {
     },
     actions: {
       calcExp,
+      canSkillBeLeveled,
       levelUpSkill,
       resetSkills,
       activateHold,
