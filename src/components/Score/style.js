@@ -18,10 +18,10 @@ export const Title = styled.span`
   margin: 0 0 1rem;
   color: white;
   text-transform: uppercase;
-  font-size: 2rem;
-`;
+  /* font-size: 1.6rem; */
+  `;
 
 export const Value = styled.span`
   color: white;
-  font-size: 1.8rem;
+  /* font-size: 1.8rem; */
 `;

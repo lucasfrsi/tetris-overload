@@ -32,7 +32,7 @@ export const buttons = css`
     border: 2px solid white;
     padding: 2rem;
 
-    font-size: 4rem;
+    font-size: 3.2rem;
 
     &:hover {
       border: 2px solid goldenrod;
