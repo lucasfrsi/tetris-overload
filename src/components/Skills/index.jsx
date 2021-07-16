@@ -1,24 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Skill from '../Skill';
+import * as styles from './style';
 
-const Skills = ({ skillsAPI }) => {
-  const {
-    actions: {
-      levelUpSkill,
-    },
-  } = skillsAPI;
-
-  return (
-    <div onClick={() => levelUpSkill('Intuition')}>
-      a
-    </div>
-  );
-};
+const Skills = ({ skills, canSkillBeLeveled, levelUpSkill }) => (
+  <div css={styles.skills}>
+    {skills.map((skill) => (
+      <Skill
+        key={skill.name}
+        skill={skill}
+        canSkillBeLeveled={canSkillBeLeveled}
+        levelUpSkill={levelUpSkill}
+      />
+    ))}
+  </div>
+);
 
 Skills.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  skillsAPI: PropTypes.object.isRequired,
+  skills: PropTypes.arrayOf(PropTypes.object).isRequired,
+  levelUpSkill: PropTypes.func.isRequired,
+  canSkillBeLeveled: PropTypes.func.isRequired,
 };
 
 export default Skills;

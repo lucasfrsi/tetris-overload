@@ -72,6 +72,11 @@ const Tetris = () => {
     state: {
       exp,
     },
+    skills,
+    actions: {
+      canSkillBeLeveled,
+      levelUpSkill,
+    },
   } = skillsAPI;
 
   const {
@@ -172,7 +177,11 @@ const Tetris = () => {
           <aside>
             <PieceHolder pieceHolderStage={holdStage} />
             <Score name="Experience" value={exp} />
-            <Skills skillsAPI={skillsAPI} />
+            <Skills
+              skills={skills}
+              canSkillBeLeveled={canSkillBeLeveled}
+              levelUpSkill={levelUpSkill}
+            />
           </aside>
           <Stage stage={stage} />
           <aside>
