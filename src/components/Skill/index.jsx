@@ -12,6 +12,9 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
     currentLevel,
   } = skill;
 
+  let status;
+  // if () {}
+
   return (
     <div
       css={styles.skill}
@@ -19,30 +22,26 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
       role="presentation"
       tabIndex={-1}
     >
-      <p>{name}</p>
-      <img src={icons[name]} alt={name} />
-      <div css={styles.levelWrapper}>
-        <span css={styles.level}>{currentLevel}</span>
+      <span css={styles.skillName}>{name}</span>
+      <img src={icons[name]} alt={name} css={styles.skillIcon} />
+      <div css={styles.skillLevelWrapper}>
+        <span css={styles.skillLevel}>{currentLevel}</span>
       </div>
-      <div css={styles.statusWrapper}>
-        <span css={styles.status} />
-        <span css={styles.expCost}>{expCost[currentLevel + 1]}</span>
+      <div css={styles.skillStatusWrapper}>
+        <span css={styles.skillStatus} />
+        <span css={styles.skillExpCost}>{expCost[currentLevel + 1]}</span>
       </div>
-      {/* Possible status:
+      {/* Possible status: (Pick the colors!)
         - Not learned
         - Passive
         - Ready to be used
         - Active
         - On cooldown
       */}
-      {canSkillBeLeveled(name) && <span css={styles.arrow} />}
-      {/* <span css={styles.expCost}>{expCost[currentLevel + 1]}</span> */}
+      {canSkillBeLeveled(name) && <span css={styles.skillArrow} />}
     </div>
   );
 };
-
-// Use a wrapper div in currentLevel and Status, so that the black part
-// Can be manipulated easier (and as a square)
 
 Skill.propTypes = {
   skill: PropTypes.shape({

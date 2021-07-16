@@ -3,32 +3,29 @@ import { css } from 'styled-components';
 export const skill = css`
   position: relative;
   cursor: pointer;
-
   border: 2px solid #333;
-  /* padding: .5rem; */
-  /* width: fit-content; */
-  width: 90%;
+
   display: flex;
   flex-direction: column;
-  margin: 1rem 0;
+  z-index: 1000;
+
+  width: 90%;
+  margin: 0 0 1rem;
 
   &:hover {
     border-color: goldenrod;
   }
+`;
 
-  img {
-    width: 4.8rem;
-    margin: 0 auto;
-  }
+export const skillName = css`
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 1rem 0 0.5rem;
+`;
 
-  p {
-    font-size: 1.4rem;
-    text-align: center;
-    margin: 1rem 0 0;
-  }
-
-  margin: 0.5rem 0;
-  z-index: 1000;
+export const skillIcon = css`
+  width: 4.8rem;
+  margin: 0 auto;
 `;
 
 const wrapper = css`
@@ -38,23 +35,23 @@ const wrapper = css`
   padding: .6rem;
 `;
 
-export const levelWrapper = css`
+export const skillLevelWrapper = css`
   ${wrapper}
   bottom: -1rem;
   left: -0.8rem;
 `;
 
-export const statusWrapper = css`
+export const skillStatusWrapper = css`
   ${wrapper}
   bottom: -0.8rem;
   right: -0.8rem;
 `;
 
-export const level = css`
+export const skillLevel = css`
   /* a */
 `;
 
-export const status = css`
+export const skillStatus = css`
   display: inline-block;
 
   width: 1.6rem;
@@ -63,7 +60,7 @@ export const status = css`
   border-radius: 50%;
 `;
 
-export const expCost = css`
+export const skillExpCost = css`
   position: absolute;
   font-size: 2rem;
   color: rgba(51, 51, 51, .5);
@@ -72,7 +69,7 @@ export const expCost = css`
   right: 2.4rem;
 `;
 
-export const arrow = css`
+export const skillArrow = css`
   position: absolute;
   top: .5rem;
   left: -.5rem;
