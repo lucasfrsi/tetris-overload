@@ -14,7 +14,7 @@ export const useSkills = ({ SFX_API }) => {
   const [clairvoyance, setClairvoyance] = useState({
     name: S.CLAIRVOYANCE,
     expCost: [0, 50, 75, 100],
-    currentLevel: 1,
+    currentLevel: 0,
     passive: true,
   });
 
@@ -120,7 +120,7 @@ export const useSkills = ({ SFX_API }) => {
 
     setClairvoyance((prev) => ({
       ...prev,
-      currentLevel: 1,
+      currentLevel: 0,
     }));
 
     setPixelPocket((prev) => ({
