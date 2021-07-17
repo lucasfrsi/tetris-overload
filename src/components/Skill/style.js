@@ -20,12 +20,12 @@ export const skill = css`
 export const skillName = css`
   font-size: 1.4rem;
   text-align: center;
-  margin: 1rem 0 0.5rem;
+  margin: 1rem 0 0;
 `;
 
 export const skillIcon = css`
-  width: 4.8rem;
-  margin: 0 auto;
+  margin: 1rem auto;
+  width: 3.2rem;
 `;
 
 const wrapper = css`

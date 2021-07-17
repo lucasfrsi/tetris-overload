@@ -25,7 +25,7 @@ import Countdown from '../Countdown';
 import GameOver from '../GameOver';
 import HighScores from '../HighScores';
 
-import { StyledTetrisLayout, StyledTetrisWrapper } from './style';
+import { StyledTetrisLayout, StyledTetrisWrapper, Buttons, Scores } from './style';
 
 const Tetris = () => {
   const BGM_API = useBGM();
@@ -187,14 +187,20 @@ const Tetris = () => {
           <aside>
             <PieceHolder pieceHolderStage={nextStage} />
             <PieceHolder pieceHolderStage={queueStage} />
-            <Score name="Score" value={score} />
-            <Score name="Level" value={level} />
-            <Score name="Rows" value={rows} />
-            {(onCountdown || gameStarted || paused)
-              ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} playSFXOnClick={false} />
-              : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} start />}
-            <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
-            <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} playSFXOnClick={false} />
+            <hr />
+            <Scores>
+              <Score name="Score" value={score} />
+              <Score name="Level" value={level} />
+              <Score name="Rows" value={rows} />
+            </Scores>
+            <hr />
+            <Buttons>
+              {(onCountdown || gameStarted || paused)
+                ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} playSFXOnClick={false} />
+                : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} start />}
+              <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
+              <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} playSFXOnClick={false} />
+            </Buttons>
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
@@ -215,8 +221,6 @@ export default Tetris;
 
 /*
   TO-DOS
-  1. Design the skill icon (how are they gonna look like?)
-    - Green arrow pointing up: means skill can be learned or leveled
   2. Design the pop-up message to alert the player that a skill is up
     - Only for Mimic, Time Stop and Perfectionism
   3. Think of how props and states are managed, how to improve performance?
@@ -231,6 +235,8 @@ export default Tetris;
   10. Improve responsiveness when pressing to drop (small delay to begin with)
     a. Make useInterval ACCURATE (check bookmarks)
     b. Move from using setState, avoiding async calls
+
+  11. Add same style from highscores to dialog confirmation (the box style)
 
   Next feats to implement:
   4. Perfectionist
