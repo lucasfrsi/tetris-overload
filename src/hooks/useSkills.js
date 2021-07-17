@@ -15,6 +15,7 @@ export const useSkills = ({ SFX_API }) => {
     name: S.CLAIRVOYANCE,
     expCost: [0, 50, 75, 100],
     currentLevel: 1,
+    passive: true,
   });
 
   const [pixelPocket, setPixelPocket] = useState({
@@ -28,6 +29,7 @@ export const useSkills = ({ SFX_API }) => {
     name: S.INTUITION,
     expCost: [0, 100],
     currentLevel: 0,
+    passive: true,
   });
 
   const [blink, setBlink] = useState({
@@ -70,7 +72,7 @@ export const useSkills = ({ SFX_API }) => {
   const skillsMap = useMemo(() => ({
     [S.CLAIRVOYANCE]: [clairvoyance, setClairvoyance],
     [S.PIXELPOCKET]: [pixelPocket, setPixelPocket],
-    [S.MIMIC]: [mimic, setPixelPocket],
+    [S.MIMIC]: [mimic, setMimic],
     [S.INTUITION]: [intuition, setIntuition],
     [S.BLINK]: [blink, setBlink],
     [S.TIMESTOP]: [timeStop, setTimeStop],
@@ -85,7 +87,7 @@ export const useSkills = ({ SFX_API }) => {
 
     if (currentSkillLevel < skillMaxLevel) {
       const costToLevel = skill.expCost[currentSkillLevel + 1];
-      if (exp > costToLevel) {
+      if (exp >= costToLevel) {
         return true;
       }
     }
