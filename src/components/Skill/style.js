@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const skill = css`
   position: relative;
@@ -48,15 +48,15 @@ export const skillStatusWrapper = css`
 `;
 
 export const skillLevel = css`
-  /* a */
+  /* Empty for now */
 `;
 
-export const skillStatus = css`
+export const skillStatus = styled.span`
   display: inline-block;
 
   width: 1.6rem;
   height: 1.6rem;
-  background-color: purple;
+  background-color: ${(props) => props.status};
   border-radius: 50%;
 `;
 

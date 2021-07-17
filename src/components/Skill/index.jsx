@@ -10,10 +10,21 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
     active,
     onCooldown,
     currentLevel,
+    passive,
   } = skill;
 
   let status;
-  // if () {}
+  if (currentLevel === 0) {
+    status = '#333';
+  } else if (active === true) {
+    status = '#8A2BE2';
+  } else if (onCooldown === true) {
+    status = '#FF4500';
+  } else if (passive) {
+    status = '#FFF9E3';
+  } else {
+    status = '#6CBB3C';
+  }
 
   return (
     <div
@@ -28,16 +39,9 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
         <span css={styles.skillLevel}>{currentLevel}</span>
       </div>
       <div css={styles.skillStatusWrapper}>
-        <span css={styles.skillStatus} />
+        <styles.skillStatus status={status} />
         <span css={styles.skillExpCost}>{expCost[currentLevel + 1]}</span>
       </div>
-      {/* Possible status: (Pick the colors!)
-        - Not learned
-        - Passive
-        - Ready to be used
-        - Active
-        - On cooldown
-      */}
       {canSkillBeLeveled(name) && <span css={styles.skillArrow} />}
     </div>
   );
@@ -52,6 +56,7 @@ Skill.propTypes = {
     active: PropTypes.bool,
     onCooldown: PropTypes.bool,
     currentLevel: PropTypes.number,
+    passive: PropTypes.bool,
   }).isRequired,
   levelUpSkill: PropTypes.func.isRequired,
   canSkillBeLeveled: PropTypes.func.isRequired,
