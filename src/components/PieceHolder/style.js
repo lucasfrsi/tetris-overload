@@ -7,5 +7,4 @@ export const StyledPieceHolder = styled.div`
   
   width: fit-content;
   margin: auto;
-  /* background: red; */
 `;
