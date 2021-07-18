@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const StyledTetrisWrapper = styled.div`
   width: 100vw;
@@ -17,7 +17,7 @@ export const StyledTetrisLayout = styled.div`
     display: flex;
     flex-direction: column;
 
-    max-width: 25rem;
+    max-width: 23.5rem;
     width: 100%;
     margin: 0 1rem;
   }
@@ -28,13 +28,48 @@ export const StyledTetrisLayout = styled.div`
   }
 `;
 
-export const Buttons = styled.div`
+export const StyledButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-export const Scores = styled.div`
+export const StyledScoresWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: auto;
+`;
+
+export const StyledSkillsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+`;
+
+const wrapper = css`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  border: 2px solid #333;
+  width: 90%;
+
+  span {
+    text-transform: uppercase;
+    margin: 0 auto 1rem;
+  }
+`;
+
+export const StyledHoldWrapper = styled.div`
+  ${wrapper}
+
+  max-height: 21.15rem;
+  height: 100%;
+  margin: 0 auto;
+`;
+
+export const StyledNextPiecesWrapper = styled.div`
+  ${wrapper}
+
+  height: 100%;
+  margin: 0 auto 1rem;
 `;

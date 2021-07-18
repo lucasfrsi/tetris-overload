@@ -25,7 +25,15 @@ import Countdown from '../Countdown';
 import GameOver from '../GameOver';
 import HighScores from '../HighScores';
 
-import { StyledTetrisLayout, StyledTetrisWrapper, Buttons, Scores } from './style';
+import {
+  StyledTetrisLayout,
+  StyledTetrisWrapper,
+  StyledButtonsWrapper,
+  StyledScoresWrapper,
+  StyledNextPiecesWrapper,
+  StyledHoldWrapper,
+  StyledSkillsWrapper,
+} from './style';
 
 const Tetris = () => {
   const BGM_API = useBGM();
@@ -36,7 +44,9 @@ const Tetris = () => {
   const playerAPI = usePlayer({ SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
-  const tetrisAPI = useTetris({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API });
+  const tetrisAPI = useTetris({
+    skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API,
+  });
 
   const timersAPI = useTimers({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API });
 
@@ -71,6 +81,8 @@ const Tetris = () => {
   const {
     state: {
       exp,
+      clairvoyance,
+      pixelPocket,
     },
     skills,
     actions: {
@@ -88,8 +100,9 @@ const Tetris = () => {
   const {
     state: {
       holdStage,
-      nextStage,
-      queueStage,
+      firstOnQueueStage,
+      secondOnQueueStage,
+      thirdOnQueueStage,
     },
   } = pieceHoldersAPI;
 
@@ -175,32 +188,48 @@ const Tetris = () => {
         )}
         <StyledTetrisLayout>
           <aside>
-            <PieceHolder pieceHolderStage={holdStage} />
-            <Score name="Experience" value={exp} />
-            <Skills
-              skills={skills}
-              canSkillBeLeveled={canSkillBeLeveled}
-              levelUpSkill={levelUpSkill}
-            />
+            {pixelPocket.currentLevel ? (
+              <>
+                <StyledHoldWrapper>
+                  <span>Hold</span>
+                  <PieceHolder pieceHolderStage={holdStage} />
+                </StyledHoldWrapper>
+              </>
+            ) : null}
+            <StyledSkillsWrapper>
+              <Score name="Experience" value={exp} />
+              {/* <hr /> */}
+              <Skills
+                skills={skills}
+                canSkillBeLeveled={canSkillBeLeveled}
+                levelUpSkill={levelUpSkill}
+              />
+            </StyledSkillsWrapper>
           </aside>
           <Stage stage={stage} />
           <aside>
-            <PieceHolder pieceHolderStage={nextStage} />
-            <PieceHolder pieceHolderStage={queueStage} />
+            {clairvoyance.currentLevel ? (
+              <StyledNextPiecesWrapper>
+                <span>Next</span>
+                <PieceHolder pieceHolderStage={firstOnQueueStage} />
+                <PieceHolder pieceHolderStage={secondOnQueueStage} />
+                <PieceHolder pieceHolderStage={thirdOnQueueStage} />
+              </StyledNextPiecesWrapper>
+            ) : null}
             <hr />
-            <Scores>
+            <StyledScoresWrapper>
               <Score name="Score" value={score} />
               <Score name="Level" value={level} />
               <Score name="Rows" value={rows} />
-            </Scores>
+            </StyledScoresWrapper>
             <hr />
-            <Buttons>
+            <StyledButtonsWrapper>
               {(onCountdown || gameStarted || paused)
                 ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} playSFXOnClick={false} />
                 : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} start />}
               <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
               <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} playSFXOnClick={false} />
-            </Buttons>
+            </StyledButtonsWrapper>
           </aside>
         </StyledTetrisLayout>
       </StyledTetrisWrapper>
@@ -222,7 +251,7 @@ export default Tetris;
 /*
   TO-DOS
   2. Design the pop-up message to alert the player that a skill is up
-    - Only for Mimic, Time Stop and Perfectionism
+    - Only for Mimic and Perfectionism?
   3. Think of how props and states are managed, how to improve performance?
     - Would it be better not to pass the entire API, and only some actions?
   3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
@@ -235,6 +264,11 @@ export default Tetris;
   10. Improve responsiveness when pressing to drop (small delay to begin with)
     a. Make useInterval ACCURATE (check bookmarks)
     b. Move from using setState, avoiding async calls
+
+  x. Add Reat.memo to reusable components: score, skill, button, etc.
+  xx. Add pixel art icons in menu: github and linkedin
+  xxx. Add made by lucasfrsi or something like that too! (+ date)
+  xxxx. Make a favicon
 
   11. Add same style from highscores to dialog confirmation (the box style)
 
