@@ -3,7 +3,7 @@ import { checkCollision } from 'utils/gameHelpers';
 import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, LEVEL_UP, NEW_HIGHSCORE } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
-export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_API, BGM_API }) => {
+export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API }) => {
   const [inGame, setInGame] = useState(false);
 
   const {
@@ -25,6 +25,12 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
       resetStage,
     },
   } = stageAPI;
+
+  const {
+    actions: {
+      resetPieceHolders,
+    },
+  } = pieceHoldersAPI;
 
   const {
     state: {
@@ -53,9 +59,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   } = gameStatusAPI;
 
   const {
-    state: {
-      timeStop,
-    },
     actions: {
       resetSkills,
       removePixelPocketCooldown,
@@ -81,6 +84,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     resetGameStatus();
     resetPlayer();
     resetStage();
+    resetPieceHolders();
   };
 
   const goToTetris = () => {
@@ -233,10 +237,12 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
     } else {
       // Game over!
       if (player.pos.y < 1) {
+        playSFX(TETROMINO_MERGE);
         gameIsOver();
+        return;
       }
-      updatePlayerPos({ x: 0, y: 0, collided: !timeStop.active });
-      coreAutoDrop();
+      updatePlayerPos({ x: 0, y: 0, collided: true });
+      coreAutoDrop(); // think if it's worth leaving this here
       playSFX(TETROMINO_MERGE);
       removePixelPocketCooldown();
     }
@@ -245,6 +251,8 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, SFX_A
   const dropPlayer = () => {
     coreManualDrop();
     drop();
+    // TEST (removing drop())
+    // Breaks how timeStop works!!
   };
 
   return {

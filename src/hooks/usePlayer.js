@@ -101,6 +101,9 @@ export const usePlayer = ({ SFX_API }) => {
   }, [preCollisionY, updatePlayerPos]);
 
   const resetPlayer = () => {
+    setHold([]);
+    setNextPieces(createNextPiecesArray(3));
+    setPreCollisionY(0);
     setPlayer({
       pos: { x: 0, y: 0 },
       tetromino: TETROMINOS[0],
