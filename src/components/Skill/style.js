@@ -26,6 +26,10 @@ export const skillName = css`
 export const skillIcon = css`
   margin: 1rem auto;
   width: 3.2rem;
+
+  @media screen and (max-height: 768px) {
+    margin: 1rem auto 0.5rem;
+  }
 `;
 
 const wrapper = css`
