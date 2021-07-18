@@ -7,7 +7,6 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
   const {
     name,
     expCost,
-    active,
     onCooldown,
     currentLevel,
     passive,
@@ -16,8 +15,6 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
   let status;
   if (currentLevel === 0) {
     status = '#333';
-  } else if (active === true) {
-    status = '#8A2BE2';
   } else if (onCooldown === true) {
     status = '#FF4500';
   } else if (passive) {
@@ -53,7 +50,6 @@ Skill.propTypes = {
     expCost: PropTypes.arrayOf(PropTypes.number),
     duration: PropTypes.arrayOf(PropTypes.number),
     cooldown: PropTypes.arrayOf(PropTypes.number),
-    active: PropTypes.bool,
     onCooldown: PropTypes.bool,
     currentLevel: PropTypes.number,
     passive: PropTypes.bool,
