@@ -1,18 +1,15 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { TIME_STOP_UP, SKILL_IS_UP } from 'utils/SFXPaths';
+import { SKILL_IS_UP } from 'utils/SFXPaths';
 import { useInterval } from './useInterval';
 
 export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
   const {
     state: {
       mimic,
-      timeStop,
       perfectionism,
     },
     actions: {
       removeMimicCooldown,
-      putTimeStopOnCooldown,
-      removeTimeStopCooldown,
       removePerfectionismCooldown,
     },
   } = skillsAPI;
@@ -48,43 +45,18 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
     cooldown: 0,
   });
 
-  const timeStopCounter = useRef({
-    duration: 0,
-    cooldown: 0,
-  });
-
   const perfectionismCounter = useRef({
     cooldown: 0,
   });
 
   const INTERVAL_DELAY = useMemo(() => {
     if (ticking) {
-      if (
-        timeStop.active
-        || timeStop.onCooldown
-        || mimic.onCooldown
-        || perfectionism.onCooldown
-      ) return 1000;
+      if (mimic.onCooldown || perfectionism.onCooldown) return 1000;
     }
     return null;
-  }, [mimic.onCooldown, perfectionism.onCooldown, ticking, timeStop.active, timeStop.onCooldown]);
+  }, [mimic.onCooldown, perfectionism.onCooldown, ticking]);
 
   // MIGHT RESET COOLDOWN ON SKILL LEVEL, CHECK!
-  useEffect(() => {
-    if (timeStop.active) {
-      timeStopCounter.current.duration = timeStop.duration[timeStop.currentLevel];
-    } else if (timeStop.onCooldown) {
-      timeStopCounter.current.cooldown = timeStop.cooldown[timeStop.currentLevel];
-      timeStopCounter.current.duration = 0;
-    }
-  }, [
-    timeStop.duration,
-    timeStop.cooldown,
-    timeStop.active,
-    timeStop.onCooldown,
-    timeStop.currentLevel,
-  ]);
-
   useEffect(() => {
     if (mimic.onCooldown) {
       mimicCounter.current.cooldown = mimic.cooldown[mimic.currentLevel];
@@ -99,22 +71,6 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
 
   // Skills Timer
   useInterval(() => {
-    if (timeStopCounter.current.duration > 0) {
-      timeStopCounter.current.duration--;
-      if (timeStopCounter.current.duration === 0) {
-        putTimeStopOnCooldown();
-        playSFX(TIME_STOP_UP);
-      }
-    }
-
-    if (timeStopCounter.current.cooldown > 0) {
-      timeStopCounter.current.cooldown--;
-      if (timeStopCounter.current.cooldown === 0) {
-        removeTimeStopCooldown();
-        playSFX(SKILL_IS_UP);
-      }
-    }
-
     if (mimicCounter.current.cooldown > 0) {
       mimicCounter.current.cooldown--;
       if (mimicCounter.current.cooldown === 0) {
@@ -162,7 +118,8 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
   // Depending on browsers, dropping when null is pretty different
   // Firefox is much slower, while on chrome and opera it's much faster
   useInterval(() => {
-    if (!timeStop.active) drop();
+    console.log('useInterval - drop()');
+    drop();
   }, dropTime);
 
   return {

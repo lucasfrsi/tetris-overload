@@ -36,11 +36,7 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
   } = tetrisAPI;
 
   const {
-    state: {
-      timeStop,
-    },
     actions: {
-      activateTimeStop,
       activateMimic,
       activateBlink,
       activateHold,
@@ -60,17 +56,13 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
       } else if (key === '4' || code === 'Numpad4') {
         playerRotate(stage, -1);
       } else if (key === '5' || code === 'Numpad5') {
-        if (timeStop.active) movePlayer(0, -1);
+        activateBlink(hardDrop);
       } else if (key === '6' || code === 'Numpad6') {
         playerRotate(stage, 1);
       } else if (key === '7' || code === 'Numpad7') {
         activateHold(holdPlayerTetromino);
-      } else if (key === '8' || code === 'Numpad8') {
-        activateBlink(hardDrop);
       } else if (key === '9' || code === 'Numpad9') {
         activateMimic(unshiftPlayerTetrominoCopy);
-      } else if (key === '0' || code === 'Numpad0') {
-        activateTimeStop();
       } else if (key === 'p' || code === 'keyP') {
         pause();
       }
@@ -105,7 +97,7 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
   };
 };
 
-// What I want:
-// when down is pressed, it triggers only ONCE, and not fire all the time
-
-// What I need to do:
+// IMPLEMENT:
+// A way to not trigger the function over and over when key is pressed
+// Mainly the dropPlayer() one
+// IDEAL: trigger once, ignore the others until keyUp

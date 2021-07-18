@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, TIME_STOP_DOWN, TIME_STOP_UP, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
+import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
 import * as S from 'utils/skillsMap';
 
 export const useSkills = ({ SFX_API }) => {
@@ -38,16 +38,6 @@ export const useSkills = ({ SFX_API }) => {
     currentLevel: 0,
   });
 
-  const [timeStop, setTimeStop] = useState({
-    name: S.TIMESTOP,
-    expCost: [0, 100, 150, 200],
-    duration: [0, 4, 6, 8],
-    cooldown: [0, 90, 75, 60],
-    active: false,
-    onCooldown: false,
-    currentLevel: 0,
-  });
-
   const [mimic, setMimic] = useState({
     name: S.MIMIC,
     expCost: [0, 100, 150, 200],
@@ -75,9 +65,8 @@ export const useSkills = ({ SFX_API }) => {
     [S.MIMIC]: [mimic, setMimic],
     [S.INTUITION]: [intuition, setIntuition],
     [S.BLINK]: [blink, setBlink],
-    [S.TIMESTOP]: [timeStop, setTimeStop],
     [S.PERFECTIONISM]: [perfectionism, setPerfectionism],
-  }), [blink, clairvoyance, intuition, mimic, perfectionism, pixelPocket, timeStop]);
+  }), [blink, clairvoyance, intuition, mimic, perfectionism, pixelPocket]);
 
   const canSkillBeLeveled = useCallback((skillKey) => {
     const [skill] = skillsMap[skillKey];
@@ -139,15 +128,6 @@ export const useSkills = ({ SFX_API }) => {
       currentLevel: 0,
     }));
 
-    setTimeStop((prev) => ({
-      ...prev,
-      currentLevel: 0,
-      durationTimer: null,
-      active: 0,
-      cooldownTimer: null,
-      onCooldown: 0,
-    }));
-
     setMimic((prev) => ({
       ...prev,
       currentLevel: 0,
@@ -162,44 +142,6 @@ export const useSkills = ({ SFX_API }) => {
       onCooldown: 0,
     }));
   }, []);
-
-  const putTimeStopAsActive = () => {
-    setTimeStop((prev) => ({
-      ...prev,
-      active: true,
-    }));
-  };
-
-  const putTimeStopOnCooldown = () => {
-    setTimeStop((prev) => ({
-      ...prev,
-      active: false,
-      onCooldown: true,
-    }));
-  };
-
-  const removeTimeStopCooldown = () => {
-    setTimeStop((prev) => ({
-      ...prev,
-      onCooldown: false,
-    }));
-  };
-
-  const activateTimeStop = () => {
-    if (timeStop.currentLevel) {
-      if (!timeStop.active && !timeStop.onCooldown) {
-        putTimeStopAsActive();
-        playSFX(TIME_STOP_DOWN);
-      } else if (timeStop.active) {
-        putTimeStopOnCooldown();
-        playSFX(TIME_STOP_UP);
-      } else {
-        playSFX(SKILL_ON_COOLDOWN);
-      }
-    } else {
-      playSFX(SKILL_ON_COOLDOWN);
-    }
-  };
 
   const putPerfectionismOnCooldown = () => {
     setPerfectionism((prev) => ({
@@ -289,7 +231,6 @@ export const useSkills = ({ SFX_API }) => {
       intuition,
       pixelPocket,
       mimic,
-      timeStop,
     },
     actions: {
       calcExp,
@@ -299,12 +240,9 @@ export const useSkills = ({ SFX_API }) => {
       activateHold,
       activateMimic,
       activateBlink,
-      activateTimeStop,
       activatePerfectionism,
       removePixelPocketCooldown,
       removeMimicCooldown,
-      putTimeStopOnCooldown,
-      removeTimeStopCooldown,
       removePerfectionismCooldown,
     },
     skills: [
@@ -313,7 +251,6 @@ export const useSkills = ({ SFX_API }) => {
       mimic,
       intuition,
       blink,
-      timeStop,
       perfectionism,
     ],
   };
