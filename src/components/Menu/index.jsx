@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import sfxOn from 'assets/sfx_on.svg';
-import sfxOff from 'assets/sfx_off.svg';
-import musicOn from 'assets/music_on.svg';
-import musicOff from 'assets/music_off.svg';
+import sfxOn from 'assets/icons/sfx_on.svg';
+import sfxOff from 'assets/icons/sfx_off.svg';
+import musicOn from 'assets/icons/music_on.svg';
+import musicOff from 'assets/icons/music_off.svg';
 import github from 'assets/icons/github.svg';
 import linkedin from 'assets/icons/linkedin.svg';
 import { BUTTON_HOVER, BUTTON_SELECT, BUTTON_TOGGLE } from 'utils/SFXPaths';
