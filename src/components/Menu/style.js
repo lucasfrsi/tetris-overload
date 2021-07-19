@@ -72,6 +72,7 @@ export const madeWithLove = css`
   bottom: 1rem;
   right: 1rem;
   text-transform: initial;
+  font-size: 1.2rem;
   
   a {
     text-decoration: none;
@@ -86,7 +87,7 @@ export const madeWithLove = css`
   }
 
   img {
-    width: 4.8rem;
+    width: 2.4rem;
     margin: 0 0 0 0.5rem;
   }
 `;
