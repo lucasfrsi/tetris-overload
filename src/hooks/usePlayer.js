@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { TETROMINOS, randomTetromino, createNextPiecesArray } from 'utils/tetrominos';
+import { TETROMINOS, randomTetromino, createNextPiecesArray, restartPool } from 'utils/tetrominos';
 import { STAGE_WIDTH, checkCollision } from 'utils/gameHelpers';
 
 import { TETROMINO_ROTATE } from 'utils/SFXPaths';
@@ -102,6 +102,7 @@ export const usePlayer = ({ SFX_API }) => {
 
   const resetPlayer = () => {
     setHold([]);
+    restartPool();
     setNextPieces(createNextPiecesArray(3));
     setPreCollisionY(0);
     setPlayer({

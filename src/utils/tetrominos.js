@@ -61,16 +61,81 @@ export const TETROMINOS = {
   },
 };
 
-export const randomTetromino = () => {
-  const tetrominos = 'IJLOSTZ';
-  const randTetromino = tetrominos[Math.floor(Math.random() * tetrominos.length)];
-  return TETROMINOS[randTetromino];
-};
+function* tgm3Randomizer() {
+  const pieces = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
+  const order = [];
 
-export const createNextPiecesArray = (piecesAmount) => {
-  const array = [];
-  for (let i = 0; i < piecesAmount; i++) {
-    array.push(randomTetromino());
+  // Create 35 pool.
+  const pool = pieces.concat(pieces, pieces, pieces, pieces);
+
+  // First piece special conditions
+  const firstPiece = ['I', 'J', 'L', 'T'][Math.floor(Math.random() * 4)];
+  yield firstPiece;
+
+  const history = ['S', 'Z', 'S', firstPiece];
+
+  while (true) {
+    let roll;
+    let i;
+    let piece;
+
+    // Roll For piece
+    for (roll = 0; roll < 6; ++roll) {
+      i = Math.floor(Math.random() * 35);
+      piece = pool[i];
+      if (history.includes(piece) === false || roll === 5) {
+        break;
+      }
+      // eslint-disable-next-line prefer-destructuring
+      if (order.length) pool[i] = order[0];
+    }
+
+    // Update piece order
+    if (order.includes(piece)) {
+      order.splice(order.indexOf(piece), 1);
+    }
+    order.push(piece);
+
+    // eslint-disable-next-line prefer-destructuring
+    pool[i] = order[0];
+
+    // Update history
+    history.shift();
+    history[3] = piece;
+
+    yield piece;
   }
-  return array;
-};
+}
+
+function tetrominoGeneration() {
+  let tetrominoGenerator = tgm3Randomizer();
+
+  function restartPool() {
+    tetrominoGenerator = tgm3Randomizer();
+  }
+
+  function randomTetromino() {
+    const piece = tetrominoGenerator.next().value;
+    return TETROMINOS[piece];
+  }
+
+  function createNextPiecesArray(piecesAmount) {
+    const array = [];
+    for (let i = 0; i < piecesAmount; i++) {
+      array.push(randomTetromino());
+    }
+    return array;
+  }
+
+  return {
+    randomTetromino,
+    createNextPiecesArray,
+    restartPool,
+  };
+}
+
+export const {
+  randomTetromino,
+  createNextPiecesArray,
+  restartPool,
+} = tetrominoGeneration();
