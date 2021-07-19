@@ -69,7 +69,7 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
     } else if (key === 'p' || code === 'keyP') {
       if (onCountdown) {
         pause();
-      } else if (paused && !dialogIsOpen) {
+      } else if (paused && !dialogIsOpen.state) {
         unpause();
       }
     }
