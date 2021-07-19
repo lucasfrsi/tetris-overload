@@ -58,4 +58,4 @@ Skill.propTypes = {
   canSkillBeLeveled: PropTypes.func.isRequired,
 };
 
-export default Skill;
+export default React.memo(Skill);

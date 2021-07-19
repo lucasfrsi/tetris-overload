@@ -19,4 +19,4 @@ Score.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default Score;
+export default React.memo(Score);

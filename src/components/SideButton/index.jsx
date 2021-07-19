@@ -28,4 +28,4 @@ SideButton.defaultProps = {
   disabled: false,
 };
 
-export default SideButton;
+export default React.memo(SideButton);
