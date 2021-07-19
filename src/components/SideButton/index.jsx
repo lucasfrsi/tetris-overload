@@ -1,18 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { BUTTON_HOVER, BUTTON_SELECT, BUTTON_START } from 'utils/SFXPaths';
+import { BUTTON_HOVER } from 'utils/SFXPaths';
 
 import * as styles from './style';
 
-const SideButton = ({ buttonName, onClick, playSFX, disabled, playSFXOnClick, start }) => (
+const SideButton = ({ buttonName, onClick, playSFX, disabled }) => (
   <button
     type="button"
     tabIndex={-1}
     css={styles.sideButton}
-    onClick={() => {
-      onClick();
-      if (playSFXOnClick) playSFX(start ? BUTTON_START : BUTTON_SELECT);
-    }}
+    onClick={onClick}
     onMouseEnter={() => playSFX(BUTTON_HOVER)}
     disabled={disabled}
   >
@@ -25,14 +22,10 @@ SideButton.propTypes = {
   onClick: PropTypes.func.isRequired,
   playSFX: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
-  playSFXOnClick: PropTypes.bool,
-  start: PropTypes.bool,
 };
 
 SideButton.defaultProps = {
   disabled: false,
-  playSFXOnClick: true,
-  start: false,
 };
 
 export default SideButton;

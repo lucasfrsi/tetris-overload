@@ -179,9 +179,10 @@ const Tetris = () => {
           />
         )}
         {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
-        {paused && <Pause dialog={dialogIsOpen} />}
-        {dialogIsOpen && (
+        {paused && <Pause dialog={dialogIsOpen.state} />}
+        {dialogIsOpen.state && (
           <ConfirmationDialog
+            type={dialogIsOpen.type}
             cancel={cancelDialog}
             confirm={confirmDialog}
           />
@@ -225,10 +226,10 @@ const Tetris = () => {
             <hr />
             <StyledButtonsWrapper>
               {(onCountdown || gameStarted || paused)
-                ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} playSFXOnClick={false} />
-                : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} start />}
+                ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} />
+                : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} />}
               <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
-              <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} playSFXOnClick={false} />
+              <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} />
             </StyledButtonsWrapper>
           </aside>
         </StyledTetrisLayout>
@@ -250,27 +251,14 @@ export default Tetris;
 
 /*
   TO-DOS
-  2. Design the pop-up message to alert the player that a skill is up
-    - Only for Mimic and Perfectionism?
-  3. Think of how props and states are managed, how to improve performance?
-    - Would it be better not to pass the entire API, and only some actions?
-  3. Find a way to centralize next and queue pieces in container (create stage the size of 'em)
-  4. Add cell animations?
   7. Play the game, tweak the math calculations + balance
   5. Add controls and the ability to choose all the keys
   x. Add switch case in place of all the ifs (use switch(true))
   8. Check all the useEffect dependencies and update functions accordingly, using useCallback
   9. Rethink the tetrominos randomization (not totally random, like the original game)
-  10. Improve responsiveness when pressing to drop (small delay to begin with)
-    a. Make useInterval ACCURATE (check bookmarks)
-    b. Move from using setState, avoiding async calls
 
   x. Add Reat.memo to reusable components: score, skill, button, etc.
-  xx. Add pixel art icons in menu: github and linkedin
-  xxx. Add made by lucasfrsi or something like that too! (+ date)
   xxxx. Make a favicon
-
-  11. Add same style from highscores to dialog confirmation (the box style)
 
   Next feats to implement:
   4. Perfectionist

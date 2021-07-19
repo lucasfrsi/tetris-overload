@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { checkCollision } from 'utils/gameHelpers';
-import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, LEVEL_UP, NEW_HIGHSCORE } from 'utils/SFXPaths';
+import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, LEVEL_UP, NEW_HIGHSCORE, BUTTON_START } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 
-export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API }) => {
+export const useTetris = ({
+  skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API,
+}) => {
   const [inGame, setInGame] = useState(false);
 
   const {
@@ -40,11 +42,11 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, piece
       gameStarted,
       paused,
       newHighScoreRef,
+      dialogIsOpen,
     },
     actions: {
       setLevel,
       setGameOver,
-      setDialogIsOpen,
       setPaused,
       setOnCountdown,
       setGameStarted,
@@ -55,6 +57,9 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, piece
       coreResume,
       coreManualDrop,
       coreAutoDrop,
+      openMenuDialog,
+      openResetDialog,
+      closeDialog,
     },
   } = gameStatusAPI;
 
@@ -124,20 +129,29 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, piece
     startCountdown();
   };
 
-  // MENU BUTTON - CONFIRMATION DIALOG
-  const openConfirmationDialog = () => {
+  // CONFIRMATION DIALOG
+  const openConfirmationDialog = (type) => {
     pause();
-    setDialogIsOpen(true);
+    if (type === 'MENU') {
+      openMenuDialog();
+    } else if (type === 'RESET') {
+      openResetDialog();
+    }
   };
 
   const closeConfirmationDialog = () => {
     unpause();
-    setDialogIsOpen(false);
+    closeDialog();
   };
 
   const confirmDialog = () => {
     playSFX(BUTTON_SELECT);
-    goToMenu();
+
+    if (dialogIsOpen.type === 'MENU') {
+      goToMenu();
+    } else if (dialogIsOpen.type === 'RESET') {
+      resetGame();
+    }
   };
 
   const cancelDialog = () => {
@@ -183,6 +197,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, piece
 
   // BUTTONS
   const handleStartButton = () => {
+    playSFX(BUTTON_START);
     startCountdown();
   };
 
@@ -195,8 +210,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, piece
   };
 
   const handleResetButton = () => {
-    // use confirmation dialog
-    resetGame();
+    openConfirmationDialog('RESET');
   };
 
   const handleMenuButton = () => {
@@ -204,7 +218,7 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, piece
       playSFX(BUTTON_SELECT);
       goToMenu();
     } else {
-      openConfirmationDialog();
+      openConfirmationDialog('MENU');
     }
   };
 
@@ -252,7 +266,6 @@ export const useTetris = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, piece
     coreManualDrop();
     drop();
     // TEST (removing drop())
-    // Breaks how timeStop works!!
   };
 
   return {

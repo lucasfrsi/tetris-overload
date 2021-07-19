@@ -1,6 +1,13 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
 import { checkLocalStorageAvailability, initializeScores, setKeyValue } from 'utils/localStorage';
+
+const clearTable = {
+  1: CLEAR_SINGLE,
+  2: CLEAR_DOUBLE,
+  3: CLEAR_TRIPLE,
+  4: CLEAR_TETRIS,
+};
 
 export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [isLocalStorageAvailable, setIsLocalStorageAvailable] = useState();
@@ -18,19 +25,15 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [onCountdown, setOnCountdown] = useState(null);
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  const [dialogIsOpen, setDialogIsOpen] = useState({
+    state: false,
+    type: '',
+  });
 
   // CORE
   const [ticking, setTicking] = useState(false);
   const [dropTime, setDropTime] = useState(null);
   const speed = useRef(0);
-
-  const clearTable = useMemo(() => ({
-    1: CLEAR_SINGLE,
-    2: CLEAR_DOUBLE,
-    3: CLEAR_TRIPLE,
-    4: CLEAR_TETRIS,
-  }), []);
 
   const {
     actions: {
@@ -56,11 +59,32 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       setRows((prev) => prev + rowsCleared);
       calcExp(rowsCleared);
     }
-  }, [activatePerfectionism, calcExp, clearTable, level, playSFX, rowsCleared]);
+  }, [activatePerfectionism, calcExp, level, playSFX, rowsCleared]);
 
   useEffect(() => {
     calcScore();
   }, [calcScore]);
+
+  const openMenuDialog = () => {
+    setDialogIsOpen({
+      state: true,
+      type: 'MENU',
+    });
+  };
+
+  const openResetDialog = () => {
+    setDialogIsOpen({
+      state: true,
+      type: 'RESET',
+    });
+  };
+
+  const closeDialog = () => {
+    setDialogIsOpen({
+      state: false,
+      type: '',
+    });
+  };
 
   const coreReset = () => {
     setTicking(false);
@@ -79,6 +103,8 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   };
 
   const coreManualDrop = () => {
+    // TEST
+    // setDropTime(25);
     setDropTime(null);
   };
 
@@ -105,7 +131,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     setOnCountdown(null);
     setPaused(false);
     setGameOver(false);
-    setDialogIsOpen(false);
+    closeDialog();
     coreReset();
   };
 
@@ -184,6 +210,9 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       corePause,
       coreManualDrop,
       coreAutoDrop,
+      openMenuDialog,
+      openResetDialog,
+      closeDialog,
     },
   };
 };

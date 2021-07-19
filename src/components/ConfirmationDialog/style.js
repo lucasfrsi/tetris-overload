@@ -22,22 +22,24 @@ export const dialogBox = css`
 
   border: 2px solid white;
   padding: 2rem;
-  background-color: black;
+  background-color: rgba(1, 1, 1, .3);
+
+  
+`;
+
+export const buttonsWrapper = css`
+  display: flex;
+  justify-content: space-between;
 
   button {
-    cursor: pointer;
     background-color: transparent;
     border: none;
+    cursor: pointer;
     text-transform: uppercase;
-    min-width: 12rem;
-    padding: 1rem;
+    line-height: 2.2;
 
     &:hover {
       color: gold;
-    }
-
-    &:first-of-type {
-      margin-right: 4rem;
     }
   }
 `;
@@ -46,10 +48,5 @@ export const dialogText = css`
   text-align: justify;
   line-height: 1.4;
   font-size: 1.4rem;
-  margin-bottom: 2rem;
-`;
-
-export const buttonsWrapper = css`
-  display: flex;
-  justify-content: center;
+  margin-bottom: 3rem;
 `;

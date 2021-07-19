@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './style';
 
-const ConfirmationDialog = ({ cancel, confirm }) => (
+const ConfirmationDialog = ({ type, cancel, confirm }) => (
   <div css={styles.dialogBoxWrapper}>
     <div css={styles.dialogBox}>
       <p css={styles.dialogText}>
-        Are you sure you want to go back to the menu?
-        All your progress will be lost.
+        {type === 'MENU' ? 'Are you sure you want to go back to the menu? All your progress will be lost.' : null}
+        {type === 'RESET' ? 'Are you sure you want to reset? All your progress will be lost.' : null}
       </p>
       <div css={styles.buttonsWrapper}>
         <button type="button" onClick={cancel}>Cancel</button>
@@ -18,6 +18,7 @@ const ConfirmationDialog = ({ cancel, confirm }) => (
 );
 
 ConfirmationDialog.propTypes = {
+  type: PropTypes.string.isRequired,
   cancel: PropTypes.func.isRequired,
   confirm: PropTypes.func.isRequired,
 };
