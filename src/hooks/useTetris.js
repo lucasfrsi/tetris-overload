@@ -116,11 +116,13 @@ export const useTetris = ({
 
   // PAUSE and UNPAUSE
   const pause = () => {
-    if (onCountdown) cancelCountdown();
-    pauseBGM();
-    playSFX(PAUSE_IN);
-    corePause();
-    setPaused(true);
+    if (!paused) {
+      if (onCountdown) cancelCountdown();
+      pauseBGM();
+      playSFX(PAUSE_IN);
+      corePause();
+      setPaused(true);
+    }
   };
 
   const unpause = () => {
