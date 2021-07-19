@@ -4,6 +4,8 @@ import sfxOn from 'assets/sfx_on.svg';
 import sfxOff from 'assets/sfx_off.svg';
 import musicOn from 'assets/music_on.svg';
 import musicOff from 'assets/music_off.svg';
+import github from 'assets/icons/github.svg';
+import linkedin from 'assets/icons/linkedin.svg';
 import { BUTTON_HOVER, BUTTON_SELECT, BUTTON_TOGGLE } from 'utils/SFXPaths';
 
 import * as styles from './style';
@@ -44,6 +46,20 @@ const Menu = ({ play, SFX, BGM, toggleSFX, toggleBGM, playSFX }) => {
             onKeyDown={() => {}}
           />
         </div>
+      </div>
+      <div css={styles.madeWithLove}>
+        <span>
+          made by&nbsp;
+          <a href="https://lucasfrsi.com/" target="_blank" rel="noopener noreferrer">
+            @lucasfrsi
+          </a>
+        </span>
+        <a href="https://github.com/lucasfrsi" target="_blank" rel="noopener noreferrer">
+          <img src={github} alt="" />
+        </a>
+        <a href="https://linkedin.com/in/lucasfrsi" target="_blank" rel="noopener noreferrer">
+          <img src={linkedin} alt="" />
+        </a>
       </div>
     </div>
   );

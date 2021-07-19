@@ -2,6 +2,7 @@ import { css } from 'styled-components';
 import { fonts } from 'style/variables';
 
 export const menu = css`
+  /* position: relative; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -63,5 +64,29 @@ export const icons = css`
   img {
     width: 4.8rem;
     cursor: pointer;
+  }
+`;
+
+export const madeWithLove = css`
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  text-transform: initial;
+  
+  a {
+    text-decoration: none;
+
+    &:visited {
+      color: inherit;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  img {
+    width: 4.8rem;
+    margin: 0 0 0 0.5rem;
   }
 `;
