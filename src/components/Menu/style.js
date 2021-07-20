@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { fonts } from 'style/variables';
+import { fonts, colors } from 'style/variables';
 
 export const menu = css`
   /* position: relative; */
@@ -45,6 +45,25 @@ export const buttons = css`
 
     &:nth-of-type(even) {
       transform: rotate(-3deg);
+    }
+
+    &:nth-of-type(3) {
+      border: 2px solid #222;
+      color: ${colors['grey-d-6']};
+      cursor: default;
+      text-decoration: line-through;
+
+      &:hover {
+        border: 2px solid #222;
+      }
+
+      span {
+        font-size: 1.6rem;
+        color: ${colors['black-1']};
+        position: absolute;
+        bottom: .5rem;
+        right: .5rem;
+      }
     }
   }
 `;
