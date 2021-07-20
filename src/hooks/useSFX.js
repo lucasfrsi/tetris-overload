@@ -161,7 +161,7 @@ export const useSFX = () => {
   }, []);
 
   const playSFX = useCallback((spriteKey) => {
-    SFXHowl.play(spriteKey);
+    if (!SFXHowl.mute()) SFXHowl.play(spriteKey);
   }, []);
 
   return {

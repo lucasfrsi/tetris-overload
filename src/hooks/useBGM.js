@@ -44,16 +44,18 @@ export const useBGM = () => {
   }, []);
 
   const playBGM = useCallback((spriteKey) => {
-    let id = BGMHowl.currentID;
+    if (!BGMHowl.mute()) {
+      let id = BGMHowl.currentID;
 
-    if (id) {
-      BGMHowl.play(id);
-    } else {
-      id = BGMHowl.play(spriteKey);
-      BGMHowl.currentID = id;
+      if (id) {
+        BGMHowl.play(id);
+      } else {
+        id = BGMHowl.play(spriteKey);
+        BGMHowl.currentID = id;
+      }
+
+      BGMHowl.fade(0, BGMHowl.volume(), 500, id);
     }
-
-    BGMHowl.fade(0, BGMHowl.volume(), 500, id);
   }, []);
 
   const stopBGM = useCallback(() => {
