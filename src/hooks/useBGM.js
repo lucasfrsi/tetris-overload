@@ -53,7 +53,7 @@ export const useBGM = () => {
       BGMHowl.currentID = id;
     }
 
-    BGMHowl.fade(0, 1, 500, id);
+    BGMHowl.fade(0, BGMHowl.volume(), 500, id);
   }, []);
 
   const stopBGM = useCallback(() => {
