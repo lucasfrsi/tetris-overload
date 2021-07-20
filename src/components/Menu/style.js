@@ -94,11 +94,8 @@ export const madeWithLove = css`
   font-size: 1.2rem;
   
   a {
+    color: white;
     text-decoration: none;
-
-    &:visited {
-      color: inherit;
-    }
 
     &:hover {
       text-decoration: underline;
