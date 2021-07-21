@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import gameModes from 'utils/gameModes';
+import gameModes, { PROGRESSIVE_OVERLOAD_MODE } from 'utils/gameModes';
 import {
   keyBindingsModes,
   NUMPAD_MODE,
   QWER_MODE,
+  CUSTOM_MODE,
   getNUMPADKeyBindings,
   getQWERKeyBindings,
 } from 'utils/keyBindings';
+import { initializeKey, setKeyValue, OPTIONS_KEY } from 'utils/localStorage';
 
-export const useOptions = ({ BGM_API, SFX_API }) => {
+export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
   const {
     actions: {
       getBGMHowlVolume,
@@ -72,12 +74,28 @@ export const useOptions = ({ BGM_API, SFX_API }) => {
     setKeyBindings(newKeyBindings);
   };
 
+  // Keep track of key bindings and disallow repeated ones??
+  // set? map? How to?
+
   // RESET TO DEFAULT
   const resetToDefault = () => {
     changeGameMode(gameModes[0]);
     changeSFXSliderValue(1.0);
     changeBGMSliderValue(1.0);
     changeKeyBindingsMode(keyBindingsModes[0]);
+  };
+
+  // SAVE TO LOCAL STORAGE
+  const saveOptionsToLocalStorage = () => {
+    const optionsToSave = {
+      gameMode,
+      sfxVolume: SFXSlider.value,
+      bgmVolume: BGMSlider.value,
+      keyBindingsMode,
+      keyBindings: keyBindingsMode === CUSTOM_MODE ? keyBindings : {},
+    };
+
+    setKeyValue(OPTIONS_KEY, optionsToSave);
   };
 
   // Automatically update the key bindings according to the mode that is set
@@ -98,6 +116,30 @@ export const useOptions = ({ BGM_API, SFX_API }) => {
     changeSFXHowlVolume(SFXSlider.value);
   }, [SFXSlider.value, changeSFXHowlVolume]);
 
+  // If local storage is available, initialize all states according to it
+  useEffect(() => {
+    if (isLocalStorageAvailable) {
+      const defaultOptions = {
+        gameMode: PROGRESSIVE_OVERLOAD_MODE,
+        sfxVolume: 1.0,
+        bgmVolume: 1.0,
+        keyBindingsMode: NUMPAD_MODE,
+        keyBindings: {},
+      };
+
+      const storedOptions = initializeKey(isLocalStorageAvailable, OPTIONS_KEY, defaultOptions);
+
+      changeGameMode(storedOptions.gameMode);
+      changeSFXSliderValue(storedOptions.sfxVolume);
+      changeBGMSliderValue(storedOptions.bgmVolume);
+      changeKeyBindingsMode(storedOptions.keyBindingsMode);
+
+      if (storedOptions.keyBindingsMode === CUSTOM_MODE) {
+        setKeyBindings(storedOptions.keyBindings);
+      }
+    }
+  }, [isLocalStorageAvailable]);
+
   return {
     state: {
       BGMSlider,
@@ -115,6 +157,7 @@ export const useOptions = ({ BGM_API, SFX_API }) => {
       changeKeyBindingsMode,
       changeKeyBinding,
       resetToDefault,
+      saveOptionsToLocalStorage,
     },
   };
 };
