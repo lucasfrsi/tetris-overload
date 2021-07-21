@@ -13,8 +13,9 @@ import { useBGM } from 'hooks/useBGM';
 import { useSFX } from 'hooks/useSFX';
 import { useOptions } from 'hooks/useOptions';
 
-// Maps
+// Utils
 import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
+import { checkLocalStorageAvailability } from 'utils/localStorage';
 
 // Components
 import Stage from '../Stage';
@@ -40,14 +41,16 @@ import {
   StyledSkillsWrapper,
 } from './style';
 
+const isLocalStorageAvailable = checkLocalStorageAvailability();
+
 const Tetris = () => {
   const BGM_API = useBGM();
   const SFX_API = useSFX();
 
-  const optionsAPI = useOptions({ BGM_API, SFX_API });
+  const optionsAPI = useOptions({ BGM_API, SFX_API, isLocalStorageAvailable });
 
   const skillsAPI = useSkills({ SFX_API });
-  const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API });
+  const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API, isLocalStorageAvailable });
   const playerAPI = usePlayer({ SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });

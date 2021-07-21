@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import * as styles from './style';
 import Picker from '../Picker';
 import KeyBindingGetter from '../KeyBindingGetter';
@@ -22,8 +22,14 @@ const Options = ({ optionsAPI, goToMenu }) => {
       changeKeyBindingsMode,
       changeKeyBinding,
       resetToDefault,
+      saveOptionsToLocalStorage,
     },
   } = optionsAPI;
+
+  const goBackToMenu = () => {
+    saveOptionsToLocalStorage();
+    goToMenu();
+  };
 
   // Key Binding Getter State
   const [getterState, setGetterState] = useState({
@@ -125,10 +131,44 @@ const Options = ({ optionsAPI, goToMenu }) => {
         </tbody>
       </table>
 
-      <button type="button" onClick={goToMenu}>Menu</button>
+      <button type="button" onClick={goBackToMenu}>Menu</button>
       <button type="button" onClick={resetToDefault}>Reset to Default</button>
     </div>
   );
+};
+
+Options.propTypes = {
+  optionsAPI: PropTypes.shape({
+    state: PropTypes.shape({
+      BGMSlider: PropTypes.shape({
+        min: PropTypes.number.isRequired,
+        max: PropTypes.number.isRequired,
+        step: PropTypes.number.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+      SFXSlider: PropTypes.shape({
+        min: PropTypes.number.isRequired,
+        max: PropTypes.number.isRequired,
+        step: PropTypes.number.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+      gameModes: PropTypes.arrayOf(PropTypes.string).isRequired,
+      gameMode: PropTypes.string.isRequired,
+      keyBindingsModes: PropTypes.arrayOf(PropTypes.string).isRequired,
+      keyBindingsMode: PropTypes.string.isRequired,
+      keyBindings: PropTypes.objectOf(PropTypes.object),
+    }).isRequired,
+    actions: PropTypes.shape({
+      changeBGMSliderValue: PropTypes.func.isRequired,
+      changeSFXSliderValue: PropTypes.func.isRequired,
+      changeGameMode: PropTypes.func.isRequired,
+      changeKeyBindingsMode: PropTypes.func.isRequired,
+      changeKeyBinding: PropTypes.func.isRequired,
+      resetToDefault: PropTypes.func.isRequired,
+      saveOptionsToLocalStorage: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
+  goToMenu: PropTypes.func.isRequired,
 };
 
 export default Options;
