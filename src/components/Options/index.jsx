@@ -14,6 +14,8 @@ const Options = ({ optionsAPI, goToMenu }) => {
       keyBindingsModes,
       keyBindingsMode,
       keyBindings,
+      usedKeys,
+      usedCodes,
     },
     actions: {
       changeBGMSliderValue,
@@ -67,6 +69,8 @@ const Options = ({ optionsAPI, goToMenu }) => {
           changeKeyBinding={changeKeyBinding}
           closeGetter={closeGetter}
           changeKeyBindingsMode={changeKeyBindingsMode}
+          usedKeys={usedKeys}
+          usedCodes={usedCodes}
         />
       ) : null}
       <h1>Options</h1>
@@ -131,7 +135,7 @@ const Options = ({ optionsAPI, goToMenu }) => {
         </tbody>
       </table>
 
-      <button type="button" onClick={goBackToMenu}>Menu</button>
+      <button type="button" onClick={goBackToMenu}>Save and Return</button>
       <button type="button" onClick={resetToDefault}>Reset to Default</button>
     </div>
   );
@@ -157,6 +161,8 @@ Options.propTypes = {
       keyBindingsModes: PropTypes.arrayOf(PropTypes.string).isRequired,
       keyBindingsMode: PropTypes.string.isRequired,
       keyBindings: PropTypes.objectOf(PropTypes.object),
+      usedKeys: PropTypes.instanceOf(Set).isRequired,
+      usedCodes: PropTypes.instanceOf(Set).isRequired,
     }).isRequired,
     actions: PropTypes.shape({
       changeBGMSliderValue: PropTypes.func.isRequired,

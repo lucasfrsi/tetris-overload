@@ -11,18 +11,27 @@ const KeyBindingGetter = ({
   changeKeyBinding,
   closeGetter,
   changeKeyBindingsMode,
+  usedKeys,
+  usedCodes,
 }) => {
   const elementRef = useRef(null);
   const [keyAndCode, setKeyAndCode] = useState({
     key: initialKey,
     code: initialCode,
   });
+  const [inUse, setInUse] = useState(true);
 
   const captureKeyAndCode = (e) => {
     setKeyAndCode({
       key: e.key,
       code: e.code,
     });
+
+    if (usedKeys.has(e.key) || usedCodes.has(e.code)) {
+      setInUse(true);
+    } else {
+      setInUse(false);
+    }
   };
 
   const cancelHandler = () => {
@@ -30,9 +39,11 @@ const KeyBindingGetter = ({
   };
 
   const confirmHandler = () => {
-    changeKeyBinding(action, keyAndCode.key, keyAndCode.code);
-    changeKeyBindingsMode(CUSTOM_MODE);
-    closeGetter();
+    if (!inUse) {
+      changeKeyBinding(action, keyAndCode.key, keyAndCode.code);
+      changeKeyBindingsMode(CUSTOM_MODE);
+      closeGetter();
+    }
   };
 
   useEffect(() => {
@@ -48,9 +59,10 @@ const KeyBindingGetter = ({
       onKeyDown={(e) => captureKeyAndCode(e)}
       onBlur={() => elementRef.current.focus()}
     >
+      <h3>{inUse ? 'ALREADY IN USE' : 'OKAY'}</h3>
       Action: {action} | Key: {keyAndCode.key} | Code: {keyAndCode.code}
       <button type="button" onClick={cancelHandler}>Cancel</button>
-      <button type="button" onClick={confirmHandler}>Confirm</button>
+      <button type="button" disabled={inUse} onClick={confirmHandler}>Confirm</button>
     </div>
   );
 };
@@ -62,6 +74,8 @@ KeyBindingGetter.propTypes = {
   changeKeyBinding: PropTypes.func.isRequired,
   closeGetter: PropTypes.func.isRequired,
   changeKeyBindingsMode: PropTypes.func.isRequired,
+  usedKeys: PropTypes.instanceOf(Set).isRequired,
+  usedCodes: PropTypes.instanceOf(Set).isRequired,
 };
 
 export default KeyBindingGetter;

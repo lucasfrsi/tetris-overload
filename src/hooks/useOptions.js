@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import gameModes, { PROGRESSIVE_OVERLOAD_MODE } from 'utils/gameModes';
 import {
   keyBindingsModes,
@@ -41,7 +41,7 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
   const changeBGMSliderValue = (value) => {
     setBGMSlider((prev) => ({
       ...prev,
-      value,
+      value: parseFloat(value),
     }));
   };
 
@@ -56,7 +56,7 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
   const changeSFXSliderValue = (value) => {
     setSFXSlider((prev) => ({
       ...prev,
-      value,
+      value: parseFloat(value),
     }));
   };
 
@@ -74,8 +74,25 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
     setKeyBindings(newKeyBindings);
   };
 
-  // Keep track of key bindings and disallow repeated ones??
-  // set? map? How to?
+  // Identifiers Trackers
+  const [usedKeys, setUsedKeys] = useState();
+  const [usedCodes, setUsedCodes] = useState();
+
+  const fillTrackers = useCallback(() => {
+    if (keyBindings) {
+      const keysSet = new Set();
+      const codesSet = new Set();
+
+      Object.values(keyBindings).forEach((action) => {
+        keysSet.add(action.key);
+        codesSet.add(action.code);
+      });
+
+      setUsedKeys(keysSet);
+      setUsedCodes(codesSet);
+    }
+  }, [keyBindings]);
+  useEffect(() => fillTrackers(), [fillTrackers]);
 
   // RESET TO DEFAULT
   const resetToDefault = () => {
@@ -117,6 +134,7 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
   }, [SFXSlider.value, changeSFXHowlVolume]);
 
   // If local storage is available, initialize all states according to it
+  // Otherwise just use the default options
   useEffect(() => {
     if (isLocalStorageAvailable) {
       const defaultOptions = {
@@ -149,6 +167,8 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
       keyBindingsModes,
       keyBindingsMode,
       keyBindings,
+      usedKeys,
+      usedCodes,
     },
     actions: {
       changeBGMSliderValue,
