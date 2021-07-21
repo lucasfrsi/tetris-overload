@@ -1,23 +1,14 @@
-const KEY = 'scores';
-const DEFAULT_VALUE = [];
+export const SCORES_KEY = 'tetrisScores';
+export const OPTIONS_KEY = 'tetrisOptions';
 
-const keyExist = () => localStorage.getItem(KEY) !== null;
-const getKeyValue = () => JSON.parse(localStorage.getItem(KEY));
+const doesKeyExist = (key) => localStorage.getItem(key) !== null;
+const getKeyValue = (key) => JSON.parse(localStorage.getItem(key));
 
-/**
- * Set a new value for 'scores' key on localStorage
- * @param   Array of numbers
- * @return  void
- */
-export const setKeyValue = (array) => {
-  const newValue = JSON.stringify(array);
-  localStorage.setItem(KEY, newValue);
+export const setKeyValue = (key, value) => {
+  const newValue = JSON.stringify(value);
+  localStorage.setItem(key, newValue);
 };
 
-/**
- * Check if localStorage is available
- * @return  Boolean
- */
 export const checkLocalStorageAvailability = () => {
   let storage;
   try {
@@ -36,17 +27,12 @@ export const checkLocalStorageAvailability = () => {
   }
 };
 
-/**
- * Initialize scores based on localStorage availability
- * @param   Boolean
- * @return  An empty array or an array of numbers
- */
-export const initializeScores = (localStorageIsAvailable) => {
+export const initializeKey = (localStorageIsAvailable, key, defaultValue) => {
   if (localStorageIsAvailable) {
-    if (!keyExist()) {
-      setKeyValue(DEFAULT_VALUE);
+    if (!doesKeyExist(key)) {
+      setKeyValue(key, defaultValue);
     }
-    return getKeyValue();
+    return getKeyValue(key);
   }
-  return DEFAULT_VALUE;
+  return defaultValue;
 };

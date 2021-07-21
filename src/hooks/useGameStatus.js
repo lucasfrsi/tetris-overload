@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
-import { checkLocalStorageAvailability, initializeScores, setKeyValue } from 'utils/localStorage';
+import { SCORES_KEY, initializeKey, setKeyValue } from 'utils/localStorage';
 import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
 
 const clearTable = {
@@ -10,8 +10,7 @@ const clearTable = {
   4: CLEAR_TETRIS,
 };
 
-export const useGameStatus = ({ skillsAPI, SFX_API }) => {
-  const [isLocalStorageAvailable, setIsLocalStorageAvailable] = useState();
+export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable }) => {
   const [storedScores, setStoredScores] = useState();
 
   const [currentPage, setCurrentPage] = useState(MENU_PAGE);
@@ -172,15 +171,12 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
     }
 
     setStoredScores(scores);
-    if (isLocalStorageAvailable) setKeyValue(scores);
+    if (isLocalStorageAvailable) setKeyValue(SCORES_KEY, scores);
   };
 
   useEffect(() => {
-    const localStorageAvailability = checkLocalStorageAvailability();
-
-    setIsLocalStorageAvailable(localStorageAvailability);
-    setStoredScores(initializeScores(localStorageAvailability));
-  }, []);
+    setStoredScores(initializeKey(isLocalStorageAvailable, SCORES_KEY, []));
+  }, [isLocalStorageAvailable]);
 
   return {
     state: {
