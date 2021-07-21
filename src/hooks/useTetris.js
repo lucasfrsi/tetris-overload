@@ -1,13 +1,11 @@
-import { useState } from 'react';
 import { checkCollision } from 'utils/gameHelpers';
 import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, LEVEL_UP, NEW_HIGHSCORE, BUTTON_START } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
+import { INGAME_PAGE } from 'utils/pagesMap';
 
 export const useTetris = ({
   skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API,
 }) => {
-  const [inGame, setInGame] = useState(false);
-
   const {
     state: {
       player,
@@ -43,6 +41,7 @@ export const useTetris = ({
       paused,
       newHighScoreRef,
       dialogIsOpen,
+      currentPage,
     },
     actions: {
       setLevel,
@@ -60,6 +59,9 @@ export const useTetris = ({
       openMenuDialog,
       openResetDialog,
       closeDialog,
+      setPageToMenu,
+      setPageToOptions,
+      setPageToIngame,
     },
   } = gameStatusAPI;
 
@@ -93,16 +95,21 @@ export const useTetris = ({
   };
 
   const goToTetris = () => {
-    setInGame(true);
+    setPageToIngame();
     stopBGM();
   };
 
   const goToMenu = () => {
-    setInGame(false);
-    resetGame();
+    setPageToMenu();
+    if (currentPage === INGAME_PAGE) {
+      resetGame();
+      stopBGM();
+      playBGM(MENU);
+    }
+  };
 
-    stopBGM();
-    playBGM(MENU);
+  const goToOptions = () => {
+    setPageToOptions();
   };
 
   // START BUTTON - COUNTDOWN
@@ -271,15 +278,13 @@ export const useTetris = ({
   };
 
   return {
-    state: {
-      inGame,
-    },
     actions: {
       // Review what actions are being actually used
       drop, // useCallback later
       dropPlayer,
       movePlayer,
       goToMenu,
+      goToOptions,
       goToTetris,
       confirmDialog,
       cancelDialog,

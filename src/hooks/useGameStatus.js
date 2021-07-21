@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
 import { checkLocalStorageAvailability, initializeScores, setKeyValue } from 'utils/localStorage';
+import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
 
 const clearTable = {
   1: CLEAR_SINGLE,
@@ -12,6 +13,8 @@ const clearTable = {
 export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const [isLocalStorageAvailable, setIsLocalStorageAvailable] = useState();
   const [storedScores, setStoredScores] = useState();
+
+  const [currentPage, setCurrentPage] = useState(MENU_PAGE);
 
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(0);
@@ -45,6 +48,10 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
   const {
     actions: { playSFX },
   } = SFX_API;
+
+  const setPageToMenu = () => setCurrentPage(MENU_PAGE);
+  const setPageToOptions = () => setCurrentPage(OPTIONS_PAGE);
+  const setPageToIngame = () => setCurrentPage(INGAME_PAGE);
 
   const calcScore = useCallback(() => {
     const linePoints = [40, 100, 300, 1200];
@@ -192,6 +199,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       newHighScoreRef,
       storedScores,
       showHighScores,
+      currentPage,
     },
     actions: {
       setScore,
@@ -213,6 +221,9 @@ export const useGameStatus = ({ skillsAPI, SFX_API }) => {
       openMenuDialog,
       openResetDialog,
       closeDialog,
+      setPageToMenu,
+      setPageToOptions,
+      setPageToIngame,
     },
   };
 };
