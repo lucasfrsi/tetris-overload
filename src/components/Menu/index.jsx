@@ -10,7 +10,7 @@ import { BUTTON_HOVER, BUTTON_SELECT, BUTTON_TOGGLE } from 'utils/SFXPaths';
 
 import * as styles from './style';
 
-const Menu = ({ play, SFX, BGM, toggleSFX, toggleBGM, playSFX }) => {
+const Menu = ({ play, options, SFX, BGM, toggleSFX, toggleBGM, playSFX }) => {
   function onHoverHandler() {
     playSFX(BUTTON_HOVER);
   }
@@ -26,7 +26,7 @@ const Menu = ({ play, SFX, BGM, toggleSFX, toggleBGM, playSFX }) => {
       <span css={styles.title}>Overload</span>
       <div css={styles.buttons}>
         <button type="button" tabIndex={-1} onClick={() => onClickHandler(play, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Play</button>
-        <button type="button" tabIndex={-1} onClick={() => onClickHandler(null, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Options</button>
+        <button type="button" tabIndex={-1} onClick={() => onClickHandler(options, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Options</button>
         <button type="button" tabIndex={-1} disabled>Credits <span>soon&trade;</span></button>
         <div css={styles.icons}>
           <img
@@ -67,6 +67,7 @@ const Menu = ({ play, SFX, BGM, toggleSFX, toggleBGM, playSFX }) => {
 
 Menu.propTypes = {
   play: PropTypes.func.isRequired,
+  options: PropTypes.func.isRequired,
   SFX: PropTypes.bool.isRequired,
   BGM: PropTypes.bool.isRequired,
   toggleSFX: PropTypes.func.isRequired,

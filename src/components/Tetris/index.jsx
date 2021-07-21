@@ -11,6 +11,10 @@ import { useSkills } from 'hooks/useSkills';
 import { useTimers } from 'hooks/useTimers';
 import { useBGM } from 'hooks/useBGM';
 import { useSFX } from 'hooks/useSFX';
+import { useOptions } from 'hooks/useOptions';
+
+// Maps
+import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
 
 // Components
 import Stage from '../Stage';
@@ -24,6 +28,7 @@ import ConfirmationDialog from '../ConfirmationDialog';
 import Countdown from '../Countdown';
 import GameOver from '../GameOver';
 import HighScores from '../HighScores';
+import Options from '../Options';
 
 import {
   StyledTetrisLayout,
@@ -38,6 +43,8 @@ import {
 const Tetris = () => {
   const BGM_API = useBGM();
   const SFX_API = useSFX();
+
+  const optionsAPI = useOptions({ BGM_API, SFX_API });
 
   const skillsAPI = useSkills({ SFX_API });
   const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API });
@@ -119,15 +126,15 @@ const Tetris = () => {
       showHighScores,
       storedScores,
       newHighScore,
+      currentPage,
     },
   } = gameStatusAPI;
 
   const {
-    state: {
-      inGame,
-    },
     actions: {
       goToTetris,
+      goToOptions,
+      goToMenu,
       handleMenuButton,
       confirmDialog,
       cancelDialog,
@@ -161,89 +168,95 @@ const Tetris = () => {
   };
 
   return (
-    inGame ? (
-      <StyledTetrisWrapper
-        role="button"
-        tabIndex="0"
-        onKeyDown={onKeyDownHandler}
-        onKeyUp={onKeyUpHandler}
-      >
-        {gameOver && <GameOver />}
-        {showHighScores && (
-          <HighScores
-            scores={storedScores}
-            newHighScore={newHighScore}
-            menuButtonAction={handleHighScoresMenuButton}
-            playAgainButtonAction={handlePlayAgainButton}
-            playSFX={playSFX}
-          />
-        )}
-        {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
-        {paused && <Pause dialog={dialogIsOpen.state} />}
-        {dialogIsOpen.state && (
-          <ConfirmationDialog
-            type={dialogIsOpen.type}
-            cancel={cancelDialog}
-            confirm={confirmDialog}
-          />
-        )}
-        <StyledTetrisLayout>
-          <aside>
-            {pixelPocket.currentLevel ? (
-              <>
-                <StyledHoldWrapper>
-                  <span>Hold</span>
-                  <PieceHolder pieceHolderStage={holdStage} />
-                </StyledHoldWrapper>
-              </>
-            ) : null}
-            <StyledSkillsWrapper>
-              <Score name="Experience" value={exp} />
-              {/* <hr /> */}
-              <Skills
-                skills={skills}
-                canSkillBeLeveled={canSkillBeLeveled}
-                levelUpSkill={levelUpSkill}
-              />
-            </StyledSkillsWrapper>
-          </aside>
-          <Stage stage={stage} />
-          <aside>
-            {clairvoyance.currentLevel ? (
-              <StyledNextPiecesWrapper>
-                <span>Next</span>
-                <PieceHolder pieceHolderStage={firstOnQueueStage} />
-                <PieceHolder pieceHolderStage={secondOnQueueStage} />
-                <PieceHolder pieceHolderStage={thirdOnQueueStage} />
-              </StyledNextPiecesWrapper>
-            ) : null}
-            <hr />
-            <StyledScoresWrapper>
-              <Score name="Score" value={score} />
-              <Score name="Level" value={level} />
-              <Score name="Rows" value={rows} />
-            </StyledScoresWrapper>
-            <hr />
-            <StyledButtonsWrapper>
-              {(onCountdown || gameStarted || paused)
-                ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} />
-                : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} />}
-              <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
-              <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} />
-            </StyledButtonsWrapper>
-          </aside>
-        </StyledTetrisLayout>
-      </StyledTetrisWrapper>
-    ) : (
-      <Menu
-        play={goToTetris}
-        SFX={SFX.mute}
-        BGM={BGM.mute}
-        toggleSFX={toggleMuteSFX}
-        toggleBGM={toggleMuteBGM}
-        playSFX={playSFX}
-      />
-    )
+    <>
+      {currentPage === INGAME_PAGE ? (
+        <StyledTetrisWrapper
+          role="button"
+          tabIndex="0"
+          onKeyDown={onKeyDownHandler}
+          onKeyUp={onKeyUpHandler}
+        >
+          {gameOver && <GameOver />}
+          {showHighScores && (
+            <HighScores
+              scores={storedScores}
+              newHighScore={newHighScore}
+              menuButtonAction={handleHighScoresMenuButton}
+              playAgainButtonAction={handlePlayAgainButton}
+              playSFX={playSFX}
+            />
+          )}
+          {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
+          {paused && <Pause dialog={dialogIsOpen.state} />}
+          {dialogIsOpen.state && (
+            <ConfirmationDialog
+              type={dialogIsOpen.type}
+              cancel={cancelDialog}
+              confirm={confirmDialog}
+            />
+          )}
+          <StyledTetrisLayout>
+            <aside>
+              {pixelPocket.currentLevel ? (
+                <>
+                  <StyledHoldWrapper>
+                    <span>Hold</span>
+                    <PieceHolder pieceHolderStage={holdStage} />
+                  </StyledHoldWrapper>
+                </>
+              ) : null}
+              <StyledSkillsWrapper>
+                <Score name="Experience" value={exp} />
+                <Skills
+                  skills={skills}
+                  canSkillBeLeveled={canSkillBeLeveled}
+                  levelUpSkill={levelUpSkill}
+                />
+              </StyledSkillsWrapper>
+            </aside>
+            <Stage stage={stage} />
+            <aside>
+              {clairvoyance.currentLevel ? (
+                <StyledNextPiecesWrapper>
+                  <span>Next</span>
+                  <PieceHolder pieceHolderStage={firstOnQueueStage} />
+                  <PieceHolder pieceHolderStage={secondOnQueueStage} />
+                  <PieceHolder pieceHolderStage={thirdOnQueueStage} />
+                </StyledNextPiecesWrapper>
+              ) : null}
+              <hr />
+              <StyledScoresWrapper>
+                <Score name="Score" value={score} />
+                <Score name="Level" value={level} />
+                <Score name="Rows" value={rows} />
+              </StyledScoresWrapper>
+              <hr />
+              <StyledButtonsWrapper>
+                {(onCountdown || gameStarted || paused)
+                  ? <SideButton buttonName={paused ? 'unpause' : 'pause'} onClick={handlePauseButton} playSFX={playSFX} />
+                  : <SideButton buttonName="start" onClick={handleStartButton} playSFX={playSFX} />}
+                <SideButton buttonName="reset" onClick={handleResetButton} playSFX={playSFX} disabled={!gameStarted} />
+                <SideButton buttonName="menu" onClick={handleMenuButton} playSFX={playSFX} />
+              </StyledButtonsWrapper>
+            </aside>
+          </StyledTetrisLayout>
+        </StyledTetrisWrapper>
+      ) : null}
+      {currentPage === MENU_PAGE ? (
+        <Menu
+          play={goToTetris}
+          options={goToOptions}
+          SFX={SFX.mute}
+          BGM={BGM.mute}
+          toggleSFX={toggleMuteSFX}
+          toggleBGM={toggleMuteBGM}
+          playSFX={playSFX}
+        />
+      ) : null}
+      {currentPage === OPTIONS_PAGE ? (
+        <Options optionsAPI={optionsAPI} goToMenu={goToMenu} />
+      ) : null}
+    </>
   );
 };
 
@@ -251,18 +264,12 @@ export default Tetris;
 
 /*
   TO-DOS
-  7. Play the game, tweak the math calculations + balance
-  5. Add controls and the ability to choose all the keys
-  x. Add switch case in place of all the ifs (use switch(true))
-  8. Check all the useEffect dependencies and update functions accordingly, using useCallback
-  9. Rethink the tetrominos randomization (not totally random, like the original game)
-
-  x. Add Reat.memo to reusable components: score, skill, button, etc.
-  xxxx. Make a favicon
-
-  Next feats to implement:
-  4. Perfectionist
-
-  Refactor:
-  1. How useSkills are being exported, use the new version
+  1. Add switch case in place of all the ifs (use switch(true))
+  2. Check all the useEffect dependencies and update functions accordingly, using useCallback
+  3. Perfectionist
+  4. Play the game, tweak the math calculations + balance
+  5. Add media query for up to 625px of height
+  6. Activate fullscreen mode automatically??
+  7. Blur skill and side buttons onClick
+  8. Remove focus styling on buttons
 */
