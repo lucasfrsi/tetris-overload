@@ -17,6 +17,7 @@ import { useOptions } from 'hooks/useOptions';
 import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
 import { checkLocalStorageAvailability } from 'utils/localStorage';
 import { PROGRESSIVE_OVERLOAD_MODE, CLASSIC_MODE } from 'utils/gameModes';
+import { PAUSE } from 'utils/keyBindings';
 
 // Components
 import Stage from '../Stage';
@@ -74,6 +75,7 @@ const Tetris = () => {
   const {
     state: {
       gameMode,
+      keyBindings,
     },
   } = optionsAPI;
 
@@ -198,7 +200,7 @@ const Tetris = () => {
             />
           )}
           {onCountdown && <Countdown count={countdown} playSFX={playSFX} />}
-          {paused && <Pause dialog={dialogIsOpen.state} />}
+          {paused && <Pause dialog={dialogIsOpen.state} pauseKeyBinding={keyBindings[PAUSE].key} />}
           {dialogIsOpen.state && (
             <ConfirmationDialog
               type={dialogIsOpen.type}
