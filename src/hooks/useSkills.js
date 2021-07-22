@@ -1,13 +1,20 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
 import * as S from 'utils/skillsMap';
+import { CLASSIC_MODE, CLASSIC_OVERLOAD_MODE } from 'utils/gameModes';
 
-export const useSkills = ({ SFX_API }) => {
+const EXP_POINTS = [10, 30, 50, 70];
+
+export const useSkills = ({ SFX_API, optionsAPI }) => {
   const {
     actions: { playSFX },
   } = SFX_API;
 
-  const EXP_POINTS = useMemo(() => [10, 30, 50, 70], []);
+  const {
+    state: {
+      gameMode,
+    },
+  } = optionsAPI;
 
   const [exp, setExp] = useState(0);
 
@@ -57,7 +64,7 @@ export const useSkills = ({ SFX_API }) => {
   const calcExp = useCallback((rowsCleared) => {
     const expFormula = EXP_POINTS[rowsCleared - 1];
     setExp((prev) => prev + expFormula);
-  }, [EXP_POINTS]);
+  }, []);
 
   const skillsMap = useMemo(() => ({
     [S.CLAIRVOYANCE]: [clairvoyance, setClairvoyance],
@@ -103,45 +110,6 @@ export const useSkills = ({ SFX_API }) => {
 
     playSFX(SKILL_ON_COOLDOWN);
   }, [canSkillBeLeveled, playSFX, skillsMap]);
-
-  const resetSkills = useCallback(() => {
-    setExp(0);
-
-    setClairvoyance((prev) => ({
-      ...prev,
-      currentLevel: 0,
-    }));
-
-    setPixelPocket((prev) => ({
-      ...prev,
-      currentLevel: 0,
-      onCooldown: false,
-    }));
-
-    setIntuition((prev) => ({
-      ...prev,
-      currentLevel: 0,
-    }));
-
-    setBlink((prev) => ({
-      ...prev,
-      currentLevel: 0,
-    }));
-
-    setMimic((prev) => ({
-      ...prev,
-      currentLevel: 0,
-      cooldownTimer: null,
-      onCooldown: 0,
-    }));
-
-    setPerfectionism((prev) => ({
-      ...prev,
-      currentLevel: 0,
-      cooldownTimer: null,
-      onCooldown: 0,
-    }));
-  }, []);
 
   const putPerfectionismOnCooldown = () => {
     setPerfectionism((prev) => ({
@@ -221,9 +189,130 @@ export const useSkills = ({ SFX_API }) => {
     }
   }, [pixelPocket.currentLevel, pixelPocket.onCooldown, playSFX]);
 
+  const setSkillsToClassicMode = () => {
+    setExp(0);
+    setClairvoyance((prev) => ({
+      ...prev,
+      currentLevel: 3,
+    }));
+
+    setPixelPocket((prev) => ({
+      ...prev,
+      currentLevel: 1,
+      onCooldown: false,
+    }));
+
+    setIntuition((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setBlink((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setMimic((prev) => ({
+      ...prev,
+      currentLevel: 0,
+      onCooldown: false,
+    }));
+
+    setPerfectionism((prev) => ({
+      ...prev,
+      currentLevel: 0,
+      onCooldown: false,
+    }));
+  };
+
+  const setAllSkillsToMaxLvl = () => {
+    setExp(0);
+    setClairvoyance((prev) => ({
+      ...prev,
+      currentLevel: 3,
+    }));
+
+    setPixelPocket((prev) => ({
+      ...prev,
+      currentLevel: 1,
+      onCooldown: false,
+    }));
+
+    setIntuition((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setBlink((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setMimic((prev) => ({
+      ...prev,
+      currentLevel: 3,
+      onCooldown: false,
+    }));
+
+    setPerfectionism((prev) => ({
+      ...prev,
+      currentLevel: 3,
+      onCooldown: false,
+    }));
+  };
+
+  const resetSkills = useCallback(() => {
+    if (gameMode === CLASSIC_MODE) {
+      setSkillsToClassicMode();
+    } else if (gameMode === CLASSIC_OVERLOAD_MODE) {
+      setAllSkillsToMaxLvl();
+    } else {
+      setExp(0);
+
+      setClairvoyance((prev) => ({
+        ...prev,
+        currentLevel: 0,
+      }));
+
+      setPixelPocket((prev) => ({
+        ...prev,
+        currentLevel: 0,
+        onCooldown: false,
+      }));
+
+      setIntuition((prev) => ({
+        ...prev,
+        currentLevel: 0,
+      }));
+
+      setBlink((prev) => ({
+        ...prev,
+        currentLevel: 0,
+      }));
+
+      setMimic((prev) => ({
+        ...prev,
+        currentLevel: 0,
+        onCooldown: false,
+      }));
+
+      setPerfectionism((prev) => ({
+        ...prev,
+        currentLevel: 0,
+        onCooldown: false,
+      }));
+    }
+  }, [gameMode]);
+
+  // Set skills automatically according to game mode
+  useEffect(() => {
+    resetSkills();
+  }, [resetSkills]);
+
   return {
     state: {
-      // Review these states, where they're being used
+      // Review these states, where they're being used!
+      // Blink is still broken if intuition is not learned before...
       exp,
       perfectionism,
       clairvoyance,

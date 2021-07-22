@@ -16,6 +16,7 @@ import { useOptions } from 'hooks/useOptions';
 // Utils
 import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
 import { checkLocalStorageAvailability } from 'utils/localStorage';
+import { PROGRESSIVE_OVERLOAD_MODE, CLASSIC_MODE } from 'utils/gameModes';
 
 // Components
 import Stage from '../Stage';
@@ -49,7 +50,7 @@ const Tetris = () => {
 
   const optionsAPI = useOptions({ BGM_API, SFX_API, isLocalStorageAvailable });
 
-  const skillsAPI = useSkills({ SFX_API });
+  const skillsAPI = useSkills({ SFX_API, optionsAPI });
   const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API, isLocalStorageAvailable });
   const playerAPI = usePlayer({ SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
@@ -69,6 +70,12 @@ const Tetris = () => {
     SFX_API,
     optionsAPI,
   });
+
+  const {
+    state: {
+      gameMode,
+    },
+  } = optionsAPI;
 
   const {
     state: {
@@ -210,12 +217,14 @@ const Tetris = () => {
                 </>
               ) : null}
               <StyledSkillsWrapper>
-                <Score name="Experience" value={exp} />
-                <Skills
-                  skills={skills}
-                  canSkillBeLeveled={canSkillBeLeveled}
-                  levelUpSkill={levelUpSkill}
-                />
+                {gameMode === PROGRESSIVE_OVERLOAD_MODE && <Score name="Experience" value={exp} />}
+                {gameMode !== CLASSIC_MODE && (
+                  <Skills
+                    skills={skills}
+                    canSkillBeLeveled={canSkillBeLeveled}
+                    levelUpSkill={levelUpSkill}
+                  />
+                )}
               </StyledSkillsWrapper>
             </aside>
             <Stage stage={stage} />
@@ -268,13 +277,11 @@ export default Tetris;
 
 /*
   TO-DOS
-  0. Add the game modes changes (I only added it to the options)
-  0a. Add key bindings to lvl skills? Add to skills the keybindings to!
+  1. Put the mode in high scores screen table
   2. Check all the useEffect dependencies and update functions accordingly, using useCallback
   3. Perfectionist
   4. Play the game, tweak the math calculations + balance
   5. Add media query for up to 625px of height
-  6. Activate fullscreen mode automatically??
   7. Blur skill and side buttons onClick
   8. Remove focus styling on buttons
 */

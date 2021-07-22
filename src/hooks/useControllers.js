@@ -9,6 +9,7 @@ import {
   MIMIC,
   PAUSE,
 } from 'utils/keyBindings';
+import { CLASSIC_MODE } from 'utils/gameModes';
 
 export const useControllers = ({
   skillsAPI,
@@ -65,6 +66,7 @@ export const useControllers = ({
   const {
     state: {
       keyBindings,
+      gameMode,
     },
   } = optionsAPI;
 
@@ -95,7 +97,7 @@ export const useControllers = ({
           activateHold(holdPlayerTetromino);
           break;
         case (key === keyBindings[MIMIC].key) || (code === keyBindings[MIMIC].code):
-          activateMimic(unshiftPlayerTetrominoCopy);
+          if (gameMode !== CLASSIC_MODE) activateMimic(unshiftPlayerTetrominoCopy);
           break;
         case (key === keyBindings[PAUSE].key) || (code === keyBindings[PAUSE].code):
           pause();
