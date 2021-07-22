@@ -1,10 +1,11 @@
+import { useCallback, useEffect } from 'react';
 import { checkCollision } from 'utils/gameHelpers';
 import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, LEVEL_UP, NEW_HIGHSCORE, BUTTON_START } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 import { INGAME_PAGE } from 'utils/pagesMap';
 
 export const useTetris = ({
-  skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API,
+  skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API, optionsAPI,
 }) => {
   const {
     state: {
@@ -86,13 +87,19 @@ export const useTetris = ({
     },
   } = BGM_API;
 
-  const resetGame = () => {
+  const {
+    state: {
+      gameMode,
+    },
+  } = optionsAPI;
+
+  const resetGame = useCallback(() => {
     resetSkills();
     resetGameStatus();
     resetPlayer();
     resetStage();
     resetPieceHolders();
-  };
+  }, [resetGameStatus, resetPieceHolders, resetPlayer, resetSkills, resetStage]);
 
   const goToTetris = () => {
     setPageToIngame();
@@ -276,6 +283,11 @@ export const useTetris = ({
     drop();
     // TEST (removing drop())
   };
+
+  // Reset the game state, whenever the gameMode is changed
+  useEffect(() => {
+    resetGame();
+  }, [gameMode, resetGame]);
 
   return {
     actions: {

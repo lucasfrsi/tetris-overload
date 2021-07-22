@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createStage } from 'utils/gameHelpers';
 
 export const usePieceHolders = ({ skillsAPI, playerAPI }) => {
@@ -51,12 +51,12 @@ export const usePieceHolders = ({ skillsAPI, playerAPI }) => {
     }
   }, [hold, pixelPocket.currentLevel]);
 
-  const resetPieceHolders = () => {
+  const resetPieceHolders = useCallback(() => {
     setHoldStage(undefined);
     setFirstOnQueueStage(undefined);
     setSecondOnQueueStage(undefined);
     setThirdOnQueueStage(undefined);
-  };
+  }, []);
 
   return {
     state: {

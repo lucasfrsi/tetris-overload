@@ -57,7 +57,7 @@ const Tetris = () => {
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
   const tetrisAPI = useTetris({
-    skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API,
+    skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API, optionsAPI,
   });
 
   const timersAPI = useTimers({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API });
@@ -279,7 +279,6 @@ export default Tetris;
 
 /*
   TO-DOS
-  1. Put the mode in high scores screen table
   2. Check all the useEffect dependencies and update functions accordingly, using useCallback
   3. Perfectionist
   4. Play the game, tweak the math calculations + balance

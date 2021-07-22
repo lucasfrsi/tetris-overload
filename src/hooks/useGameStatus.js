@@ -139,7 +139,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
     coreUpdateSpeed();
   }, [coreUpdateSpeed]);
 
-  const resetGameStatus = () => {
+  const resetGameStatus = useCallback(() => {
     setScore(0);
     setLevel(0);
     setRows(0);
@@ -152,7 +152,7 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
     setGameOver(false);
     closeDialog();
     coreReset();
-  };
+  }, []);
 
   const updateScores = () => {
     const scores = [...storedScores];

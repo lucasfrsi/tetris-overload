@@ -100,7 +100,7 @@ export const usePlayer = ({ SFX_API }) => {
     updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
   }, [preCollisionY, updatePlayerPos]);
 
-  const resetPlayer = () => {
+  const resetPlayer = useCallback(() => {
     setHold([]);
     restartPool();
     setNextPieces(createNextPiecesArray(3));
@@ -110,7 +110,7 @@ export const usePlayer = ({ SFX_API }) => {
       tetromino: TETROMINOS[0],
       collided: false,
     });
-  };
+  }, []);
 
   return {
     state: {

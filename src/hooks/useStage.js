@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createMainStage, checkCollision } from 'utils/gameHelpers';
 
 export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
@@ -88,9 +88,9 @@ export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
     setRowsCleared, updatePreCollisionY,
   ]);
 
-  const resetStage = () => {
+  const resetStage = useCallback(() => {
     setStage(createMainStage());
-  };
+  }, []);
 
   return {
     state: {

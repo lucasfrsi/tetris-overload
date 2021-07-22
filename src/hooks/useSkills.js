@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
 import * as S from 'utils/skillsMap';
 import { CLASSIC_MODE, CLASSIC_OVERLOAD_MODE } from 'utils/gameModes';
@@ -303,11 +303,6 @@ export const useSkills = ({ SFX_API, optionsAPI }) => {
       }));
     }
   }, [gameMode]);
-
-  // Set skills automatically according to game mode
-  useEffect(() => {
-    resetSkills();
-  }, [resetSkills]);
 
   return {
     state: {
