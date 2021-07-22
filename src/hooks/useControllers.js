@@ -1,4 +1,23 @@
-export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI }) => {
+import {
+  MOVE_LEFT,
+  MOVE_RIGHT,
+  DROP,
+  ROTATE_CW,
+  ROTATE_ACW,
+  HARD_DROP,
+  HOLD,
+  MIMIC,
+  PAUSE,
+} from 'utils/keyBindings';
+
+export const useControllers = ({
+  skillsAPI,
+  gameStatusAPI,
+  playerAPI,
+  stageAPI,
+  tetrisAPI,
+  optionsAPI,
+}) => {
   const {
     actions: {
       playerRotate,
@@ -43,30 +62,48 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
     },
   } = skillsAPI;
 
+  const {
+    state: {
+      keyBindings,
+    },
+  } = optionsAPI;
+
   const onKeyDown = (event) => {
     const { code, key } = event;
 
     if (ticking) {
-      if (key === '1' || code === 'Numpad1') {
-        movePlayer(-1);
-      } else if (key === '2' || code === 'Numpad2') {
-        dropPlayer();
-      } else if (key === '3' || code === 'Numpad3') {
-        movePlayer(1);
-      } else if (key === '4' || code === 'Numpad4') {
-        playerRotate(stage, -1);
-      } else if (key === '5' || code === 'Numpad5') {
-        activateBlink(hardDrop);
-      } else if (key === '6' || code === 'Numpad6') {
-        playerRotate(stage, 1);
-      } else if (key === '7' || code === 'Numpad7') {
-        activateHold(holdPlayerTetromino);
-      } else if (key === '9' || code === 'Numpad9') {
-        activateMimic(unshiftPlayerTetrominoCopy);
-      } else if (key === 'p' || code === 'keyP') {
-        pause();
+      switch (true) {
+        case (key === keyBindings[MOVE_LEFT].key) || (code === keyBindings[MOVE_LEFT].code):
+          movePlayer(-1);
+          break;
+        case (key === keyBindings[MOVE_RIGHT].key) || (code === keyBindings[MOVE_RIGHT].code):
+          movePlayer(1);
+          break;
+        case (key === keyBindings[DROP].key) || (code === keyBindings[DROP].code):
+          dropPlayer();
+          break;
+        case (key === keyBindings[ROTATE_CW].key) || (code === keyBindings[ROTATE_CW].code):
+          playerRotate(stage, 1);
+          break;
+        case (key === keyBindings[ROTATE_ACW].key) || (code === keyBindings[ROTATE_ACW].code):
+          playerRotate(stage, -1);
+          break;
+        case (key === keyBindings[HARD_DROP].key) || (code === keyBindings[HARD_DROP].code):
+          activateBlink(hardDrop);
+          break;
+        case (key === keyBindings[HOLD].key) || (code === keyBindings[HOLD].code):
+          activateHold(holdPlayerTetromino);
+          break;
+        case (key === keyBindings[MIMIC].key) || (code === keyBindings[MIMIC].code):
+          activateMimic(unshiftPlayerTetrominoCopy);
+          break;
+        case (key === keyBindings[PAUSE].key) || (code === keyBindings[PAUSE].code):
+          pause();
+          break;
+        default:
+          break;
       }
-    } else if (key === 'p' || code === 'keyP') {
+    } else if ((key === keyBindings[PAUSE].key) || (code === keyBindings[PAUSE].code)) {
       if (onCountdown) {
         pause();
       } else if (paused && !dialogIsOpen.state) {
@@ -80,7 +117,7 @@ export const useControllers = ({ skillsAPI, gameStatusAPI, playerAPI, stageAPI, 
 
     if (ticking) {
       // Activate the interval again when user releases down arrow.
-      if (key === '2' || code === 'Numpad2') {
+      if ((key === keyBindings[DROP].key) || (code === keyBindings[DROP].code)) {
         coreAutoDrop();
       }
     }

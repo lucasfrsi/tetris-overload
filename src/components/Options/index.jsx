@@ -25,12 +25,16 @@ const Options = ({ optionsAPI, goToMenu }) => {
       changeKeyBinding,
       resetToDefault,
       saveOptionsToLocalStorage,
+      clearKeyBindings,
+      trackersAreFilled,
     },
   } = optionsAPI;
 
   const goBackToMenu = () => {
-    saveOptionsToLocalStorage();
-    goToMenu();
+    if (trackersAreFilled()) {
+      saveOptionsToLocalStorage();
+      goToMenu();
+    }
   };
 
   // Key Binding Getter State
@@ -135,7 +139,8 @@ const Options = ({ optionsAPI, goToMenu }) => {
         </tbody>
       </table>
 
-      <button type="button" onClick={goBackToMenu}>Save and Return</button>
+      <button type="button" onClick={clearKeyBindings}>Clear Key Bindings</button>
+      <button type="button" onClick={goBackToMenu} disabled={!trackersAreFilled()}>Save and Return</button>
       <button type="button" onClick={resetToDefault}>Reset to Default</button>
     </div>
   );
@@ -172,9 +177,13 @@ Options.propTypes = {
       changeKeyBinding: PropTypes.func.isRequired,
       resetToDefault: PropTypes.func.isRequired,
       saveOptionsToLocalStorage: PropTypes.func.isRequired,
+      clearKeyBindings: PropTypes.func.isRequired,
+      trackersAreFilled: PropTypes.func.isRequired,
     }).isRequired,
   }).isRequired,
   goToMenu: PropTypes.func.isRequired,
 };
 
 export default Options;
+
+// Add SFX to buttons

@@ -7,6 +7,7 @@ import {
   CUSTOM_MODE,
   getNUMPADKeyBindings,
   getQWERKeyBindings,
+  getEmptyKeyBindings,
 } from 'utils/keyBindings';
 import { initializeKey, setKeyValue, OPTIONS_KEY } from 'utils/localStorage';
 
@@ -74,6 +75,11 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
     setKeyBindings(newKeyBindings);
   };
 
+  const clearKeyBindings = () => {
+    setKeyBindings(getEmptyKeyBindings());
+    changeKeyBindingsMode(CUSTOM_MODE);
+  };
+
   // Identifiers Trackers
   const [usedKeys, setUsedKeys] = useState();
   const [usedCodes, setUsedCodes] = useState();
@@ -84,8 +90,10 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
       const codesSet = new Set();
 
       Object.values(keyBindings).forEach((action) => {
-        keysSet.add(action.key);
-        codesSet.add(action.code);
+        if (action.key !== '' && action.code !== '') {
+          keysSet.add(action.key);
+          codesSet.add(action.code);
+        }
       });
 
       setUsedKeys(keysSet);
@@ -93,6 +101,15 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
     }
   }, [keyBindings]);
   useEffect(() => fillTrackers(), [fillTrackers]);
+
+  // Check if all key bindings are uniquely filled
+  const trackersAreFilled = () => {
+    const keyBindingsLength = Object.keys(keyBindings).length;
+    const usedKeysLength = usedKeys.size;
+    const usedCodesLength = usedKeys.size;
+
+    return usedKeysLength === keyBindingsLength && usedCodesLength === keyBindingsLength;
+  };
 
   // RESET TO DEFAULT
   const resetToDefault = () => {
@@ -178,6 +195,8 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
       changeKeyBinding,
       resetToDefault,
       saveOptionsToLocalStorage,
+      clearKeyBindings,
+      trackersAreFilled,
     },
   };
 };

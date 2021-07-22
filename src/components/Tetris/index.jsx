@@ -67,6 +67,7 @@ const Tetris = () => {
     stageAPI,
     tetrisAPI,
     SFX_API,
+    optionsAPI,
   });
 
   const {
@@ -267,7 +268,8 @@ export default Tetris;
 
 /*
   TO-DOS
-  1. Add switch case in place of all the ifs (use switch(true))
+  0. Add the game modes changes (I only added it to the options)
+  0a. Add key bindings to lvl skills? Add to skills the keybindings to!
   2. Check all the useEffect dependencies and update functions accordingly, using useCallback
   3. Perfectionist
   4. Play the game, tweak the math calculations + balance
