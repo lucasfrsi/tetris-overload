@@ -77,6 +77,13 @@ export const highScoresTable = css`
     background-color: rgba(255, 255, 255, .1);
   }
 
+  tr td:nth-child(1) {
+    width: 100%;
+  }
+
+  tr td:nth-child(2) {
+    font-size: 1.2rem;
+  }
 `;
 
 export const highScoresButtons = css`

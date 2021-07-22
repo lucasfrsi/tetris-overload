@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
 import { SCORES_KEY, initializeKey, setKeyValue } from 'utils/localStorage';
 import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
+import { CLASSIC_MODE, CLASSIC_OVERLOAD_MODE, PROGRESSIVE_OVERLOAD_MODE } from 'utils/gameModes';
 
 const clearTable = {
   1: CLEAR_SINGLE,
@@ -10,7 +11,13 @@ const clearTable = {
   4: CLEAR_TETRIS,
 };
 
-export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable }) => {
+const gameModesAbbreviations = {
+  [CLASSIC_MODE]: 'Classic',
+  [CLASSIC_OVERLOAD_MODE]: 'Overload',
+  [PROGRESSIVE_OVERLOAD_MODE]: 'Progressive',
+};
+
+export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, optionsAPI }) => {
   const [storedScores, setStoredScores] = useState();
 
   const [currentPage, setCurrentPage] = useState(MENU_PAGE);
@@ -47,6 +54,12 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable }) =
   const {
     actions: { playSFX },
   } = SFX_API;
+
+  const {
+    state: {
+      gameMode,
+    },
+  } = optionsAPI;
 
   const setPageToMenu = () => setCurrentPage(MENU_PAGE);
   const setPageToOptions = () => setCurrentPage(OPTIONS_PAGE);
@@ -143,31 +156,33 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable }) =
 
   const updateScores = () => {
     const scores = [...storedScores];
+    const gameModeAbbreviation = gameModesAbbreviations[gameMode];
+    const newScore = [score, gameModeAbbreviation];
 
     if (scores.length < 5) {
-      scores.push(score);
-    } else if (score > scores[scores.length - 1]) {
+      scores.push(newScore);
+    } else if (newScore[0] > scores[scores.length - 1][0]) {
       scores.pop();
-      scores.push(score);
+      scores.push(newScore);
     } else {
       return;
     }
 
     if (scores.length === 1) {
-      if (scores[0] > 0) {
+      if (scores[0][0] > 0) {
         setNewHighScore(true);
         newHighScoreRef.current = true;
       }
     } else {
-      const firstEl = scores[0];
-      const lastEl = scores[scores.length - 1];
+      const firstEl = scores[0][0];
+      const lastEl = scores[scores.length - 1][0];
 
       if (lastEl > firstEl) {
         setNewHighScore(true);
         newHighScoreRef.current = true;
       }
 
-      scores.sort((a, b) => b - a);
+      scores.sort((a, b) => b[0] - a[0]);
     }
 
     setStoredScores(scores);

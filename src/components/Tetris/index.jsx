@@ -52,7 +52,7 @@ const Tetris = () => {
   const optionsAPI = useOptions({ BGM_API, SFX_API, isLocalStorageAvailable });
 
   const skillsAPI = useSkills({ SFX_API, optionsAPI });
-  const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API, isLocalStorageAvailable });
+  const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API, isLocalStorageAvailable, optionsAPI });
   const playerAPI = usePlayer({ SFX_API });
   const stageAPI = useStage({ skillsAPI, gameStatusAPI, playerAPI });
   const pieceHoldersAPI = usePieceHolders({ skillsAPI, playerAPI });
