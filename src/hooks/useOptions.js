@@ -13,16 +13,25 @@ import { initializeKey, setKeyValue, OPTIONS_KEY } from 'utils/localStorage';
 
 export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
   const {
+    state: {
+      BGM,
+    },
     actions: {
       getBGMHowlVolume,
       changeBGMHowlVolume,
+      toggleMuteBGM,
     },
   } = BGM_API;
 
   const {
+    state: {
+      SFX,
+    },
     actions: {
       getSFXHowlVolume,
       changeSFXHowlVolume,
+      toggleMuteSFX,
+      playSFX,
     },
   } = SFX_API;
 
@@ -186,6 +195,9 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
       keyBindings,
       usedKeys,
       usedCodes,
+      BGM: BGM.mute,
+      SFX: SFX.mute,
+
     },
     actions: {
       changeBGMSliderValue,
@@ -197,6 +209,9 @@ export const useOptions = ({ BGM_API, SFX_API, isLocalStorageAvailable }) => {
       saveOptionsToLocalStorage,
       clearKeyBindings,
       trackersAreFilled,
+      toggleMuteBGM,
+      toggleMuteSFX,
+      playSFX,
     },
   };
 };
