@@ -17,11 +17,15 @@ export const menu = css`
   text-transform: uppercase;
 `;
 
-export const buttons = css`
+export const menuOptions = css`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+export const buttons = css`
+  ${menuOptions}
 
   button {
     cursor: pointer;
@@ -79,11 +83,6 @@ export const title = css`
 
 export const icons = css`
   margin: 1rem 0 0 auto;
-
-  img {
-    width: 4.8rem;
-    cursor: pointer;
-  }
 `;
 
 export const madeWithLove = css`

@@ -6,7 +6,8 @@ import musicOn from 'assets/icons/music_on.svg';
 import musicOff from 'assets/icons/music_off.svg';
 import github from 'assets/icons/github.svg';
 import linkedin from 'assets/icons/linkedin.svg';
-import { BUTTON_HOVER, BUTTON_SELECT, BUTTON_TOGGLE } from 'utils/SFXPaths';
+import { BUTTON_HOVER, BUTTON_SELECT } from 'utils/SFXPaths';
+import SVGToggleButton from 'components/SVGToggleButton';
 
 import * as styles from './style';
 
@@ -24,26 +25,30 @@ const Menu = ({ play, options, SFX, BGM, toggleSFX, toggleBGM, playSFX }) => {
     <div css={styles.menu}>
       <span css={styles.title}>Tetris</span>
       <span css={styles.title}>Overload</span>
-      <div css={styles.buttons}>
-        <button type="button" tabIndex={-1} onClick={() => onClickHandler(play, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Play</button>
-        <button type="button" tabIndex={-1} onClick={() => onClickHandler(options, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Options</button>
-        <button type="button" tabIndex={-1} disabled>Credits <span>soon&trade;</span></button>
+      <div css={styles.menuOptions}>
+        <div css={styles.buttons}>
+          <button type="button" tabIndex={-1} onClick={() => onClickHandler(play, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Play</button>
+          <button type="button" tabIndex={-1} onClick={() => onClickHandler(options, BUTTON_SELECT)} onMouseEnter={onHoverHandler}>Options</button>
+          <button type="button" tabIndex={-1} disabled>Credits <span>soon&trade;</span></button>
+        </div>
         <div css={styles.icons}>
-          <img
-            role="presentation"
-            src={SFX ? sfxOff : sfxOn}
-            alt={SFX ? 'sfx off' : 'sfx on'}
-            draggable={false}
-            onClick={() => onClickHandler(toggleSFX, BUTTON_TOGGLE)}
-            onKeyDown={() => {}}
+          <SVGToggleButton
+            state={!SFX}
+            SVGOn={sfxOn}
+            SVGOff={sfxOff}
+            toggleAction={toggleSFX}
+            altOn="sfx on"
+            altOff="sfx off"
+            playSFX={playSFX}
           />
-          <img
-            role="presentation"
-            src={BGM ? musicOff : musicOn}
-            alt={BGM ? 'music off' : 'music on'}
-            draggable={false}
-            onClick={() => onClickHandler(toggleBGM, BUTTON_TOGGLE)}
-            onKeyDown={() => {}}
+          <SVGToggleButton
+            state={!BGM}
+            SVGOn={musicOn}
+            SVGOff={musicOff}
+            toggleAction={toggleBGM}
+            altOn="music on"
+            altOff="music off"
+            playSFX={playSFX}
           />
         </div>
       </div>
