@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import sfxOn from 'assets/icons/sfx_on.svg';
+import sfxOff from 'assets/icons/sfx_off.svg';
+import musicOn from 'assets/icons/music_on.svg';
+import musicOff from 'assets/icons/music_off.svg';
 import * as styles from './style';
 import Picker from '../Picker';
+import SVGToggleButton from '../SVGToggleButton';
 import KeyBindingGetter from '../KeyBindingGetter';
 
 const Options = ({ optionsAPI, goToMenu }) => {
@@ -16,6 +21,8 @@ const Options = ({ optionsAPI, goToMenu }) => {
       keyBindings,
       usedKeys,
       usedCodes,
+      SFX,
+      BGM,
     },
     actions: {
       changeBGMSliderValue,
@@ -27,6 +34,9 @@ const Options = ({ optionsAPI, goToMenu }) => {
       saveOptionsToLocalStorage,
       clearKeyBindings,
       trackersAreFilled,
+      toggleMuteBGM,
+      toggleMuteSFX,
+      playSFX,
     },
   } = optionsAPI;
 
@@ -64,7 +74,7 @@ const Options = ({ optionsAPI, goToMenu }) => {
   };
 
   return (
-    <div css={styles.options}>
+    <div css={styles.optionsWrapper}>
       {getterState.open ? (
         <KeyBindingGetter
           action={getterState.action}
@@ -77,48 +87,99 @@ const Options = ({ optionsAPI, goToMenu }) => {
           usedCodes={usedCodes}
         />
       ) : null}
-      <h1>Options</h1>
-
-      <div>
-        <span>Game Mode</span>
-        <Picker
-          state={gameMode}
-          changeState={changeGameMode}
-          possibleStates={gameModes}
-        />
-      </div>
-
-      <br />
-      <span>SFX Volume</span>
-      <input
-        type="range"
-        min={SFXSlider.min}
-        max={SFXSlider.max}
-        step={SFXSlider.step}
-        value={SFXSlider.value}
-        onChange={(e) => changeSFXSliderValue(e.target.value)}
-      />
-      <span>{parseInt(SFXSlider.value * 100, 10)}%</span>
-      <br />
-      <span>BGM Volume</span>
-      <input
-        type="range"
-        min={BGMSlider.min}
-        max={BGMSlider.max}
-        step={BGMSlider.step}
-        value={BGMSlider.value}
-        onChange={(e) => changeBGMSliderValue(e.target.value)}
-      />
-      <span>{parseInt(BGMSlider.value * 100, 10)}%</span>
-      <br />
-      <span>Key Bindings</span>
-      <Picker
-        state={keyBindingsMode}
-        changeState={changeKeyBindingsMode}
-        possibleStates={keyBindingsModes}
-      />
-      <table>
+      <table css={styles.optionsTable}>
         <thead>
+          <tr>
+            <th colSpan="2">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Game Mode</td>
+            <td>
+              <Picker
+                state={gameMode}
+                changeState={changeGameMode}
+                possibleStates={gameModes}
+                playSFX={playSFX}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>SFX Volume</td>
+            <td>
+              <div css={styles.sliderWrapper}>
+                <input
+                  tabIndex={-1}
+                  css={styles.slider}
+                  type="range"
+                  min={SFXSlider.min}
+                  max={SFXSlider.max}
+                  step={SFXSlider.step}
+                  value={SFXSlider.value}
+                  onChange={(e) => changeSFXSliderValue(e.target.value)}
+                />
+                <span css={styles.sliderValue}>{parseInt(SFXSlider.value * 100, 10)}%</span>
+                <SVGToggleButton
+                  state={!SFX}
+                  SVGOn={sfxOn}
+                  SVGOff={sfxOff}
+                  toggleAction={toggleMuteSFX}
+                  altOn="sfx on"
+                  altOff="sfx off"
+                  playSFX={playSFX}
+                />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>BGM Volume</td>
+            <td>
+              <div css={styles.sliderWrapper}>
+                <input
+                  tabIndex={-1}
+                  css={styles.slider}
+                  type="range"
+                  min={BGMSlider.min}
+                  max={BGMSlider.max}
+                  step={BGMSlider.step}
+                  value={BGMSlider.value}
+                  onChange={(e) => changeBGMSliderValue(e.target.value)}
+                />
+                <span css={styles.sliderValue}>{parseInt(BGMSlider.value * 100, 10)}%</span>
+                <SVGToggleButton
+                  state={!BGM}
+                  SVGOn={musicOn}
+                  SVGOff={musicOff}
+                  toggleAction={toggleMuteBGM}
+                  altOn="bgm on"
+                  altOff="bgm off"
+                  playSFX={playSFX}
+                />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Key Bindings Mode</td>
+            <td>
+              <Picker
+                state={keyBindingsMode}
+                changeState={changeKeyBindingsMode}
+                possibleStates={keyBindingsModes}
+                playSFX={playSFX}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table css={styles.keyBindingsTable}>
+        <thead>
+          <tr>
+            <th colSpan="3">
+              Key Bindings
+            </th>
+          </tr>
           <tr>
             <th>Action</th>
             <th>Key</th>
@@ -140,8 +201,10 @@ const Options = ({ optionsAPI, goToMenu }) => {
       </table>
 
       <button type="button" onClick={clearKeyBindings}>Clear Key Bindings</button>
-      <button type="button" onClick={goBackToMenu} disabled={!trackersAreFilled()}>Save and Return</button>
-      <button type="button" onClick={resetToDefault}>Reset to Default</button>
+      <div>
+        <button type="button" onClick={goBackToMenu} disabled={!trackersAreFilled()}>Save and Return</button>
+        <button type="button" onClick={resetToDefault}>Reset to Default</button>
+      </div>
     </div>
   );
 };
@@ -168,6 +231,8 @@ Options.propTypes = {
       keyBindings: PropTypes.objectOf(PropTypes.object),
       usedKeys: PropTypes.instanceOf(Set).isRequired,
       usedCodes: PropTypes.instanceOf(Set).isRequired,
+      SFX: PropTypes.bool.isRequired,
+      BGM: PropTypes.bool.isRequired,
     }).isRequired,
     actions: PropTypes.shape({
       changeBGMSliderValue: PropTypes.func.isRequired,
@@ -179,11 +244,12 @@ Options.propTypes = {
       saveOptionsToLocalStorage: PropTypes.func.isRequired,
       clearKeyBindings: PropTypes.func.isRequired,
       trackersAreFilled: PropTypes.func.isRequired,
+      toggleMuteBGM: PropTypes.func.isRequired,
+      toggleMuteSFX: PropTypes.func.isRequired,
+      playSFX: PropTypes.func.isRequired,
     }).isRequired,
   }).isRequired,
   goToMenu: PropTypes.func.isRequired,
 };
 
 export default Options;
-
-// Add SFX to buttons
