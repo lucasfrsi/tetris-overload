@@ -160,7 +160,7 @@ const Options = ({ optionsAPI, goToMenu }) => {
             </td>
           </tr>
           <tr>
-            <td>Key Bindings Mode</td>
+            <td>Key Bindings</td>
             <td>
               <Picker
                 state={keyBindingsMode}
@@ -175,11 +175,11 @@ const Options = ({ optionsAPI, goToMenu }) => {
 
       <table css={styles.keyBindingsTable}>
         <thead>
-          <tr>
+          {/* <tr>
             <th colSpan="3">
               Key Bindings
             </th>
-          </tr>
+          </tr> */}
           <tr>
             <th>Action</th>
             <th>Key</th>

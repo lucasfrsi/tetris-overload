@@ -22,14 +22,6 @@ export const optionsTable = css`
   border-collapse: separate;
   border-spacing: 1rem 2rem;
 
-  thead {
-    background-color: purple;
-  }
-
-  tbody {
-    background-color: violet;
-  }
-
   th {
     font-size: 3.2rem;
     text-transform: uppercase;
@@ -79,6 +71,10 @@ export const slider = css`
     width: 1.6rem;
     height: 1.6rem;
     background-color: white;
+
+    &:active {
+      background-color: goldenrod;
+    }
   }
 
   &::-moz-range-thumb {
@@ -91,6 +87,10 @@ export const slider = css`
 
     border: none;
     border-radius: 0;
+
+    &:active {
+      background-color: goldenrod;
+    }
   }
 `;
 
@@ -101,13 +101,39 @@ export const sliderValue = css`
 `;
 
 export const keyBindingsTable = css`
-  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0.5rem .5rem;
+  width: 97.5%;
+  margin: 0 auto;
 
-  thead {
-    background-color: purple;
+  thead tr th {
+    padding: .5rem 0.5rem 0.5rem 1rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: 1px solid white;
+
+    &:first-of-type {
+      text-align: left;
+    }
   }
 
-  tbody {
-    background-color: violet;
+  tr td:nth-of-type(1) {
+    padding: .5rem 0.5rem 0.5rem 1rem;
+    width: 40%;
+    text-transform: uppercase;
+  }
+
+  tr td:nth-of-type(2) {
+    width: 30%;
+  }
+
+  tr td:nth-of-type(2),
+  tr td:nth-of-type(3) {
+    text-align: center;
+  }
+
+  tbody tr:hover {
+    cursor: pointer;
+    color: goldenrod;
   }
 `;
