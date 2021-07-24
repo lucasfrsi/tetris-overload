@@ -8,14 +8,6 @@ export const optionsWrapper = css`
   max-width: 102.4rem;
   height: 100vh;
   margin: 0 auto;
-
-  
-  /* h1 {
-    text-transform: uppercase;
-    font-weight: 500;
-    align-self: center;
-    margin: 2rem 0 4rem;
-  } */
 `;
 
 export const optionsTable = css`
@@ -136,4 +128,10 @@ export const keyBindingsTable = css`
     cursor: pointer;
     color: goldenrod;
   }
+`;
+
+export const finalButtons = css`
+  display: flex;
+  justify-content: space-between;
+  margin: 3rem 1.5%;
 `;

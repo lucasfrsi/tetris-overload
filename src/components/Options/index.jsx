@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
+// Icons
 import sfxOn from 'assets/icons/sfx_on.svg';
 import sfxOff from 'assets/icons/sfx_off.svg';
 import musicOn from 'assets/icons/music_on.svg';
 import musicOff from 'assets/icons/music_off.svg';
+
+// Styles
 import * as styles from './style';
+
+// Components
 import Picker from '../Picker';
 import SVGToggleButton from '../SVGToggleButton';
 import KeyBindingGetter from '../KeyBindingGetter';
+import Button from '../Button';
 
 const Options = ({ optionsAPI, goToMenu }) => {
   const {
@@ -175,11 +182,6 @@ const Options = ({ optionsAPI, goToMenu }) => {
 
       <table css={styles.keyBindingsTable}>
         <thead>
-          {/* <tr>
-            <th colSpan="3">
-              Key Bindings
-            </th>
-          </tr> */}
           <tr>
             <th>Action</th>
             <th>Key</th>
@@ -199,11 +201,10 @@ const Options = ({ optionsAPI, goToMenu }) => {
           ))}
         </tbody>
       </table>
-
-      <button type="button" onClick={clearKeyBindings}>Clear Key Bindings</button>
-      <div>
-        <button type="button" onClick={goBackToMenu} disabled={!trackersAreFilled()}>Save and Return</button>
-        <button type="button" onClick={resetToDefault}>Reset to Default</button>
+      <div css={styles.finalButtons}>
+        <Button name="Save and Return" onClick={goBackToMenu} disabled={!trackersAreFilled()} />
+        <Button name="Reset to Default" onClick={resetToDefault} />
+        <Button name="Clear Key Bindings" onClick={clearKeyBindings} />
       </div>
     </div>
   );
@@ -253,3 +254,5 @@ Options.propTypes = {
 };
 
 export default Options;
+
+// Style key binding getter
