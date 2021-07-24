@@ -204,7 +204,7 @@ const Options = ({ optionsAPI, goToMenu }) => {
       <div css={styles.finalButtons}>
         <Button name="Save and Return" onClick={goBackToMenu} disabled={!trackersAreFilled()} />
         <Button name="Reset to Default" onClick={resetToDefault} />
-        <Button name="Clear Key Bindings" onClick={clearKeyBindings} />
+        <Button name="Unbind Keys" onClick={clearKeyBindings} />
       </div>
     </div>
   );

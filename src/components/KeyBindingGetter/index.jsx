@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { CUSTOM_MODE } from 'utils/keyBindings';
+import Button from '../Button';
 import * as styles from './style';
 
 const KeyBindingGetter = ({
@@ -46,6 +47,15 @@ const KeyBindingGetter = ({
     }
   };
 
+  const showInUseMessage = () => {
+    const usedKeysIsEmpty = usedKeys.size === 0;
+    const usedCodesIsEmpty = usedCodes.size === 0;
+    const sameInitialKey = initialKey === keyAndCode.key;
+    const sameInitialCode = initialCode === keyAndCode.code;
+
+    return inUse && !usedKeysIsEmpty && !usedCodesIsEmpty && !sameInitialKey && !sameInitialCode;
+  };
+
   useEffect(() => {
     elementRef.current.focus();
   }, []);
@@ -59,10 +69,42 @@ const KeyBindingGetter = ({
       onKeyDown={(e) => captureKeyAndCode(e)}
       onBlur={() => elementRef.current.focus()}
     >
-      <h3>{inUse ? 'ALREADY IN USE' : 'OKAY'}</h3>
-      Action: {action} | Key: {keyAndCode.key} | Code: {keyAndCode.code}
-      <button type="button" onClick={cancelHandler}>Cancel</button>
-      <button type="button" disabled={inUse} onClick={confirmHandler}>Confirm</button>
+      <div css={styles.getter}>
+        <div css={styles.text}>
+          <span>Press a key to bind to the action</span>
+          <span css={styles.actionStyle}>{action}</span>
+          <span>Current Binding</span>
+          <table>
+            <tbody>
+              <tr>
+                <td><i>{initialKey || 'None'}</i></td>
+                <td>|</td>
+                <td><i>{initialCode || 'None'}</i></td>
+              </tr>
+            </tbody>
+          </table>
+          <span>New Binding</span>
+          <table>
+            <tbody>
+              <tr>
+                <td><i>{keyAndCode.key || 'None'}</i></td>
+                <td>|</td>
+                <td><i>{keyAndCode.code || 'None'}</i></td>
+              </tr>
+            </tbody>
+          </table>
+          {showInUseMessage() ? (
+            <span css={styles.inUseStyle}>Binding already in use!</span>
+          ) : (
+            <span> </span>
+          )}
+        </div>
+
+        <div css={styles.buttons}>
+          <Button name="Cancel" onClick={cancelHandler} />
+          <Button name="Confirm" onClick={confirmHandler} disabled={inUse} />
+        </div>
+      </div>
     </div>
   );
 };

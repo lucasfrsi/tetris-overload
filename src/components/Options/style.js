@@ -2,6 +2,7 @@ import { css } from 'styled-components';
 import { StyledToggleButton } from '../SVGToggleButton/style';
 
 export const optionsWrapper = css`
+  position: relative;
   display: flex;
   flex-direction: column;
 
