@@ -4,7 +4,7 @@ export const getterWrapper = css`
   position: fixed;
   display: flex;
   justify-content: center;
-  align-items: center;
+  max-width: 102.4rem;
   width: 100%;
   height: 100%;
   background-color: rgba(1, 1, 1, .5);
@@ -18,7 +18,8 @@ export const getterWrapper = css`
 `;
 
 export const getter = css`
-  margin: 0 0 40%;
+  height: fit-content;
+  margin: 14% 0 0;
   padding: 2rem;
 
   display: flex;
