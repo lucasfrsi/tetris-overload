@@ -306,11 +306,9 @@ export const useSkills = ({ SFX_API, optionsAPI }) => {
 
   return {
     state: {
-      // Review these states, where they're being used!
       exp,
       perfectionism,
       clairvoyance,
-      blink,
       intuition,
       pixelPocket,
       mimic,

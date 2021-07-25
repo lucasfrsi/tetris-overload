@@ -14,17 +14,17 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     font-size: 62.5%;
 
-      @media screen and (max-height: 730px) {
-        font-size: 50%;
-      }
+    @media screen and (max-height: 730px) {
+      font-size: 50%;
+    }
 
-      @media screen and (max-height: 635px) {
-        font-size: 45%;
-      }
+    @media screen and (max-height: 635px) {
+      font-size: 45%;
+    }
   }
 
   body {
-    font-family: ${fonts.secondary};
+    font-family: ${fonts.primary};
     font-size: 1.6rem;
     font-weight: 400;
     color: ${colors.white};

@@ -254,5 +254,3 @@ Options.propTypes = {
 };
 
 export default Options;
-
-// Style key binding getter

@@ -97,7 +97,6 @@ export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
       stage,
     },
     actions: {
-      setStage,
       resetStage,
     },
   };

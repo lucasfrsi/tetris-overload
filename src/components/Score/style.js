@@ -10,8 +10,6 @@ export const StyledScore = styled.div`
   padding: 1rem;
   border: 2px solid #333;
   width: 90%;
-
-  font-family: ${fonts.secondary};
 `;
 
 export const Title = styled.span`

@@ -142,8 +142,6 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
   };
 
   const coreManualDrop = () => {
-    // TEST
-    // setDropTime(25);
     setDropTime(null);
   };
 
@@ -227,7 +225,6 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
       score,
       level,
       rows,
-      rowsCleared,
       gameStarted,
       onCountdown,
       paused,
@@ -242,9 +239,6 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
       currentPage,
     },
     actions: {
-      setScore,
-      setRows,
-      setLevel,
       setRowsCleared,
       setGameStarted,
       setOnCountdown,

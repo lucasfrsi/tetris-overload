@@ -125,9 +125,6 @@ export const useControllers = ({
   };
 
   return {
-    state: {
-
-    },
     actions: {
       onKeyDown,
       onKeyUp,

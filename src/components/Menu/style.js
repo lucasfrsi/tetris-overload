@@ -1,8 +1,7 @@
 import { css } from 'styled-components';
-import { fonts, colors } from 'style/variables';
+import { colors } from 'style/variables';
 
 export const menu = css`
-  /* position: relative; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,7 +11,6 @@ export const menu = css`
   height: 100vh;
   margin: 0 auto;
 
-  font-family: ${fonts.secondary};
   color: white;
   text-transform: uppercase;
 `;
