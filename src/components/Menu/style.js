@@ -102,7 +102,7 @@ export const madeWithLove = css`
   }
 
   img {
-    width: 2.4rem;
+    width: 24px;
     margin: 0 0 0 0.5rem;
   }
 `;

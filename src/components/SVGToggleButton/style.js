@@ -8,5 +8,9 @@ export const StyledToggleButton = styled.button`
 `;
 
 export const StyledSVG = styled.img`
-  width: 4.8rem;
+  width: 48px;
+
+  @media screen and (max-height: 730px) {
+    width: 32px;
+  }
 `;
