@@ -65,6 +65,8 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
   useEffect(() => {
     if (perfectionism.onCooldown && perfectionismCounter.current.cooldown === 0) {
       perfectionismCounter.current.cooldown = perfectionism.cooldown[perfectionism.currentLevel];
+      // Set mimic counter to 1
+      if (mimicCounter.current.cooldown > 1) mimicCounter.current.cooldown = 1;
     }
   }, [perfectionism.cooldown, perfectionism.currentLevel, perfectionism.onCooldown]);
 

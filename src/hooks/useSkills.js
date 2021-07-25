@@ -56,6 +56,7 @@ export const useSkills = ({ SFX_API, optionsAPI }) => {
   const [perfectionism, setPerfectionism] = useState({
     name: S.PERFECTIONISM,
     expCost: [0, 150, 200, 250],
+    modifier: [0, 1.3, 1.6, 2],
     cooldown: [0, 120, 90, 60],
     onCooldown: false,
     currentLevel: 0,
@@ -130,7 +131,6 @@ export const useSkills = ({ SFX_API, optionsAPI }) => {
       playSFX(PERFECTIONISM);
       putPerfectionismOnCooldown();
     }
-    // It only plays SFX for now
   }, [perfectionism.currentLevel, perfectionism.onCooldown, playSFX]);
 
   const putMimicOnCooldown = () => {
@@ -307,7 +307,6 @@ export const useSkills = ({ SFX_API, optionsAPI }) => {
   return {
     state: {
       // Review these states, where they're being used!
-      // Blink is still broken if intuition is not learned before...
       exp,
       perfectionism,
       clairvoyance,

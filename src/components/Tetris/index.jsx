@@ -33,6 +33,7 @@ import GameOver from '../GameOver';
 import HighScores from '../HighScores';
 import Options from '../Options';
 
+// Styles
 import {
   StyledTetrisLayout,
   StyledTetrisWrapper,
@@ -48,9 +49,7 @@ const isLocalStorageAvailable = checkLocalStorageAvailability();
 const Tetris = () => {
   const BGM_API = useBGM();
   const SFX_API = useSFX();
-
   const optionsAPI = useOptions({ BGM_API, SFX_API, isLocalStorageAvailable });
-
   const skillsAPI = useSkills({ SFX_API, optionsAPI });
   const gameStatusAPI = useGameStatus({ skillsAPI, SFX_API, isLocalStorageAvailable, optionsAPI });
   const playerAPI = usePlayer({ SFX_API });
@@ -59,9 +58,7 @@ const Tetris = () => {
   const tetrisAPI = useTetris({
     skillsAPI, gameStatusAPI, playerAPI, stageAPI, pieceHoldersAPI, SFX_API, BGM_API, optionsAPI,
   });
-
   const timersAPI = useTimers({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API });
-
   const controllersAPI = useControllers({
     skillsAPI,
     gameStatusAPI,
@@ -276,13 +273,3 @@ const Tetris = () => {
 };
 
 export default Tetris;
-
-/*
-  TO-DOS
-  2. Check all the useEffect dependencies and update functions accordingly, using useCallback
-  3. Perfectionist
-  4. Play the game, tweak the math calculations + balance
-  5. Add media query for up to 625px of height
-  7. Blur skill and side buttons onClick
-  8. Remove focus styling on buttons
-*/

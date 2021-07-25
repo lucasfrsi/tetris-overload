@@ -11,6 +11,8 @@ const clearTable = {
   4: CLEAR_TETRIS,
 };
 
+const linePoints = [40, 100, 300, 1200];
+
 const gameModesAbbreviations = {
   [CLASSIC_MODE]: 'Classic',
   [CLASSIC_OVERLOAD_MODE]: 'Overload',
@@ -45,6 +47,9 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
   const speed = useRef(0);
 
   const {
+    state: {
+      perfectionism,
+    },
     actions: {
       calcExp,
       activatePerfectionism,
@@ -66,19 +71,34 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
   const setPageToIngame = () => setCurrentPage(INGAME_PAGE);
 
   const calcScore = useCallback(() => {
-    const linePoints = [40, 100, 300, 1200];
-
-    // There's score to be calculated
     if (rowsCleared > 0) {
       playSFX(clearTable[rowsCleared]);
-      if (rowsCleared === 4) activatePerfectionism();
 
-      // Score calculation
-      setScore((prev) => prev + linePoints[rowsCleared - 1] * (level + 1));
+      if (rowsCleared === 4 && perfectionism.currentLevel && !perfectionism.onCooldown) {
+        activatePerfectionism();
+        setScore((prev) => Math.ceil(
+          prev
+          + linePoints[rowsCleared - 1]
+          * (level + 1)
+          * perfectionism.modifier[perfectionism.currentLevel],
+        ));
+      } else {
+        setScore((prev) => prev + linePoints[rowsCleared - 1] * (level + 1));
+      }
+
       setRows((prev) => prev + rowsCleared);
       calcExp(rowsCleared);
     }
-  }, [activatePerfectionism, calcExp, level, playSFX, rowsCleared]);
+  }, [
+    activatePerfectionism,
+    calcExp,
+    level,
+    perfectionism.currentLevel,
+    perfectionism.modifier,
+    perfectionism.onCooldown,
+    playSFX,
+    rowsCleared,
+  ]);
 
   useEffect(() => {
     calcScore();
