@@ -56,15 +56,14 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
     return null;
   }, [mimic.onCooldown, perfectionism.onCooldown, ticking]);
 
-  // MIGHT RESET COOLDOWN ON SKILL LEVEL, CHECK!
   useEffect(() => {
-    if (mimic.onCooldown) {
+    if (mimic.onCooldown && mimicCounter.current.cooldown === 0) {
       mimicCounter.current.cooldown = mimic.cooldown[mimic.currentLevel];
     }
   }, [mimic.cooldown, mimic.currentLevel, mimic.onCooldown]);
 
   useEffect(() => {
-    if (perfectionism.onCooldown) {
+    if (perfectionism.onCooldown && perfectionismCounter.current.cooldown === 0) {
       perfectionismCounter.current.cooldown = perfectionism.cooldown[perfectionism.currentLevel];
     }
   }, [perfectionism.cooldown, perfectionism.currentLevel, perfectionism.onCooldown]);
@@ -114,11 +113,8 @@ export const useTimers = ({ skillsAPI, gameStatusAPI, tetrisAPI, SFX_API }) => {
     }
   }, [onCountdown]);
 
-  // Tetris Timer - Ticking
-  // Depending on browsers, dropping when null is pretty different
-  // Firefox is much slower, while on chrome and opera it's much faster
+  // Core Timer
   useInterval(() => {
-    console.log('useInterval - drop()');
     drop();
   }, dropTime);
 
