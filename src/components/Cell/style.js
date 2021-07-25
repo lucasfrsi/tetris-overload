@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 export const StyledCell = styled.div(
   (props) => css`
     width: auto;
-    /* border-radius: 2px; */
     border: ${props.type === 0 ? '0px solid' : '4px solid'};
 
     ${props.highlight

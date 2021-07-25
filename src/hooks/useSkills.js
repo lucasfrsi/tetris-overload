@@ -1,197 +1,338 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useInterval } from 'hooks/useInterval';
+import { PIXEL_POCKET, TETROMINO_MERGE, MIMIC, SKILL_ON_COOLDOWN, SKILL_LEARNED, PERFECTIONISM } from 'utils/SFXPaths';
+import * as S from 'utils/skillsMap';
+import { CLASSIC_MODE, CLASSIC_OVERLOAD_MODE } from 'utils/gameModes';
 
-export const useSkills = () => {
-  const INTERVAL_DELAY = 1000;
-  const EXP_POINTS = useMemo(() => [5, 15, 25, 35], []);
+const EXP_POINTS = [10, 30, 50, 70];
+
+export const useSkills = ({ SFX_API, optionsAPI }) => {
+  const {
+    actions: { playSFX },
+  } = SFX_API;
+
+  const {
+    state: {
+      gameMode,
+    },
+  } = optionsAPI;
 
   const [exp, setExp] = useState(0);
 
   const [clairvoyance, setClairvoyance] = useState({
+    name: S.CLAIRVOYANCE,
     expCost: [0, 50, 75, 100],
-    currentLevel: 3,
+    currentLevel: 0,
+    passive: true,
   });
 
   const [pixelPocket, setPixelPocket] = useState({
+    name: S.PIXELPOCKET,
     expCost: [0, 50],
     currentLevel: 0,
+    onCooldown: false,
   });
 
   const [intuition, setIntuition] = useState({
+    name: S.INTUITION,
     expCost: [0, 100],
     currentLevel: 0,
+    passive: true,
   });
 
   const [blink, setBlink] = useState({
+    name: S.BLINK,
     expCost: [0, 100],
-    currentLevel: 0,
-  });
-
-  const [greedy, setGreedy] = useState({
-    expCost: [0, 50, 75, 100],
-    multiplier: [0, 1.25, 1.5, 1.75],
-    currentLevel: 0,
-  });
-
-  const [timeStop, setTimeStop] = useState({
-    expCost: [0, 100, 150, 200],
-    duration: [0, 4, 6, 8],
-    durationTimer: null,
-    active: 0,
-    cooldown: [0, 90, 75, 60],
-    cooldownTimer: null,
-    onCooldown: 0,
     currentLevel: 0,
   });
 
   const [mimic, setMimic] = useState({
+    name: S.MIMIC,
     expCost: [0, 100, 150, 200],
     cooldown: [0, 60, 45, 30],
-    onCooldown: 0,
-    cooldownTimer: null,
+    onCooldown: false,
     currentLevel: 0,
   });
 
   const [perfectionism, setPerfectionism] = useState({
+    name: S.PERFECTIONISM,
     expCost: [0, 150, 200, 250],
+    modifier: [0, 1.3, 1.6, 2],
     cooldown: [0, 120, 90, 60],
-    onCooldown: 0,
-    cooldownTimer: null,
+    onCooldown: false,
     currentLevel: 0,
   });
 
   const calcExp = useCallback((rowsCleared) => {
-    const expFormula = EXP_POINTS[rowsCleared - 1] * greedy.multiplier[greedy.currentLevel];
+    const expFormula = EXP_POINTS[rowsCleared - 1];
     setExp((prev) => prev + expFormula);
-  }, [EXP_POINTS, greedy.currentLevel, greedy.multiplier]);
+  }, []);
 
-  const activateTimeStop = () => {
-    if (timeStop.currentLevel) {
-      if (!timeStop.active && !timeStop.onCooldown) {
-        setTimeStop((prev) => ({
-          ...prev,
-          active: prev.duration[prev.currentLevel],
-          durationTimer: INTERVAL_DELAY,
-        }));
-      } else if (timeStop.active) {
-        setTimeStop((prev) => ({
-          ...prev,
-          active: 0,
-          onCooldown: prev.cooldown[prev.currentLevel],
-          durationTimer: null,
-          cooldownTimer: INTERVAL_DELAY,
-        }));
+  const skillsMap = useMemo(() => ({
+    [S.CLAIRVOYANCE]: [clairvoyance, setClairvoyance],
+    [S.PIXELPOCKET]: [pixelPocket, setPixelPocket],
+    [S.MIMIC]: [mimic, setMimic],
+    [S.INTUITION]: [intuition, setIntuition],
+    [S.BLINK]: [blink, setBlink],
+    [S.PERFECTIONISM]: [perfectionism, setPerfectionism],
+  }), [blink, clairvoyance, intuition, mimic, perfectionism, pixelPocket]);
+
+  const canSkillBeLeveled = useCallback((skillKey) => {
+    const [skill] = skillsMap[skillKey];
+
+    const currentSkillLevel = skill.currentLevel;
+    const skillMaxLevel = skill.expCost.length - 1;
+
+    if (currentSkillLevel < skillMaxLevel) {
+      const costToLevel = skill.expCost[currentSkillLevel + 1];
+      if (exp >= costToLevel) {
+        return true;
       }
     }
+
+    return false;
+  }, [exp, skillsMap]);
+
+  const levelUpSkill = useCallback((skillKey) => {
+    if (canSkillBeLeveled(skillKey)) {
+      const [skill, setSkill] = skillsMap[skillKey];
+      const currentSkillLevel = skill.currentLevel;
+      const costToLevel = skill.expCost[currentSkillLevel + 1];
+
+      setSkill((prev) => ({
+        ...prev,
+        currentLevel: prev.currentLevel + 1,
+      }));
+
+      setExp((prev) => prev - costToLevel);
+
+      playSFX(SKILL_LEARNED);
+      return;
+    }
+
+    playSFX(SKILL_ON_COOLDOWN);
+  }, [canSkillBeLeveled, playSFX, skillsMap]);
+
+  const putPerfectionismOnCooldown = () => {
+    setPerfectionism((prev) => ({
+      ...prev,
+      onCooldown: true,
+    }));
   };
 
-  // TIMERS
-  // Using setInterval for now, even though it's not perfectly accurate
-  useInterval(() => {
-    // console.log('useInterval: timeStop cooldownTimer');
-    if (timeStop.onCooldown > 0) {
-      setTimeStop((prev) => ({
-        ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
-      }));
-    }
-  }, timeStop.cooldownTimer);
+  const removePerfectionismCooldown = () => {
+    setPerfectionism((prev) => ({
+      ...prev,
+      onCooldown: false,
+    }));
+  };
 
-  useInterval(() => {
-    // console.log('useInterval: timeStop durationTimer');
-    if (timeStop.active > 0) {
-      setTimeStop((prev) => ({
-        ...prev,
-        active: prev.active - 1,
-        onCooldown: prev.active === 1 ? prev.cooldown[prev.currentLevel] : prev.onCooldown,
-        durationTimer: prev.active === 1 ? null : INTERVAL_DELAY,
-        cooldownTimer: prev.active === 1 ? INTERVAL_DELAY : null,
-      }));
+  const activatePerfectionism = useCallback(() => {
+    if (perfectionism.currentLevel && !perfectionism.onCooldown) {
+      playSFX(PERFECTIONISM);
+      putPerfectionismOnCooldown();
     }
-  }, timeStop.durationTimer);
+  }, [perfectionism.currentLevel, perfectionism.onCooldown, playSFX]);
 
-  useInterval(() => {
-    // console.log('useInterval: mimic cooldownTimer');
-    if (mimic.onCooldown > 0) {
+  const putMimicOnCooldown = () => {
+    setMimic((prev) => ({
+      ...prev,
+      onCooldown: true,
+    }));
+  };
+
+  const removeMimicCooldown = () => {
+    setMimic((prev) => ({
+      ...prev,
+      onCooldown: false,
+    }));
+  };
+
+  const activateMimic = useCallback((unshiftPlayerTetrominoCopy) => {
+    if (mimic.currentLevel && !mimic.onCooldown) {
+      playSFX(MIMIC);
+      putMimicOnCooldown();
+      unshiftPlayerTetrominoCopy();
+    } else {
+      playSFX(SKILL_ON_COOLDOWN);
+    }
+  }, [mimic.currentLevel, mimic.onCooldown, playSFX]);
+
+  const putPixelPocketOnCooldown = () => {
+    setPixelPocket((prev) => ({
+      ...prev,
+      onCooldown: true,
+    }));
+  };
+
+  const removePixelPocketCooldown = () => {
+    setPixelPocket((prev) => ({
+      ...prev,
+      onCooldown: false,
+    }));
+  };
+
+  const activateBlink = useCallback((hardDrop) => {
+    if (blink.currentLevel) {
+      playSFX(TETROMINO_MERGE);
+      hardDrop();
+      removePixelPocketCooldown();
+    }
+  }, [blink.currentLevel, playSFX]);
+
+  const activateHold = useCallback((holdPlayerTetromino) => {
+    if (pixelPocket.currentLevel && !pixelPocket.onCooldown) {
+      holdPlayerTetromino();
+      playSFX(PIXEL_POCKET);
+      putPixelPocketOnCooldown();
+    } else {
+      playSFX(SKILL_ON_COOLDOWN);
+    }
+  }, [pixelPocket.currentLevel, pixelPocket.onCooldown, playSFX]);
+
+  const setSkillsToClassicMode = () => {
+    setExp(0);
+    setClairvoyance((prev) => ({
+      ...prev,
+      currentLevel: 3,
+    }));
+
+    setPixelPocket((prev) => ({
+      ...prev,
+      currentLevel: 1,
+      onCooldown: false,
+    }));
+
+    setIntuition((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setBlink((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setMimic((prev) => ({
+      ...prev,
+      currentLevel: 0,
+      onCooldown: false,
+    }));
+
+    setPerfectionism((prev) => ({
+      ...prev,
+      currentLevel: 0,
+      onCooldown: false,
+    }));
+  };
+
+  const setAllSkillsToMaxLvl = () => {
+    setExp(0);
+    setClairvoyance((prev) => ({
+      ...prev,
+      currentLevel: 3,
+    }));
+
+    setPixelPocket((prev) => ({
+      ...prev,
+      currentLevel: 1,
+      onCooldown: false,
+    }));
+
+    setIntuition((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setBlink((prev) => ({
+      ...prev,
+      currentLevel: 1,
+    }));
+
+    setMimic((prev) => ({
+      ...prev,
+      currentLevel: 3,
+      onCooldown: false,
+    }));
+
+    setPerfectionism((prev) => ({
+      ...prev,
+      currentLevel: 3,
+      onCooldown: false,
+    }));
+  };
+
+  const resetSkills = useCallback(() => {
+    if (gameMode === CLASSIC_MODE) {
+      setSkillsToClassicMode();
+    } else if (gameMode === CLASSIC_OVERLOAD_MODE) {
+      setAllSkillsToMaxLvl();
+    } else {
+      setExp(0);
+
+      setClairvoyance((prev) => ({
+        ...prev,
+        currentLevel: 0,
+      }));
+
+      setPixelPocket((prev) => ({
+        ...prev,
+        currentLevel: 0,
+        onCooldown: false,
+      }));
+
+      setIntuition((prev) => ({
+        ...prev,
+        currentLevel: 0,
+      }));
+
+      setBlink((prev) => ({
+        ...prev,
+        currentLevel: 0,
+      }));
+
       setMimic((prev) => ({
         ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
+        currentLevel: 0,
+        onCooldown: false,
       }));
-    }
-  }, mimic.cooldownTimer);
 
-  useInterval(() => {
-    // console.log('useInterval: perfectionism cooldownTimer');
-    if (perfectionism.onCooldown > 0) {
       setPerfectionism((prev) => ({
         ...prev,
-        onCooldown: prev.onCooldown - 1,
-        cooldownTimer: prev.onCooldown === 1 ? null : INTERVAL_DELAY,
+        currentLevel: 0,
+        onCooldown: false,
       }));
     }
-  }, perfectionism.cooldownTimer);
+  }, [gameMode]);
 
   return {
-    constants: {
-      INTERVAL_DELAY,
-    },
     state: {
       exp,
       perfectionism,
       clairvoyance,
-      blink,
       intuition,
-      greedy,
       pixelPocket,
       mimic,
-      timeStop,
     },
     actions: {
-      setExp,
       calcExp,
-      setPerfectionism,
-      setClairvoyance,
-      setBlink,
-      setIntuition,
-      setGreedy,
-      setPixelPocket,
-      setMimic,
-      setTimeStop,
-      activateTimeStop,
+      canSkillBeLeveled,
+      levelUpSkill,
+      resetSkills,
+      activateHold,
+      activateMimic,
+      activateBlink,
+      activatePerfectionism,
+      removePixelPocketCooldown,
+      removeMimicCooldown,
+      removePerfectionismCooldown,
     },
+    skills: [
+      clairvoyance,
+      pixelPocket,
+      mimic,
+      intuition,
+      blink,
+      perfectionism,
+    ],
   };
 };
-
-// - Clairvoyance [OK]
-// =PASSIVE=
-// = Allow the player to see the next piece(s)
-
-// - Time Stop [OK]
-// =ACTIVE=
-// = Allow the player to freely move the piece for a certain period of time
-
-// - Mimic [OK]
-// =ACTIVE=
-// = Set the next piece to be equal to the current one
-
-// - Pixel Pocket [OK]
-// =ACTIVE=
-// = Stores a piece to be used later on
-
-// - Perfectionist
-// =PASSIVE=
-// = Clearing 4 rows at once resets all abilities cooldown
-
-// - Intuition [OK]
-// =PASSIVE=
-// = Shows a mark of where the piece will fall at
-
-// - Greedy
-// =PASSIVE=
-// = Earns more exp/money per coin and rows cleared
-
-// - Blink [OK]
-// =ACTIVE=
-// = Immediately set the piece to the intuition location mark

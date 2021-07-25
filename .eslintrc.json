@@ -35,6 +35,7 @@
     "react/jsx-one-expression-per-line": 0,
     "object-curly-newline": 0,
     "import/prefer-default-export": ["off"],
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "import/no-named-as-default-member": "off"
 	}
 }

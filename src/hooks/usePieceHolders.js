@@ -1,94 +1,72 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createStage } from 'utils/gameHelpers';
 
-const SINGLE_STAGE_HEIGHT = 6;
-const SINGLE_STAGE_WIDTH = 5;
-
-const DOUBLE_STAGE_HEIGHT = SINGLE_STAGE_HEIGHT * 2;
-const DOUBLE_STAGE_WIDTH = SINGLE_STAGE_WIDTH;
-
-export const usePieceHolders = (skillsAPI, playerAPI) => {
-  const [holdStage, setHoldStage] = useState(
-    createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH),
-  );
-
-  const [nextStage, setNextStage] = useState(null);
-
-  const [queueStage, setQueueStage] = useState(
-    createStage(DOUBLE_STAGE_HEIGHT, DOUBLE_STAGE_WIDTH),
-  );
+export const usePieceHolders = ({ skillsAPI, playerAPI }) => {
+  const [holdStage, setHoldStage] = useState();
+  const [firstOnQueueStage, setFirstOnQueueStage] = useState();
+  const [secondOnQueueStage, setSecondOnQueueStage] = useState();
+  const [thirdOnQueueStage, setThirdOnQueueStage] = useState();
 
   const {
-    state: { nextPieces, hold },
+    state: {
+      nextPieces,
+      hold,
+    },
   } = playerAPI;
 
   const {
-    state: { clairvoyance },
+    state: {
+      clairvoyance,
+      pixelPocket,
+    },
   } = skillsAPI;
 
+  const createPieceStage = (piece) => {
+    const pieceShape = piece.shape;
+    return pieceShape.map((row) => row.map((value) => [value]));
+  };
+
   useEffect(() => {
-    const updateNextStage = () => {
-      if (clairvoyance.currentLevel) {
-        const nextPiece = nextPieces[0];
-        const nextPieceShape = nextPiece.shape;
+    if (clairvoyance.currentLevel) {
+      setFirstOnQueueStage(createPieceStage(nextPieces[0]));
 
-        const newStage = nextPieceShape.map((row) => row.map((value) => [value]));
-
-        return newStage;
-      }
-      return null;
-    };
-
-    const updateQueueStage = () => {
-      const newStage = createStage(DOUBLE_STAGE_HEIGHT, DOUBLE_STAGE_WIDTH);
-
-      for (let i = 0; i < 2; i++) {
-        nextPieces[i + 1].shape.forEach((row, y) => {
-          row.forEach((value, x) => {
-            if (value !== 0) {
-              newStage[y + (i * 7)][x + 1] = [value, 'merged'];
-            }
-          });
-        });
+      if (clairvoyance.currentLevel > 1) {
+        setSecondOnQueueStage(createPieceStage(nextPieces[1]));
       }
 
-      return newStage;
-    };
-
-    setNextStage(updateNextStage());
-    setQueueStage(updateQueueStage());
+      if (clairvoyance.currentLevel > 2) {
+        setThirdOnQueueStage(createPieceStage(nextPieces[2]));
+      }
+    }
   }, [clairvoyance.currentLevel, nextPieces]);
 
   useEffect(() => {
-    const updateHoldStage = () => {
-      const newStage = createStage(SINGLE_STAGE_HEIGHT, SINGLE_STAGE_WIDTH);
-
+    if (pixelPocket.currentLevel) {
       if (hold.length === 0) {
-        return newStage;
+        const emptyStage = createStage(4, 4);
+        setHoldStage(emptyStage);
+      } else {
+        setHoldStage(createPieceStage(hold[0]));
       }
+    }
+  }, [hold, pixelPocket.currentLevel]);
 
-      hold[0].shape.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value !== 0) {
-            newStage[y + 1][x + 1] = [value, 'merged'];
-          }
-        });
-      });
-
-      return newStage;
-    };
-
-    setHoldStage(updateHoldStage());
-  }, [hold]);
+  const resetPieceHolders = useCallback(() => {
+    setHoldStage(undefined);
+    setFirstOnQueueStage(undefined);
+    setSecondOnQueueStage(undefined);
+    setThirdOnQueueStage(undefined);
+  }, []);
 
   return {
     state: {
-      nextStage,
-      queueStage,
       holdStage,
+      firstOnQueueStage,
+      secondOnQueueStage,
+      thirdOnQueueStage,
     },
     actions: {
-
+      resetPieceHolders,
     },
   };
 };

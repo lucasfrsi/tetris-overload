@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createMainStage, checkCollision } from 'utils/gameHelpers';
 
-export const useStage = (skillsAPI, gameStatusAPI, playerAPI) => {
+export const useStage = ({ skillsAPI, gameStatusAPI, playerAPI }) => {
   const [stage, setStage] = useState(createMainStage());
 
   const {
     state: { player },
-    actions: { resetPlayer, updatePreCollisionY },
+    actions: { getPlayerNextPiece, updatePreCollisionY },
   } = playerAPI;
 
   const {
@@ -74,21 +74,30 @@ export const useStage = (skillsAPI, gameStatusAPI, playerAPI) => {
 
       // Check for score
       if (player.collided && !gameOver) {
-        resetPlayer();
+        getPlayerNextPiece();
         return sweepRows(newStage);
       }
       return newStage;
     };
 
     setStage((prev) => updateStage(prev));
-  }, [gameOver, intuition.currentLevel, player, resetPlayer, setRowsCleared, updatePreCollisionY]);
+  }, [
+    gameOver,
+    intuition.currentLevel,
+    player, getPlayerNextPiece,
+    setRowsCleared, updatePreCollisionY,
+  ]);
+
+  const resetStage = useCallback(() => {
+    setStage(createMainStage());
+  }, []);
 
   return {
     state: {
       stage,
     },
     actions: {
-      setStage,
+      resetStage,
     },
   };
 };

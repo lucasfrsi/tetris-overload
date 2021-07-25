@@ -1,10 +1,30 @@
-export const useControllers = (skillsAPI, gameStatusAPI, playerAPI, stageAPI, tetrisAPI) => {
+import {
+  MOVE_LEFT,
+  MOVE_RIGHT,
+  DROP,
+  ROTATE_CW,
+  ROTATE_ACW,
+  HARD_DROP,
+  HOLD,
+  MIMIC,
+  PAUSE,
+} from 'utils/keyBindings';
+import { CLASSIC_MODE } from 'utils/gameModes';
+
+export const useControllers = ({
+  skillsAPI,
+  gameStatusAPI,
+  playerAPI,
+  stageAPI,
+  tetrisAPI,
+  optionsAPI,
+}) => {
   const {
     actions: {
       playerRotate,
-      activateHold,
-      activateMimic,
-      activateBlink,
+      unshiftPlayerTetrominoCopy,
+      hardDrop,
+      holdPlayerTetromino,
     },
   } = playerAPI;
 
@@ -16,11 +36,13 @@ export const useControllers = (skillsAPI, gameStatusAPI, playerAPI, stageAPI, te
 
   const {
     state: {
-      level,
-      gameOver,
+      paused,
+      ticking,
+      onCountdown,
+      dialogIsOpen,
     },
     actions: {
-      setDropTime,
+      coreAutoDrop,
     },
   } = gameStatusAPI;
 
@@ -28,42 +50,66 @@ export const useControllers = (skillsAPI, gameStatusAPI, playerAPI, stageAPI, te
     actions: {
       dropPlayer,
       movePlayer,
+      pause,
+      unpause,
     },
   } = tetrisAPI;
 
   const {
-    state: {
-      timeStop,
-    },
     actions: {
-      activateTimeStop,
+      activateMimic,
+      activateBlink,
+      activateHold,
     },
   } = skillsAPI;
+
+  const {
+    state: {
+      keyBindings,
+      gameMode,
+    },
+  } = optionsAPI;
 
   const onKeyDown = (event) => {
     const { code, key } = event;
 
-    if (!gameOver) {
-      if (key === '1' || code === 'Numpad1') {
-        movePlayer(-1);
-      } else if (key === '2' || code === 'Numpad2') {
-        dropPlayer();
-      } else if (key === '3' || code === 'Numpad3') {
-        movePlayer(1);
-      } else if (key === '4' || code === 'Numpad4') {
-        playerRotate(stage, -1);
-      } else if (key === '5' || code === 'Numpad5') {
-        if (timeStop.active) movePlayer(0, -1);
-      } else if (key === '6' || code === 'Numpad6') {
-        playerRotate(stage, 1);
-      } else if (key === '7' || code === 'Numpad7') {
-        activateHold();
-      } else if (key === '8' || code === 'Numpad8') {
-        activateBlink();
-      } else if (key === '9' || code === 'Numpad9') {
-        activateMimic();
-      } else if (key === '0' || code === 'Numpad0') {
-        activateTimeStop();
+    if (ticking) {
+      switch (true) {
+        case (key === keyBindings[MOVE_LEFT].key) || (code === keyBindings[MOVE_LEFT].code):
+          movePlayer(-1);
+          break;
+        case (key === keyBindings[MOVE_RIGHT].key) || (code === keyBindings[MOVE_RIGHT].code):
+          movePlayer(1);
+          break;
+        case (key === keyBindings[DROP].key) || (code === keyBindings[DROP].code):
+          dropPlayer();
+          break;
+        case (key === keyBindings[ROTATE_CW].key) || (code === keyBindings[ROTATE_CW].code):
+          playerRotate(stage, 1);
+          break;
+        case (key === keyBindings[ROTATE_ACW].key) || (code === keyBindings[ROTATE_ACW].code):
+          playerRotate(stage, -1);
+          break;
+        case (key === keyBindings[HARD_DROP].key) || (code === keyBindings[HARD_DROP].code):
+          activateBlink(hardDrop);
+          break;
+        case (key === keyBindings[HOLD].key) || (code === keyBindings[HOLD].code):
+          activateHold(holdPlayerTetromino);
+          break;
+        case (key === keyBindings[MIMIC].key) || (code === keyBindings[MIMIC].code):
+          if (gameMode !== CLASSIC_MODE) activateMimic(unshiftPlayerTetrominoCopy);
+          break;
+        case (key === keyBindings[PAUSE].key) || (code === keyBindings[PAUSE].code):
+          pause();
+          break;
+        default:
+          break;
+      }
+    } else if ((key === keyBindings[PAUSE].key) || (code === keyBindings[PAUSE].code)) {
+      if (onCountdown) {
+        pause();
+      } else if (paused && !dialogIsOpen.state) {
+        unpause();
       }
     }
   };
@@ -71,18 +117,14 @@ export const useControllers = (skillsAPI, gameStatusAPI, playerAPI, stageAPI, te
   const onKeyUp = (event) => {
     const { code, key } = event;
 
-    if (!gameOver) {
-      // Activate the interval again when user releases down arrow.
-      if (key === '2' || code === 'Numpad2') {
-        setDropTime(1000 / (level + 1));
+    if (ticking) {
+      if ((key === keyBindings[DROP].key) || (code === keyBindings[DROP].code)) {
+        coreAutoDrop();
       }
     }
   };
 
   return {
-    state: {
-
-    },
     actions: {
       onKeyDown,
       onKeyUp,

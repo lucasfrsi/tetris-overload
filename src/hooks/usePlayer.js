@@ -1,9 +1,11 @@
 import { useState, useCallback } from 'react';
 
-import { TETROMINOS, randomTetromino, createNextPiecesArray } from 'utils/tetrominos';
+import { TETROMINOS, randomTetromino, createNextPiecesArray, restartPool } from 'utils/tetrominos';
 import { STAGE_WIDTH, checkCollision } from 'utils/gameHelpers';
 
-export const usePlayer = (skillsAPI) => {
+import { TETROMINO_ROTATE } from 'utils/SFXPaths';
+
+export const usePlayer = ({ SFX_API }) => {
   const [hold, setHold] = useState([]);
   const [nextPieces, setNextPieces] = useState(createNextPiecesArray(3));
   const [preCollisionY, setPreCollisionY] = useState(0);
@@ -15,18 +17,10 @@ export const usePlayer = (skillsAPI) => {
   });
 
   const {
-    constants: {
-      INTERVAL_DELAY,
-    },
-    state: {
-      blink,
-      mimic,
-      pixelPocket,
-    },
     actions: {
-      setMimic,
+      playSFX,
     },
-  } = skillsAPI;
+  } = SFX_API;
 
   function rotate(matrix, dir) {
     // Make the rows to become cols (transpose)
@@ -52,6 +46,7 @@ export const usePlayer = (skillsAPI) => {
       }
     }
     setPlayer(clonedPlayer);
+    playSFX(TETROMINO_ROTATE);
   }
 
   const updatePreCollisionY = useCallback((y) => {
@@ -66,7 +61,7 @@ export const usePlayer = (skillsAPI) => {
     }));
   }, []);
 
-  const resetPlayer = useCallback(() => {
+  const getPlayerNextPiece = useCallback(() => {
     const newNextPieces = [...nextPieces];
     const nextPiece = newNextPieces.shift();
     // Mimic Check
@@ -80,52 +75,42 @@ export const usePlayer = (skillsAPI) => {
     setNextPieces(newNextPieces);
   }, [nextPieces]);
 
-  const activateHold = useCallback(() => {
-    if (pixelPocket.currentLevel) {
-      if (hold.length === 0) {
-        setHold([player.tetromino]);
-        resetPlayer();
-      } else {
-        const holdPiece = hold[0];
-        setHold([player.tetromino]);
-        setPlayer((prev) => ({
-          ...prev,
-          pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-          tetromino: holdPiece,
-        }));
-      }
-    }
-  }, [hold, pixelPocket.currentLevel, player.tetromino, resetPlayer]);
-
-  const activateMimic = useCallback(() => {
-    if (mimic.currentLevel && !mimic.onCooldown) {
-      setMimic((prev) => ({
+  const holdPlayerTetromino = useCallback(() => {
+    if (hold.length === 0) {
+      setHold([player.tetromino]);
+      getPlayerNextPiece();
+    } else {
+      const holdPiece = hold[0];
+      setHold([player.tetromino]);
+      setPlayer((prev) => ({
         ...prev,
-        onCooldown: prev.cooldown[prev.currentLevel],
-        cooldownTimer: INTERVAL_DELAY,
+        pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+        tetromino: holdPiece,
       }));
-      const newNextPieces = [...nextPieces];
-      newNextPieces.unshift(player.tetromino);
-      setNextPieces(newNextPieces);
     }
-  }, [
-    INTERVAL_DELAY,
-    mimic.currentLevel,
-    mimic.onCooldown,
-    nextPieces,
-    player.tetromino,
-    setMimic,
-  ]);
+  }, [getPlayerNextPiece, hold, player.tetromino]);
 
-  const activateBlink = useCallback(() => {
-    if (blink.currentLevel) {
-      updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
-    }
-  }, [
-    blink.currentLevel,
-    preCollisionY,
-    updatePlayerPos,
-  ]);
+  const unshiftPlayerTetrominoCopy = useCallback(() => {
+    const newNextPieces = [...nextPieces];
+    newNextPieces.unshift(player.tetromino);
+    setNextPieces(newNextPieces);
+  }, [nextPieces, player.tetromino]);
+
+  const hardDrop = useCallback(() => {
+    updatePlayerPos({ x: 0, y: preCollisionY, collided: true });
+  }, [preCollisionY, updatePlayerPos]);
+
+  const resetPlayer = useCallback(() => {
+    setHold([]);
+    restartPool();
+    setNextPieces(createNextPiecesArray(3));
+    setPreCollisionY(0);
+    setPlayer({
+      pos: { x: 0, y: 0 },
+      tetromino: TETROMINOS[0],
+      collided: false,
+    });
+  }, []);
 
   return {
     state: {
@@ -134,13 +119,14 @@ export const usePlayer = (skillsAPI) => {
       hold,
     },
     actions: {
-      activateHold,
-      activateMimic,
-      activateBlink,
+      holdPlayerTetromino,
+      hardDrop,
       updatePlayerPos,
-      resetPlayer,
+      getPlayerNextPiece,
       playerRotate,
       updatePreCollisionY,
+      resetPlayer,
+      unshiftPlayerTetrominoCopy,
     },
   };
 };

@@ -24,6 +24,12 @@ const config = {
   module: {
     rules: [
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
@@ -31,7 +37,7 @@ const config = {
         },
       },
       {
-        test: /\.(png|jpg|jpeg|gif|svg)$/i,
+        test: /\.(png|svg|mp3)$/i,
         type: 'asset/resource',
       },
     ],
@@ -41,10 +47,7 @@ const config = {
     alias: {
       assets: path.join(__dirname, 'src', 'assets'),
       components: path.join(__dirname, 'src', 'components'),
-      lib: path.join(__dirname, 'src', 'lib'),
       hooks: path.join(__dirname, 'src', 'hooks'),
-      services: path.join(__dirname, 'src', 'services'),
-      store: path.join(__dirname, 'src', 'store'),
       style: path.join(__dirname, 'src', 'style'),
       utils: path.join(__dirname, 'src', 'utils'),
     },
@@ -84,7 +87,7 @@ if (isDevelopment) {
     compress: true,
   };
 
-  config.module.rules[0].use.options = {
+  config.module.rules[1].use.options = {
     plugins: ['react-refresh/babel'],
   };
 

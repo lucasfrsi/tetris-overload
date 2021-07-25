@@ -13,13 +13,23 @@ const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
     font-size: 62.5%;
+
+    @media screen and (max-height: 730px) {
+      font-size: 50%;
+    }
+
+    @media screen and (max-height: 635px) {
+      font-size: 45%;
+    }
   }
 
   body {
     font-family: ${fonts.primary};
     font-size: 1.6rem;
     font-weight: 400;
-    color: ${colors['black-1']};
+    color: ${colors.white};
+    background-color: black;
+    user-select: none;
   }
 
   button,
