@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 // Icons
 import sfxOn from 'assets/icons/sfx_on.svg';
 import sfxOff from 'assets/icons/sfx_off.svg';
-import musicOn from 'assets/icons/music_on.svg';
-import musicOff from 'assets/icons/music_off.svg';
+import musicOn from 'assets/icons/bgm_on.svg';
+import musicOff from 'assets/icons/bgm_off.svg';
 
 // Styles
 import * as styles from './style';
