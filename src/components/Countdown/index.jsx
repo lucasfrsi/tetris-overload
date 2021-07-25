@@ -27,8 +27,12 @@ const Countdown = ({ count, playSFX }) => {
 };
 
 Countdown.propTypes = {
-  count: PropTypes.number.isRequired,
+  count: PropTypes.number,
   playSFX: PropTypes.func.isRequired,
+};
+
+Countdown.defaultProps = {
+  count: null,
 };
 
 export default Countdown;

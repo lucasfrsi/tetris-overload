@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { TETROMINOS } from 'utils/tetrominos';
 import { StyledCell } from './style';
 
-// React.memo makes sure we only re-render the changed cells
 const Cell = ({ type }) => (
   <StyledCell
     type={type[0]}
@@ -13,7 +12,12 @@ const Cell = ({ type }) => (
 );
 
 Cell.propTypes = {
-  type: PropTypes.arrayOf(PropTypes.array).isRequired,
+  type: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+  ])).isRequired,
 };
 
+// React.memo makes sure only changed cells are re-rendered
 export default React.memo(Cell);
