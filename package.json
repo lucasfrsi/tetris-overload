@@ -13,7 +13,7 @@
     "eslint": "eslint --ext .jsx,.js ./",
     "stylelint": "stylelint ./src/**/*.{js,jsx}",
     "lint": "npm run eslint && npm run stylelint",
-    "test": "jest --verbose",
+    "test": "jest --verbose --passWithNoTests",
     "test:watch": "jest --verbose --watch",
     "validate": "npm run lint && npm run test"
   },

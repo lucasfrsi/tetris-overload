@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { fonts } from 'style/variables';
 
 export const StyledScore = styled.div`
   display: flex;
