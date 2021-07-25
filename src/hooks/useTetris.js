@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { checkCollision } from 'utils/gameHelpers';
-import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_LEVEL_UP, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, LEVEL_UP, NEW_HIGHSCORE, BUTTON_START } from 'utils/SFXPaths';
+import { TETROMINO_MERGE, TETROMINO_MOVE, PAUSE_IN, PAUSE_OUT, BUTTON_SELECT, VO_GAME_OVER, GAME_OVER, VO_CONGRATULATIONS, VO_NEW_HIGHSCORE, NEW_HIGHSCORE, BUTTON_START } from 'utils/SFXPaths';
 import { MENU, INGAME } from 'utils/BGMPaths';
 import { INGAME_PAGE } from 'utils/pagesMap';
 
@@ -35,8 +35,6 @@ export const useTetris = ({
 
   const {
     state: {
-      level,
-      rows,
       onCountdown,
       gameStarted,
       paused,
@@ -45,7 +43,6 @@ export const useTetris = ({
       currentPage,
     },
     actions: {
-      setLevel,
       setGameOver,
       setPaused,
       setOnCountdown,
@@ -255,24 +252,17 @@ export const useTetris = ({
   };
 
   const drop = () => {
-    // Increase level when player has cleared 10 rows
-    if (rows > (level + 1) * 10) {
-      playSFX(LEVEL_UP);
-      playSFX(VO_LEVEL_UP);
-      setLevel((prev) => prev + 1);
-    }
-
     if (!checkCollision(player, stage, { x: 0, y: 1 })) {
       updatePlayerPos({ x: 0, y: 1, collided: false });
     } else {
-      // Game over!
-      if (player.pos.y < 1) {
+      // Game Over :(
+      if (player.pos.y <= 1) {
         playSFX(TETROMINO_MERGE);
         gameIsOver();
         return;
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
-      coreAutoDrop(); // think if it's worth leaving this here
+      coreAutoDrop();
       playSFX(TETROMINO_MERGE);
       removePixelPocketCooldown();
     }
@@ -281,18 +271,15 @@ export const useTetris = ({
   const dropPlayer = () => {
     coreManualDrop();
     drop();
-    // TEST (removing drop())
   };
 
-  // Reset the game state, whenever the gameMode is changed
   useEffect(() => {
     resetGame();
   }, [gameMode, resetGame]);
 
   return {
     actions: {
-      // Review what actions are being actually used
-      drop, // useCallback later
+      drop,
       dropPlayer,
       movePlayer,
       goToMenu,

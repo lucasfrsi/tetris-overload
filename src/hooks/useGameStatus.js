@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS } from 'utils/SFXPaths';
+import { CLEAR_SINGLE, CLEAR_DOUBLE, CLEAR_TRIPLE, CLEAR_TETRIS, LEVEL_UP, VO_LEVEL_UP } from 'utils/SFXPaths';
 import { SCORES_KEY, initializeKey, setKeyValue } from 'utils/localStorage';
 import { MENU_PAGE, OPTIONS_PAGE, INGAME_PAGE } from 'utils/pagesMap';
 import { CLASSIC_MODE, CLASSIC_OVERLOAD_MODE, PROGRESSIVE_OVERLOAD_MODE } from 'utils/gameModes';
@@ -192,6 +192,15 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
   useEffect(() => {
     setStoredScores(initializeKey(isLocalStorageAvailable, SCORES_KEY, []));
   }, [isLocalStorageAvailable]);
+
+  useEffect(() => {
+    // Increase level every 10 rows cleared
+    if (rows > (level + 1) * 10) {
+      playSFX(LEVEL_UP);
+      playSFX(VO_LEVEL_UP);
+      setLevel((prev) => prev + 1);
+    }
+  }, [level, playSFX, rows]);
 
   return {
     state: {
