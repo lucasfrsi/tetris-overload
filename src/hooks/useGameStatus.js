@@ -68,12 +68,12 @@ export const useGameStatus = ({ skillsAPI, SFX_API, isLocalStorageAvailable, opt
   const calcScore = useCallback(() => {
     const linePoints = [40, 100, 300, 1200];
 
-    // We have score
+    // There's score to be calculated
     if (rowsCleared > 0) {
       playSFX(clearTable[rowsCleared]);
       if (rowsCleared === 4) activatePerfectionism();
 
-      // This is how original Tetris score is calculated
+      // Score calculation
       setScore((prev) => prev + linePoints[rowsCleared - 1] * (level + 1));
       setRows((prev) => prev + rowsCleared);
       calcExp(rowsCleared);

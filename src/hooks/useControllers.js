@@ -118,7 +118,6 @@ export const useControllers = ({
     const { code, key } = event;
 
     if (ticking) {
-      // Activate the interval again when user releases down arrow.
       if ((key === keyBindings[DROP].key) || (code === keyBindings[DROP].code)) {
         coreAutoDrop();
       }
@@ -135,8 +134,3 @@ export const useControllers = ({
     },
   };
 };
-
-// IMPLEMENT:
-// A way to not trigger the function over and over when key is pressed
-// Mainly the dropPlayer() one
-// IDEAL: trigger once, ignore the others until keyUp
