@@ -15,6 +15,10 @@ export const skill = css`
   &:hover {
     border-color: goldenrod;
   }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const skillName = css`

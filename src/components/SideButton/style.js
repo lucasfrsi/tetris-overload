@@ -15,6 +15,10 @@ export const sideButton = css`
 
   text-transform: uppercase;
 
+  &:focus {
+    outline: none;
+  }
+
   &:hover {
     border-color: goldenrod;
   }

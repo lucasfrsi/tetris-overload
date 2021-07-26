@@ -9,10 +9,12 @@ const SideButton = ({ buttonName, onClick, playSFX, disabled }) => (
     type="button"
     tabIndex={-1}
     css={styles.sideButton}
-    onClick={onClick}
+    onClick={(e) => {
+      onClick();
+      e.currentTarget.blur();
+    }}
     onMouseEnter={() => playSFX(BUTTON_HOVER)}
     disabled={disabled}
-    onFocus={(e) => e.target.blur()}
   >
     { buttonName }
   </button>
