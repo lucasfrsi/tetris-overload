@@ -185,7 +185,7 @@ const Tetris = () => {
           tabIndex="0"
           onKeyDown={onKeyDownHandler}
           onKeyUp={onKeyUpHandler}
-          onBlur={(e) => e.target.focus()}
+          onBlur={(e) => e.currentTarget.focus()}
         >
           {gameOver && <GameOver />}
           {showHighScores && (

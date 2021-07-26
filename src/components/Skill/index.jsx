@@ -26,10 +26,12 @@ const Skill = ({ skill, canSkillBeLeveled, levelUpSkill }) => {
   return (
     <div
       css={styles.skill}
-      onClick={() => levelUpSkill(name)}
+      onClick={(e) => {
+        levelUpSkill(name);
+        e.currentTarget.blur();
+      }}
       role="presentation"
       tabIndex={-1}
-      onFocus={(e) => e.target.blur()}
     >
       <span css={styles.skillName}>{name}</span>
       <img src={icons[name]} alt={name} css={styles.skillIcon} />
