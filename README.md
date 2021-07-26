@@ -13,4 +13,4 @@ This is a Tetris game I created using React. It's currently hosted on Vercel and
 **3.** Access http://localhost:8080/.
 
 ## License
-[MIT](https://github.com/lucasfrsi/gsn_client/blob/master/LICENSE)
+[MIT](https://github.com/lucasfrsi/tetris-overload/blob/main/LICENSE)
